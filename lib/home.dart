@@ -3,6 +3,7 @@ import 'package:graduation_thesis_project/page/overview.dart';
 import 'package:graduation_thesis_project/page/planning.dart';
 import 'package:graduation_thesis_project/page/setting.dart';
 import 'package:graduation_thesis_project/page/transaction.dart';
+import 'package:graduation_thesis_project/ui/login.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -60,7 +61,7 @@ class _HomeState extends State<Home> {
                     minWidth: 40,
                     onPressed: (){
                       setState(() {
-                        currentScreen = const Overview();
+                        currentScreen = const Login();
                         currentTab = 0;
                       });
                     },
