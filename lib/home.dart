@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_thesis_project/page/overview.dart';
-import 'package:graduation_thesis_project/page/planning.dart';
-import 'package:graduation_thesis_project/page/setting.dart';
-import 'package:graduation_thesis_project/page/transaction.dart';
-import 'package:graduation_thesis_project/ui/login.dart';
+import 'package:graduation_thesis_project/views/page/overview.dart';
+import 'package:graduation_thesis_project/views/page/planning.dart';
+import 'package:graduation_thesis_project/views/page/setting.dart';
+import 'package:graduation_thesis_project/views/page/transaction.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -61,7 +60,7 @@ class _HomeState extends State<Home> {
                     minWidth: 40,
                     onPressed: (){
                       setState(() {
-                        currentScreen = const Login();
+                        currentScreen = const Overview();
                         currentTab = 0;
                       });
                     },

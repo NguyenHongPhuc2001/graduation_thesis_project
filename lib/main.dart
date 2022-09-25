@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_thesis_project/ui/account_management.dart';
 import 'package:graduation_thesis_project/ui/login.dart';
 import 'package:graduation_thesis_project/ui/signup.dart';
 import 'home.dart';
@@ -14,12 +15,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Final Project',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: const SignUp(),
+      home: const AccountManagement(),
     );
   }
 }

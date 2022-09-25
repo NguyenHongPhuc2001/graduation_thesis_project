@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_thesis_project/views/plan_screen/plan_main_screen.dart';
 
 class Planning extends StatefulWidget {
   const Planning({Key? key}) : super(key: key);
@@ -10,11 +11,6 @@ class Planning extends StatefulWidget {
 class _PlanningState extends State<Planning> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Planning"),),
-      body: Center(
-        child: Text("Planning Page", style: TextStyle(fontSize: 40),),
-      ),
-    );
+    return PlanMainScreen();
   }
 }
