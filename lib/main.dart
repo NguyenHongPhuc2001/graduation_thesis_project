@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_thesis_project/ui/account_management.dart';
+import 'package:graduation_thesis_project/ui/change_password.dart';
 import 'package:graduation_thesis_project/ui/login.dart';
 import 'package:graduation_thesis_project/ui/signup.dart';
 import 'home.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: const AccountManagement(),
+      home: const ChangePassword(),
     );
   }
 }

@@ -47,7 +47,7 @@ class _AccountManagementState extends State<AccountManagement> {
                       Container(
                         alignment: Alignment.center,
                         margin: const EdgeInsets.symmetric(horizontal: 20),
-                        padding: EdgeInsets.symmetric(vertical: 10),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(15),
