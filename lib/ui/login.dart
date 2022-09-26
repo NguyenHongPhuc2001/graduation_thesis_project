@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:graduation_thesis_project/utils/style.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);

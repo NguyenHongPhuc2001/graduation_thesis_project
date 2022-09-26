@@ -114,7 +114,7 @@ class _AccountManagementState extends State<AccountManagement> {
                               style: ElevatedButton.styleFrom(
                                 shape: const StadiumBorder(),
                                 minimumSize: const Size(230.0, 30.0),
-                                primary: Color(0xfffaefe7),
+                                primary: const Color(0xfffaefe7),
                               ),
                               child: const Text(
                                 "Ví của tôi",

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_thesis_project/ui/about_us.dart';
 import 'package:graduation_thesis_project/ui/account_management.dart';
 import 'package:graduation_thesis_project/ui/change_password.dart';
 import 'package:graduation_thesis_project/ui/login.dart';
 import 'package:graduation_thesis_project/ui/signup.dart';
+import 'package:graduation_thesis_project/ui/wallet_create.dart';
+import 'package:graduation_thesis_project/ui/wallet_list.dart';
+import 'package:graduation_thesis_project/ui/wallet_setting.dart';
 import 'home.dart';
 
 void main() {
@@ -21,7 +25,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: const ChangePassword(),
+      home: const AboutUs(),
     );
   }
 }

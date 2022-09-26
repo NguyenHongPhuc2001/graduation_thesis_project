@@ -14,7 +14,7 @@ class _ChangePasswordState extends State<ChangePassword> {
       backgroundColor: const Color(0xE9ECEFED),
       appBar: AppBar(
         title: const Text(
-          "Quản lý tài khoản",
+          "Thay đổi mật khẩu",
           style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.bold,
