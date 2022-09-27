@@ -1,14 +1,15 @@
 import 'package:graduation_thesis_project/model/Wallet.dart';
 
 class Event {
-  int? id;
+  int id;
   String eventName;
   DateTime createDate;
   DateTime endDate;
   double totalSpending;
   bool status;
-  Wallet? wallet;
-  String? urlImage;
+  Wallet wallet;
+  String urlImage;
+
 
   Event({
     required this.totalSpending,
@@ -20,6 +21,8 @@ class Event {
     required this.wallet,
     required this.urlImage,
   });
+
+
 
   Event.fromMap(Map<String, dynamic> data)
       : id = data["id"],

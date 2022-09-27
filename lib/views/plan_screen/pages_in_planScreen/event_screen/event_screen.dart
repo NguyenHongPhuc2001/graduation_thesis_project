@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_thesis_project/dao/envent_dao.dart';
 import 'package:graduation_thesis_project/model/Event.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_addEvent.dart';
@@ -8,11 +10,15 @@ import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/
 class EventScreen extends StatefulWidget {
   final PageController pageController;
   final List<Event> listEvent;
+  final Event? event;
+  final String checkInserDelete;
 
   const EventScreen({
     Key? key,
     required this.pageController,
     required this.listEvent,
+    this.event,
+    this.checkInserDelete = "",
   }) : super(key: key);
 
   @override
@@ -21,9 +27,14 @@ class EventScreen extends StatefulWidget {
 
 class _EventScreenState extends State<EventScreen> {
   final PageController _pageController = PageController();
+  bool statusOfInsert = false;
+  int nbBeforInsert = 0, nbAfterInsert = 0;
+  List<Event> ls = [];
+
 
   @override
   Widget build(BuildContext context) {
+    ls = widget.listEvent;
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: DefaultTabController(
@@ -73,15 +84,20 @@ class _EventScreenState extends State<EventScreen> {
                         customBorder: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(size.width * 0.1),
                         ),
-                        onTap: ()async {
-                          final eventData = await Navigator.push(
+                        onTap: () async {
+                          final data = await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => AddEvent(listEvent: widget.listEvent,),
+                              builder: (context) => AddEvent(
+                                listEvent: widget.listEvent,
+                                status: statusOfInsert,
+                              ),
                             ),
-                          ).then((value) => setState((){
-                            widget.listEvent.add(value);
+                          ).then((value) => setState(() {
+                            if(value == "Save")
+                              Fluttertoast.showToast(msg:"Thêm thành công !");
                           }));
+
                         },
                         child: Container(
                           width: size.width * 0.3,

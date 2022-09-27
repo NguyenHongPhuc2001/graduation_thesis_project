@@ -1,22 +1,28 @@
 import 'dart:math';
 
-import 'package:date_time_picker/date_time_picker.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_thesis_project/dao/envent_dao.dart';
 import 'package:graduation_thesis_project/dao/wallet_dao.dart';
 import 'package:graduation_thesis_project/model/Event.dart';
 import 'package:graduation_thesis_project/model/Wallet.dart';
+import 'package:graduation_thesis_project/views/plan_screen/commons/pages/select_icon.dart';
+import 'package:graduation_thesis_project/views/plan_screen/commons/pages/select_wallet.dart';
+import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_screen.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_selectWallet.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_select_icons.dart';
 import 'package:intl/intl.dart';
 
 class AddEvent extends StatefulWidget {
   final List<Event> listEvent;
+  bool status;
 
-  const AddEvent({
+  AddEvent({
     Key? key,
     required this.listEvent,
+    required this.status,
   }) : super(key: key);
 
   @override
@@ -28,31 +34,15 @@ class _AddEventState extends State<AddEvent> {
   final List<Wallet> listWallet = WalletDAO().getAllWallet();
   final TextEditingController _eventNameController = TextEditingController();
   final DateFormat df = DateFormat("yyyy-MM-dd");
-
+  final PageController _pageController = PageController();
   var dateTime, linkIcon;
 
-  Wallet wallet = Wallet(
-      id: 1,
-      walletName: "Chọn ví",
-      walletBlanace: 111,
-      createDate: DateTime.now(),
-      updateDate: DateTime.now());
-
-  Event event = Event(
-    totalSpending: 123123,
-    id: 0,
-    endDate: DateTime.now(),
-    createDate: DateTime.now(),
-    eventName: "Initinal",
-    status: false,
-    wallet: null,
-    urlImage: null,
-  );
+  Wallet wallet = WalletDAO().wl1;
+  Event event = EventDAO().ev_1;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -63,7 +53,7 @@ class _AddEventState extends State<AddEvent> {
             color: Colors.black,
           ),
           onPressed: () {
-            Navigator.pop(context, event);
+            Navigator.pop(context);
           },
         ),
         centerTitle: true,
@@ -84,16 +74,23 @@ class _AddEventState extends State<AddEvent> {
               size: size.width * 0.08,
             ),
             onPressed: () {
+              List<Event> listEvent = [];
               setState(() {
+                String check = "Insert";
                 event.eventName = _eventNameController.text;
                 event.endDate = dateTime;
                 event.totalSpending = 0;
                 event.wallet = wallet;
                 event.id = 5;
                 event.urlImage = linkIcon;
-                EventDAO().insertEvent(event);
+                widget.listEvent.add(event);
+                widget.status = EventDAO().insertEvent(event);
+                listEvent = widget.listEvent;
+                Navigator.pop(
+                  context,
+                  "Save",
+                );
               });
-              Navigator.pop(context, event);
             },
           ),
         ],
@@ -140,7 +137,7 @@ class _AddEventState extends State<AddEvent> {
                                 Icons.question_mark,
                                 size: size.width * 0.09,
                               )
-                            : Image.asset(
+                            : SvgPicture.asset(
                                 linkIcon,
                                 width: size.width * 0.09,
                               ),
@@ -213,160 +210,19 @@ class _AddEventState extends State<AddEvent> {
                     setState(() {
                       dateTime = null;
                     });
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text(
-                              "Chờ chút",
-                              style: TextStyle(
-                                fontSize: size.width * 0.07,
-                                color: Colors.black,
-                              ),
-                            ),
-                            content: Text(
-                              "Ngày không hợp lệ ! Vui lòng chọn lại !",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: size.width * 0.04,
-                              ),
-                            ),
-                            actions: [
-                              InkWell(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  padding: EdgeInsets.only(
-                                      top: size.width * 0.005,
-                                      bottom: size.width * 0.005),
-                                  width: size.width * 0.2,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    borderRadius: BorderRadius.circular(
-                                        size.width * 0.016),
-                                    color: Colors.blueAccent,
-                                  ),
-                                  child: Text(
-                                    "OK",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: size.width * 0.05,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        });
+                    _showCalendarDialog();
                   } else if (year1 == year2 && month1 < month2) {
                     setState(() {
                       dateTime = null;
                     });
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text(
-                              "Chờ chút",
-                              style: TextStyle(
-                                fontSize: size.width * 0.07,
-                                color: Colors.black,
-                              ),
-                            ),
-                            content: Text(
-                              "Ngày không hợp lệ ! Vui lòng chọn lại !",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: size.width * 0.04,
-                              ),
-                            ),
-                            actions: [
-                              InkWell(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  padding: EdgeInsets.only(
-                                      top: size.width * 0.005,
-                                      bottom: size.width * 0.005),
-                                  width: size.width * 0.2,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    borderRadius: BorderRadius.circular(
-                                        size.width * 0.016),
-                                    color: Colors.blueAccent,
-                                  ),
-                                  child: Text(
-                                    "OK",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: size.width * 0.05,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        });
+                    _showCalendarDialog();
                   } else if (year1 == year2 &&
                       month1 == month2 &&
                       day1 < day2) {
                     setState(() {
                       dateTime = null;
                     });
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text(
-                              "Chờ chút",
-                              style: TextStyle(
-                                fontSize: size.width * 0.07,
-                                color: Colors.black,
-                              ),
-                            ),
-                            content: Text(
-                              "Ngày không hợp lệ ! Vui lòng chọn lại !",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: size.width * 0.04,
-                              ),
-                            ),
-                            actions: [
-                              InkWell(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  padding: EdgeInsets.only(
-                                      top: size.width * 0.005,
-                                      bottom: size.width * 0.005),
-                                  width: size.width * 0.2,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    borderRadius: BorderRadius.circular(
-                                        size.width * 0.016),
-                                    color: Colors.blueAccent,
-                                  ),
-                                  child: Text(
-                                    "OK",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: size.width * 0.05,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        });
+                    _showCalendarDialog();
                   }
                 });
               },
@@ -526,11 +382,52 @@ class _AddEventState extends State<AddEvent> {
   }
 
   _showCalendarDialog() {
-    return showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2000),
-    );
+    Size size = MediaQuery.of(context).size;
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              "Chờ chút",
+              style: TextStyle(
+                fontSize: size.width * 0.07,
+                color: Colors.black,
+              ),
+            ),
+            content: Text(
+              "Ngày không hợp lệ ! Vui lòng chọn lại !",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: size.width * 0.04,
+              ),
+            ),
+            actions: [
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.only(
+                      top: size.width * 0.005, bottom: size.width * 0.005),
+                  width: size.width * 0.2,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(size.width * 0.016),
+                    color: Colors.blueAccent,
+                  ),
+                  child: Text(
+                    "OK",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: size.width * 0.05,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
   }
 }

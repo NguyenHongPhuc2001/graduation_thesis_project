@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_thesis_project/dao/budget_dao.dart';
 import 'package:graduation_thesis_project/dao/envent_dao.dart';
+import 'package:graduation_thesis_project/dao/target_dao.dart';
+import 'package:graduation_thesis_project/dao/transaction_dao.dart';
+import 'package:graduation_thesis_project/model/Budget.dart';
 import 'package:graduation_thesis_project/model/Event.dart';
+import 'package:graduation_thesis_project/model/Transaction.dart';
+import 'package:graduation_thesis_project/model/target.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_screen.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_screen.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_screen.dart';
@@ -15,7 +21,9 @@ class PlanMainScreen extends StatefulWidget {
 class _PlanMainScreenState extends State<PlanMainScreen> {
   final PageController _pageController = PageController();
   final List<Event> listEvent = EventDAO().getAllEvent();
-
+  final List<Target> listTarget = TargetDAO().getAll();
+  final List<Budget> listBudget = BudgetDAO().getAll();
+  final List<Transactions> listTransaction = TransactionDAO().getAll();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -87,6 +95,8 @@ class _PlanMainScreenState extends State<PlanMainScreen> {
             } else if (position == 1) {
               return BudgetScreen(
                 pageController: _pageController,
+                listBudget: listBudget,
+                listTransaction: listTransaction,
               );
             } else if (position == 2) {
               return EventScreen(
@@ -96,6 +106,7 @@ class _PlanMainScreenState extends State<PlanMainScreen> {
             } else {
               return TargetScreen(
                 pageController: _pageController,
+                listTarget: listTarget,
               );
             }
           },

@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:graduation_thesis_project/model/Budget.dart';
+import 'package:graduation_thesis_project/model/Transaction.dart';
+import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_add.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_end.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_happening.dart';
 
 class BudgetScreen extends StatefulWidget {
   final PageController pageController;
+  final List<Budget> listBudget;
+  final List<Transactions> listTransaction;
 
-  const BudgetScreen({Key? key, required this.pageController})
+  const BudgetScreen(
+      {Key? key,
+      required this.pageController,
+      required this.listBudget,
+      required this.listTransaction})
       : super(key: key);
 
   @override
@@ -66,7 +76,19 @@ class _BudgetScreenState extends State<BudgetScreen> {
                         customBorder: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(size.width * 0.1),
                         ),
-                        onTap: () {},
+                        onTap: () async{
+                         await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddBudget(
+                                listBudget: widget.listBudget,
+                              ),
+                            ),
+                          ).then((value) => setState((){
+                            if(value == "Save")
+                              Fluttertoast.showToast(msg: "Thêm ngân sách thành công !");
+                         }));
+                        },
                         child: Container(
                           width: size.width * 0.3,
                           padding: EdgeInsets.only(
@@ -124,9 +146,15 @@ class _BudgetScreenState extends State<BudgetScreen> {
               itemCount: 2,
               itemBuilder: (context, pagePosition) {
                 if (pagePosition == 0)
-                  return BudgetHappening();
+                  return BudgetHappening(
+                    listBudget: widget.listBudget,
+                    listTransaction: widget.listTransaction,
+                  );
                 else
-                  return BudgetEnd();
+                  return BudgetEnd(
+                    listTransaction: widget.listTransaction,
+                    listBudget: widget.listBudget,
+                  );
               }),
         ),
       ),

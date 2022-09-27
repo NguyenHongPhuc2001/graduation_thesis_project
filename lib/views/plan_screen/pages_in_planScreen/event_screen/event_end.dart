@@ -98,6 +98,8 @@ class _EventEndState extends State<EventEnd> {
                                   MaterialPageRoute(
                                     builder: (context) => EventDetail(
                                       event: widget.listEvent.elementAt(index),
+                                      listEvent: widget.listEvent,
+                                      index: index,
                                     ),
                                   ),
                                 ).then((value) => setState(() {

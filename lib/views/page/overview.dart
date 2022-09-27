@@ -11,10 +11,12 @@ class _OverviewState extends State<Overview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Overview")),
-      body: Center(
-        child: Text("Overview Page", style: TextStyle(fontSize: 40),),
-      ),
-    );
+        appBar: AppBar(title: Text("Overview")),
+        body: Center(
+          child: Text(
+            "Overview",
+            style: TextStyle(fontSize: 50),
+          ),
+        ));
   }
 }
