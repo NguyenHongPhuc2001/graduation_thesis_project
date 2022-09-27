@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_thesis_project/dao/envent_dao.dart';
+import 'package:graduation_thesis_project/dao/target_dao.dart';
 import 'package:graduation_thesis_project/model/Event.dart';
+import 'package:graduation_thesis_project/model/target.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_screen.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_screen.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_screen.dart';
@@ -15,6 +17,8 @@ class PlanMainScreen extends StatefulWidget {
 class _PlanMainScreenState extends State<PlanMainScreen> {
   final PageController _pageController = PageController();
   final List<Event> listEvent = EventDAO().getAllEvent();
+  final List<Target> listTarget = TargetDAO().getAll();
+
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +100,7 @@ class _PlanMainScreenState extends State<PlanMainScreen> {
             } else {
               return TargetScreen(
                 pageController: _pageController,
+                listTarget: listTarget,
               );
             }
           },

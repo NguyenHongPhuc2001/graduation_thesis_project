@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:graduation_thesis_project/dao/target_dao.dart';
+import 'package:graduation_thesis_project/model/target.dart';
+import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_add.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_end.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_happening.dart';
 
 class TargetScreen extends StatefulWidget {
   final PageController pageController;
+  final List<Target> listTarget;
 
-  const TargetScreen({Key? key, required this.pageController})
-      : super(key: key);
+  const TargetScreen({
+    Key? key,
+    required this.pageController,
+    required this.listTarget,
+  }) : super(key: key);
 
   @override
   State<TargetScreen> createState() => _TargetScreenState();
@@ -66,7 +74,19 @@ class _TargetScreenState extends State<TargetScreen> {
                         customBorder: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(size.width * 0.1),
                         ),
-                        onTap: () {},
+                        onTap: () async {
+                         await  Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddTarget(
+                                listTarget: widget.listTarget,
+                              ),
+                            ),
+                          ).then((value) => setState((){
+                            if(value == "Save")
+                              Fluttertoast.showToast(msg: "Thêm mục tiêu thành công !");
+                         }));
+                        },
                         child: Container(
                           width: size.width * 0.3,
                           padding: EdgeInsets.only(
@@ -124,9 +144,13 @@ class _TargetScreenState extends State<TargetScreen> {
               itemCount: 2,
               itemBuilder: (context, pagePosition) {
                 if (pagePosition == 0)
-                  return TargetHappening();
+                  return TargetHappening(
+                    listTarget: widget.listTarget,
+                  );
                 else
-                  return TargetEnd();
+                  return TargetEnd(
+                    listTarget: widget.listTarget,
+                  );
               }),
         ),
       ),

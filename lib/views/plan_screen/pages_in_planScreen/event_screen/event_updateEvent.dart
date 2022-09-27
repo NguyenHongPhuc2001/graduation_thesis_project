@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,30 +13,39 @@ import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_select_icons.dart';
 import 'package:intl/intl.dart';
 
-class AddEvent extends StatefulWidget {
-  final List<Event> listEvent;
-  bool status;
+class UpdateEvent extends StatefulWidget {
+  final Event event;
 
-  AddEvent({
+  UpdateEvent({
     Key? key,
-    required this.listEvent,
-    required this.status,
+    required this.event,
   }) : super(key: key);
 
   @override
-  State<AddEvent> createState() => _AddEventState();
+  State<UpdateEvent> createState() => _UpdateEventState();
 }
 
-class _AddEventState extends State<AddEvent> {
+class _UpdateEventState extends State<UpdateEvent> {
   final _random = Random();
   final List<Wallet> listWallet = WalletDAO().getAllWallet();
   final TextEditingController _eventNameController = TextEditingController();
   final DateFormat df = DateFormat("yyyy-MM-dd");
   final PageController _pageController = PageController();
   var dateTime, linkIcon;
+  bool _onTextClick = true, _onTextFieldClick = false;
 
-  Wallet wallet = WalletDAO().wl1;
-  Event event = EventDAO().ev_1;
+
+
+  Event newEvent = EventDAO().ev_1;
+
+  @override
+  void initState() {
+    _eventNameController.text = widget.event.eventName;
+    dateTime = widget.event.endDate;
+    linkIcon = widget.event.urlImage;
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +61,12 @@ class _AddEventState extends State<AddEvent> {
           ),
           onPressed: () {
             Navigator.pop(context);
+            // Navigator.pop(context);
           },
         ),
         centerTitle: true,
         title: Text(
-          "Thêm sự kiện",
+          "Sửa sự kiện",
           style: TextStyle(
             fontSize: size.width * 0.065,
             fontWeight: FontWeight.bold,
@@ -71,23 +82,16 @@ class _AddEventState extends State<AddEvent> {
               size: size.width * 0.08,
             ),
             onPressed: () {
-              List<Event> listEvent = [];
+              print("i'm update in update !");
               setState(() {
-                String check = "Insert";
-                event.eventName = _eventNameController.text;
-                event.endDate = dateTime;
-                event.totalSpending = 0;
-                event.wallet = wallet;
-                event.id = 5;
-                event.urlImage = linkIcon;
-                widget.listEvent.add(event);
-                widget.status = EventDAO().insertEvent(event);
-                listEvent = widget.listEvent;
-                Navigator.pop(
-                  context,
-                  "Save",
-                );
+                newEvent.eventName = _eventNameController.text;
+                if (dateTime != null) newEvent.endDate = dateTime;
+                newEvent.wallet = widget.event.wallet;
+                if (linkIcon != null) newEvent.urlImage = linkIcon as String;
+
+                EventDAO().updateEvent(widget.event, newEvent);
               });
+              Navigator.pop(context, "Update");
             },
           ),
         ],
@@ -130,9 +134,9 @@ class _AddEventState extends State<AddEvent> {
                               [_random.nextInt(9) * 100],
                         ),
                         child: (linkIcon == null)
-                            ? Icon(
-                                Icons.question_mark,
-                                size: size.width * 0.09,
+                            ? Image.asset(
+                                widget.event.urlImage,
+                                width: size.width * 0.09,
                               )
                             : Image.asset(
                                 linkIcon,
@@ -146,29 +150,60 @@ class _AddEventState extends State<AddEvent> {
                       width: size.width * 0.1,
                     ),
                     Expanded(
-                      child: TextField(
-                        controller: _eventNameController,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: size.width * 0.07,
-                          decoration: TextDecoration.none,
-                        ),
-                        decoration: InputDecoration(
-                          isCollapsed: true,
-                          alignLabelWithHint: true,
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Visibility(
+                            visible: _onTextClick,
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _onTextClick = false;
+                                  _onTextFieldClick = true;
+                                  _eventNameController.text =
+                                      widget.event.eventName;
+                                });
+                              },
+                              child: Text(
+                                widget.event.eventName,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: size.width * 0.07,
+                                  decoration: TextDecoration.none,
+                                ),
+                              ),
+                            ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
+                          Visibility(
+                            visible: _onTextFieldClick,
+                            child: TextField(
+                              autofocus: true,
+                              controller: _eventNameController,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: size.width * 0.07,
+                                decoration: TextDecoration.none,
+                              ),
+                              decoration: InputDecoration(
+                                isCollapsed: true,
+                                alignLabelWithHint: true,
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                ),
+                                hintText: "Tên",
+                                hintStyle: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: size.width * 0.07,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
                           ),
-                          hintText: "Tên",
-                          hintStyle: TextStyle(
-                            color: Colors.grey,
-                            fontSize: size.width * 0.07,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
+                        ],
                       ),
                     ),
                   ],
@@ -343,7 +378,7 @@ class _AddEventState extends State<AddEvent> {
                       Expanded(
                         child: dateTime == null
                             ? Text(
-                                "Ngày kết thúc",
+                                df.format(widget.event.endDate),
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: size.width * 0.07,
@@ -377,8 +412,7 @@ class _AddEventState extends State<AddEvent> {
                     ),
                   ),
                 ).then((value) => setState(() {
-                      wallet = value;
-                      print(wallet.walletName);
+                      widget.event.wallet = value;
                     }));
               },
               child: Container(
@@ -408,7 +442,7 @@ class _AddEventState extends State<AddEvent> {
                       ),
                       Expanded(
                         child: Text(
-                          wallet.walletName,
+                           widget.event.wallet.walletName ,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: size.width * 0.07,

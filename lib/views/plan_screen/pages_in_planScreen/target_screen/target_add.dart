@@ -1,41 +1,31 @@
 import 'dart:math';
 
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:graduation_thesis_project/dao/envent_dao.dart';
-import 'package:graduation_thesis_project/dao/wallet_dao.dart';
-import 'package:graduation_thesis_project/model/Event.dart';
-import 'package:graduation_thesis_project/model/Wallet.dart';
-import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_screen.dart';
-import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_selectWallet.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:graduation_thesis_project/dao/target_dao.dart';
+import 'package:graduation_thesis_project/model/target.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_select_icons.dart';
 import 'package:intl/intl.dart';
 
-class AddEvent extends StatefulWidget {
-  final List<Event> listEvent;
-  bool status;
+class AddTarget extends StatefulWidget {
+  final List<Target> listTarget;
 
-  AddEvent({
-    Key? key,
-    required this.listEvent,
-    required this.status,
-  }) : super(key: key);
+  const AddTarget({Key? key, required this.listTarget}) : super(key: key);
 
   @override
-  State<AddEvent> createState() => _AddEventState();
+  State<AddTarget> createState() => _AddTargetState();
 }
 
-class _AddEventState extends State<AddEvent> {
+class _AddTargetState extends State<AddTarget> {
   final _random = Random();
-  final List<Wallet> listWallet = WalletDAO().getAllWallet();
-  final TextEditingController _eventNameController = TextEditingController();
+  final TextEditingController _targetNameController = TextEditingController();
+  final TextEditingController _targetMoneyController = TextEditingController();
   final DateFormat df = DateFormat("yyyy-MM-dd");
   final PageController _pageController = PageController();
   var dateTime, linkIcon;
 
-  Wallet wallet = WalletDAO().wl1;
-  Event event = EventDAO().ev_1;
+  Target target = TargetDAO().tg1;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +45,7 @@ class _AddEventState extends State<AddEvent> {
         ),
         centerTitle: true,
         title: Text(
-          "Thêm sự kiện",
+          "Thêm mục tiêu",
           style: TextStyle(
             fontSize: size.width * 0.065,
             fontWeight: FontWeight.bold,
@@ -71,18 +61,19 @@ class _AddEventState extends State<AddEvent> {
               size: size.width * 0.08,
             ),
             onPressed: () {
-              List<Event> listEvent = [];
+              List<Target> listTarget = [];
               setState(() {
-                String check = "Insert";
-                event.eventName = _eventNameController.text;
-                event.endDate = dateTime;
-                event.totalSpending = 0;
-                event.wallet = wallet;
-                event.id = 5;
-                event.urlImage = linkIcon;
-                widget.listEvent.add(event);
-                widget.status = EventDAO().insertEvent(event);
-                listEvent = widget.listEvent;
+                target.targetName = _targetNameController.text;
+                if (linkIcon != null) target.urlImage = linkIcon;
+                target.targetMoney = double.parse(_targetMoneyController.text);
+                target.currentMoney = 0;
+                if (dateTime != null) target.endDate = dateTime;
+                target.status = false;
+                target.createDate = DateTime.now();
+                target.id = widget.listTarget.length + 1;
+                // listTarget = widget.listTarget;
+                // listTarget.add(target);
+                widget.listTarget.add(target);
                 Navigator.pop(
                   context,
                   "Save",
@@ -134,7 +125,7 @@ class _AddEventState extends State<AddEvent> {
                                 Icons.question_mark,
                                 size: size.width * 0.09,
                               )
-                            : Image.asset(
+                            : SvgPicture.asset(
                                 linkIcon,
                                 width: size.width * 0.09,
                               ),
@@ -147,7 +138,7 @@ class _AddEventState extends State<AddEvent> {
                     ),
                     Expanded(
                       child: TextField(
-                        controller: _eventNameController,
+                        controller: _targetNameController,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: size.width * 0.07,
@@ -162,7 +153,7 @@ class _AddEventState extends State<AddEvent> {
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide.none,
                           ),
-                          hintText: "Tên",
+                          hintText: "Tên mục tiêu",
                           hintStyle: TextStyle(
                             color: Colors.grey,
                             fontSize: size.width * 0.07,
@@ -367,106 +358,118 @@ class _AddEventState extends State<AddEvent> {
           ),
           Padding(
             padding: EdgeInsets.only(top: size.width * 0.1),
-            child: InkWell(
-              onTap: () async {
-                final data = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SelectWallet(
-                      listWallet: listWallet,
+            child: Container(
+              padding: EdgeInsets.only(left: size.width * 0.04),
+              height: size.width * 0.2,
+              width: size.width,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: size.width * 0.001,
+                  color: Colors.black,
+                ),
+              ),
+              child: IntrinsicHeight(
+                child: Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(size.width * 0.025),
+                      child: Image.asset(
+                        "icons/icons_1/money_icon_2.png",
+                        width: size.width * 0.1,
+                      ),
                     ),
-                  ),
-                ).then((value) => setState(() {
-                      wallet = value;
-                      print(wallet.walletName);
-                    }));
-              },
-              child: Container(
-                padding: EdgeInsets.only(left: size.width * 0.04),
-                height: size.width * 0.2,
-                width: size.width,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: size.width * 0.001,
-                    color: Colors.black,
-                  ),
-                ),
-                child: IntrinsicHeight(
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(size.width * 0.025),
-                        child: Image.asset(
-                          "icons/icons_1/wallet_icon_1.png",
-                          width: size.width * 0.1,
-                        ),
-                      ),
-                      VerticalDivider(
-                        thickness: size.width * 0.001,
-                        color: Colors.black,
-                        width: size.width * 0.1,
-                      ),
-                      Expanded(
-                        child: Text(
-                          wallet.walletName,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: size.width * 0.07,
-                            decoration: TextDecoration.none,
+                    VerticalDivider(
+                      thickness: size.width * 0.001,
+                      color: Colors.black,
+                      width: size.width * 0.1,
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(right: size.width*0.04),
+                            child: Text(
+                              "đ",
+                              style: TextStyle(
+                                color: Colors.lightGreen,
+                                fontWeight: FontWeight.bold,
+                                fontSize: size.width*0.08
+                              ),
+                            ),
                           ),
-                        ),
+                          Expanded(
+                            child: TextField(
+                              controller: _targetMoneyController,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "Số tiền mục tiêu",
+                                hintStyle: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                focusColor: Colors.white,
+                              ),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.lightGreen,
+                                fontSize: size.width * 0.07,
+                                decoration: TextDecoration.none,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(top: size.width * 0.1),
-            child: InkWell(
-              onTap: () {},
-              child: Container(
-                padding: EdgeInsets.only(left: size.width * 0.04),
-                height: size.width * 0.2,
-                width: size.width,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: size.width * 0.001,
-                    color: Colors.black,
-                  ),
-                ),
-                child: IntrinsicHeight(
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(size.width * 0.01),
-                        child: Image.asset(
-                          "icons/icons_1/money_icon_1.png",
-                          width: size.width * 0.13,
-                        ),
-                      ),
-                      VerticalDivider(
-                        thickness: size.width * 0.001,
-                        color: Colors.black,
-                        width: size.width * 0.1,
-                      ),
-                      Expanded(
-                        child: Text(
-                          "Việt nam đồng",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: size.width * 0.07,
-                            decoration: TextDecoration.none,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // Padding(
+          //   padding: EdgeInsets.only(top: size.width * 0.1),
+          //   child: InkWell(
+          //     onTap: () {},
+          //     child: Container(
+          //       padding: EdgeInsets.only(left: size.width * 0.04),
+          //       height: size.width * 0.2,
+          //       width: size.width,
+          //       decoration: BoxDecoration(
+          //         border: Border.all(
+          //           width: size.width * 0.001,
+          //           color: Colors.black,
+          //         ),
+          //       ),
+          //       child: IntrinsicHeight(
+          //         child: Row(
+          //           children: [
+          //             Container(
+          //               padding: EdgeInsets.all(size.width * 0.01),
+          //               child: Image.asset(
+          //                 "icons/icons_1/money_icon_1.png",
+          //                 width: size.width * 0.13,
+          //               ),
+          //             ),
+          //             VerticalDivider(
+          //               thickness: size.width * 0.001,
+          //               color: Colors.black,
+          //               width: size.width * 0.1,
+          //             ),
+          //             Expanded(
+          //               child: Text(
+          //                 "Việt nam đồng",
+          //                 style: TextStyle(
+          //                   color: Colors.black,
+          //                   fontSize: size.width * 0.07,
+          //                   decoration: TextDecoration.none,
+          //                 ),
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -520,5 +523,35 @@ class _AddEventState extends State<AddEvent> {
             ],
           );
         });
+  }
+}
+
+class _textInTargetDetail extends StatelessWidget {
+  final String text;
+  final Color textColor;
+  final double textSize;
+  final FontWeight textFontWeight;
+  final TextDecoration decoration;
+
+  const _textInTargetDetail({
+    Key? key,
+    required this.text,
+    required this.textColor,
+    required this.textSize,
+    required this.textFontWeight,
+    required this.decoration,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: textSize,
+        color: textColor,
+        fontWeight: textFontWeight,
+        decoration: decoration,
+      ),
+    );
   }
 }

@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_thesis_project/dao/envent_dao.dart';
 import 'package:graduation_thesis_project/model/Event.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_detail.dart';
@@ -99,12 +101,19 @@ class _EventHappeningState extends State<EventHappening> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => EventDetail(
+                                      index: index,
                                       event: widget.listEvent.elementAt(index),
+                                      listEvent: widget.listEvent,
                                     ),
                                   ),
                                 ).then((value) => setState(() {
-                                      widget.listEvent.elementAt(index).status = value;
-                                      print("Value after update : ${value}");
+                                      if (value == "Delete") {
+                                        Fluttertoast.showToast(
+                                            msg: "Xóa sự kiện thành công !");
+                                      } else if (value == "Save") {
+                                        Fluttertoast.showToast(
+                                            msg: "Thêm sự kiện thành công !");
+                                      }
                                     }));
                               },
                               child: Container(
@@ -130,9 +139,11 @@ class _EventHappeningState extends State<EventHappening> {
                                                 Colors.primaries.length)]
                                             [_random.nextInt(9) * 100],
                                       ),
-                                      child: Image.asset(
-                                        "icons/icons_1/wallet_icon_1.png",
-                                        width: size.width * 0.06,
+                                      child: SvgPicture.asset(
+                                        widget.listEvent
+                                            .elementAt(index)
+                                            .urlImage,
+                                        width: size.width * 0.07,
                                       ),
                                     ),
                                     Container(

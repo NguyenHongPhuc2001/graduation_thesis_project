@@ -19,7 +19,7 @@ class _AccountManagementState extends State<AccountManagement> {
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
-            fontSize: 15.0
+            fontSize: 15.0,
           ),
         ),
         centerTitle: true,
@@ -82,11 +82,11 @@ class _AccountManagementState extends State<AccountManagement> {
                                         boxShadow: const [
                                           BoxShadow(
                                               color: Colors.black,
-                                              blurRadius: 2
+                                              blurRadius: 2,
                                           )
                                         ]
                                     ),
-                                    child: SvgPicture.asset("images/camera.svg")
+                                    child: SvgPicture.asset("images/camera.svg"),
                                 )
                               ],
                             ),
