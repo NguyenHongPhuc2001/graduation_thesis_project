@@ -10,7 +10,7 @@ import 'package:graduation_thesis_project/model/Budget.dart';
 import 'package:graduation_thesis_project/model/Wallet.dart';
 import 'package:graduation_thesis_project/views/plan_screen/commons/pages/select_wallet.dart';
 import 'package:intl/intl.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
 
 class UpdateBudget extends StatefulWidget {
   final Budget budget;
@@ -297,14 +297,6 @@ class _UpdateBudgetState extends State<UpdateBudget> {
                             children: [
                               Expanded(
                                 child: TextField(
-                                  inputFormatters: [
-                                    MaskTextInputFormatter(
-                                      mask: '###,###,###,###,###,###',
-                                      filter: {'#': RegExp(r'[0-9]')},
-                                      type: MaskAutoCompletionType.lazy,
-                                    ),
-                                    LengthLimitingTextInputFormatter(100),
-                                  ],
                                   controller: _budgetMoneyController,
                                   decoration: InputDecoration(
                                     prefix: Padding(

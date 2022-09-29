@@ -13,7 +13,6 @@ import 'package:graduation_thesis_project/model/Wallet.dart';
 import 'package:graduation_thesis_project/views/plan_screen/commons/pages/select_wallet.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_select_rap.dart';
 import 'package:intl/intl.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
 class AddBudget extends StatefulWidget {

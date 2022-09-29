@@ -24,6 +24,7 @@ class _PlanMainScreenState extends State<PlanMainScreen> {
   final List<Target> listTarget = TargetDAO().getAll();
   final List<Budget> listBudget = BudgetDAO().getAll();
   final List<Transactions> listTransaction = TransactionDAO().getAll();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

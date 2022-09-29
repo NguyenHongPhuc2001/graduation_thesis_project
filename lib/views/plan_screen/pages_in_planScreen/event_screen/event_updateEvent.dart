@@ -12,7 +12,6 @@ import 'package:graduation_thesis_project/views/plan_screen/commons/pages/select
 import 'package:graduation_thesis_project/views/plan_screen/commons/pages/select_wallet.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_screen.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_selectWallet.dart';
-import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_select_icons.dart';
 import 'package:intl/intl.dart';
 
 class UpdateEvent extends StatefulWidget {
@@ -45,6 +44,7 @@ class _UpdateEventState extends State<UpdateEvent> {
     _eventNameController.text = widget.event.eventName;
     dateTime = widget.event.endDate;
     linkIcon = widget.event.urlImage;
+
     super.initState();
   }
 

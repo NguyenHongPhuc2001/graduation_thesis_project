@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:graduation_thesis_project/dao/target_dao.dart';
 import 'package:graduation_thesis_project/model/target.dart';
 import 'package:graduation_thesis_project/views/plan_screen/commons/pages/select_icon.dart';
-import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_select_icons.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_screen.dart';
 import 'package:intl/intl.dart';
 
