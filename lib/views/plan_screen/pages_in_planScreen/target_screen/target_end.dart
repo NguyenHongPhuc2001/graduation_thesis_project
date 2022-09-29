@@ -245,7 +245,7 @@ class _TargetEndState extends State<TargetEnd> {
                                             barRadius: Radius.circular(
                                                 size.width * 0.008),
                                             lineHeight: size.width * 0.02,
-                                            percent: targetPercent/100,
+                                            percent: targetPercent,
                                             progressColor: Colors.green,
                                             width: size.width * 0.7,
                                           ),

@@ -8,8 +8,6 @@ import 'package:graduation_thesis_project/dao/envent_dao.dart';
 import 'package:graduation_thesis_project/dao/wallet_dao.dart';
 import 'package:graduation_thesis_project/model/Event.dart';
 import 'package:graduation_thesis_project/model/Wallet.dart';
-import 'package:graduation_thesis_project/views/plan_screen/commons/pages/select_icon.dart';
-import 'package:graduation_thesis_project/views/plan_screen/commons/pages/select_wallet.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_screen.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_selectWallet.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_select_icons.dart';
@@ -45,6 +43,7 @@ class _UpdateEventState extends State<UpdateEvent> {
     _eventNameController.text = widget.event.eventName;
     dateTime = widget.event.endDate;
     linkIcon = widget.event.urlImage;
+
     super.initState();
   }
 

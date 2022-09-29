@@ -160,7 +160,7 @@ class _TargetDetailState extends State<TargetDetail> {
                     child: CircularPercentIndicator(
                       radius: size.width * 0.3,
                       progressColor: Color(0xff70E000),
-                      percent: percentTarget / 100,
+                      percent: percentTarget,
                       lineWidth: size.width * 0.06,
                       center: Column(
                         children: [
@@ -450,20 +450,7 @@ class _TargetDetailState extends State<TargetDetail> {
               ),
             ),
             InkWell(
-              onTap: () {
-                setState(() {
-                  double addMoney = double.parse(_moneyTextController.text);
-                  if ((addMoney + widget.target.currentMoney >=
-                      widget.target.targetMoney)) {
-                    widget.target.currentMoney = widget.target.targetMoney;
-                    widget.target.status = true;
-                  } else {
-                    widget.target.currentMoney += addMoney;
-                  }
-                });
-                _moneyTextController.clear();
-                Navigator.pop(context);
-              },
+              onTap: () {},
               child: Container(
                 alignment: Alignment.center,
                 width: size.width * 0.3,
