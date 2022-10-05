@@ -6,8 +6,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_thesis_project/model/Budget.dart';
 import 'package:graduation_thesis_project/model/Transaction.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/appbar_container.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/appbar_container_2.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/money_text_container.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/percent_text_container.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/single_row_container.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_screen.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_update.dart';
+import 'package:graduation_thesis_project/views/transaction_screen/transaction_detail.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
@@ -32,6 +40,7 @@ class _BudgetDetailState extends State<BudgetDetail> {
   final nf = NumberFormat("###,###");
   List<Transactions> listTransaction = [];
   final _pageController = PageController();
+  final df = DateFormat("dd-MM-yyyy");
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +48,7 @@ class _BudgetDetailState extends State<BudgetDetail> {
 
     double total_spending = 0, percentSpending = 0, overSpending = 0;
     bool isOverSpending = false;
+
     listTransaction.clear();
     widget.listTransaction.forEach((element) {
       if (element.rap.id == widget.budget.rap.id) listTransaction.add(element);
@@ -55,38 +65,19 @@ class _BudgetDetailState extends State<BudgetDetail> {
       percentSpending = 100;
     }
 
-    print("over spending ${overSpending}");
-
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: Icon(
-              CupertinoIcons.xmark,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          centerTitle: true,
-          title: Text(
-            widget.budget.rap.rapName,
-            style: TextStyle(
-              fontSize: size.width * 0.06,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-          actions: [
-            IconButton(
-              splashRadius: size.width * 0.07,
-              icon: Icon(
-                Icons.edit,
-                color: Colors.black,
-              ),
-              onPressed: () async {
+        appBar: PreferredSize(
+          preferredSize: Size(size.width, size.width * 0.145),
+          child: AppBarContainer2(
+              text: "Chi tiết",
+              backIcon: CupertinoIcons.xmark,
+              prefixIcon1: Icons.edit,
+              prefixIcon2: Icons.delete,
+              onBackTap: () {
+                Navigator.pop(context);
+              },
+              onPrefixIcon1Tap: () async {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -100,240 +91,162 @@ class _BudgetDetailState extends State<BudgetDetail> {
                         Fluttertoast.showToast(msg: "Cập nhật thành công !");
                     }));
               },
-            ),
-            IconButton(
-              splashRadius: size.width * 0.07,
-              icon: Icon(
-                CupertinoIcons.delete_solid,
-                color: Colors.black,
-              ),
-              onPressed: () {
+              onPrefixIcon2Tap: () {
                 _showDeleteDialog(widget.budget);
-              },
-            ),
-          ],
+              }),
         ),
         body: Container(
           width: size.width,
           child: Column(
+            mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
                 padding: EdgeInsets.only(top: size.width * 0.06),
-                child: Container(
-                  decoration: BoxDecoration(
+                child: SingleRowContainer(
+                  boxDecoration: BoxDecoration(
                     border: Border.all(
                       width: size.width * 0.001,
                       color: Colors.black,
                     ),
                   ),
-                  padding: EdgeInsets.only(
-                      left: size.width * 0.01,
-                      right: size.width * 0.01,
-                      top: size.width * 0.03,
-                      bottom: size.width * 0.03),
-                  width: size.width,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: size.width * 0.025),
-                        child: Text(
-                          "Tháng 9 năm 2022",
-                          style: TextStyle(
-                            fontSize: size.width * 0.04,
-                            color: Colors.black,
+                  paddingTop: size.width * 0.05,
+                  paddingBottom: size.width * 0.05,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: size.width * 0.025),
+                          child: TextContainer(
+                            text:
+                                "Tháng ${widget.budget.endDate.month} năm 2022",
+                            textColor: Colors.black,
+                            textSize: size.width * 0.04,
+                            textFontWeight: FontWeight.w400,
+                            decoration: TextDecoration.none,
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: size.width * 0.025,
-                            bottom: size.width * 0.02),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  nf.format(total_spending),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: size.width * 0.04,
+                        Container(
+                          padding: EdgeInsets.only(
+                              left: size.width * 0.025,
+                              bottom: size.width * 0.015),
+                          width: size.width * 0.99,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              MoneyTextContainer(
+                                value: total_spending,
+                                textSize: size.width * 0.04,
+                                textFontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(right: size.width * 0.02),
+                                child: Container(
+                                  padding: EdgeInsets.all(size.width * 0.01),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                        size.width * 0.01),
+                                    color: Colors.grey,
+                                  ),
+                                  child: PercentTextContainer(
+                                    value: isOverSpending
+                                        ? ("+ ${((overSpending - overSpending.toInt() == 0) == false) ? overSpending.toStringAsFixed(1) : overSpending.toInt().toString()}")
+                                        : (((percentSpending -
+                                                        percentSpending
+                                                            .toInt() ==
+                                                    0) ==
+                                                false)
+                                            ? percentSpending.toStringAsFixed(1)
+                                            : percentSpending
+                                                .toInt()
+                                                .toString()),
+                                    textSize: size.width * 0.04,
+                                    textFontWeight: FontWeight.w400,
                                     color: Colors.black,
                                   ),
-                                ),
-                                Text(
-                                  "đ",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    decoration: TextDecoration.underline,
-                                    fontSize: size.width * 0.04,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(left: size.width * 0.03),
-                                  child: Visibility(
-                                    visible: isOverSpending ? true : false,
-                                    child: SvgPicture.asset(
-                                      "images/WarningIcon.svg",
-                                      width: size.width * 0.05,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsets.only(right: size.width * 0.045),
-                              child: Container(
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.all(size.width * 0.01),
-                                decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.circular(size.width * 0.01),
-                                  color: Colors.grey,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      isOverSpending
-                                          ? ("+ ${((overSpending - overSpending.toInt() == 0) == false) ? overSpending.toStringAsFixed(1) : overSpending.toInt().toString()}")
-                                          : (((percentSpending -
-                                                          percentSpending
-                                                              .toInt() ==
-                                                      0) ==
-                                                  false)
-                                              ? percentSpending
-                                                  .toStringAsFixed(1)
-                                              : percentSpending
-                                                  .toInt()
-                                                  .toString()),
-                                      style: TextStyle(
-                                        fontSize: size.width * 0.04,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    Text(
-                                      " %",
-                                      style: TextStyle(
-                                        fontSize: size.width * 0.04,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ],
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      LinearPercentIndicator(
-                        barRadius: Radius.circular(size.width * 0.008),
-                        lineHeight: size.width * 0.02,
-                        percent: percentSpending / 100,
-                        progressColor:
-                            isOverSpending ? Colors.red : Colors.green,
-                        width: size.width * 0.956,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: size.width * 0.025, top: size.width * 0.02),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                        LinearPercentIndicator(
+                          barRadius: Radius.circular(size.width * 0.008),
+                          lineHeight: size.width * 0.02,
+                          percent: percentSpending / 100,
+                          progressColor:
+                              isOverSpending ? Colors.red : Colors.green,
+                          width: size.width * 0.99,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: size.width * 0.025, top: size.width * 0.02),
+                          child: Container(
+                            width: size.width * 0.973,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      nf.format(total_spending),
-                                      style: TextStyle(
-                                        fontSize: size.width * 0.04,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    Text(
-                                      "đ",
-                                      style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        fontSize: size.width * 0.04,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(left: size.width * 0.01),
-                                  child: Text(
-                                    "Đã chi",
-                                    style: TextStyle(
-                                      fontSize: size.width * 0.03,
+                                    MoneyTextContainer(
+                                      value: total_spending,
+                                      textSize: size.width * 0.04,
+                                      textFontWeight: FontWeight.w400,
                                       color: Colors.black,
                                     ),
+                                    TextContainer(
+                                      text: "Đã chi",
+                                      textColor: Colors.black,
+                                      textSize: size.width * 0.03,
+                                      textFontWeight: FontWeight.w400,
+                                      decoration: TextDecoration.none,
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      right: size.width * 0.043),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      MoneyTextContainer(
+                                        value: total_spending,
+                                        textSize: size.width * 0.04,
+                                        textFontWeight: FontWeight.w400,
+                                        color: Colors.black,
+                                      ),
+                                      (isOverSpending == false)
+                                          ? TextContainer(
+                                              text: "Còn lại",
+                                              textColor: Colors.black,
+                                              textSize: size.width * 0.03,
+                                              textFontWeight: FontWeight.w400,
+                                              decoration: TextDecoration.none,
+                                            )
+                                          : TextContainer(
+                                              text: "Over Spending",
+                                              textColor: Colors.red,
+                                              textSize: size.width * 0.03,
+                                              textFontWeight: FontWeight.w400,
+                                              decoration: TextDecoration.none,
+                                            ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
-                            Padding(
-                              padding:
-                                  EdgeInsets.only(right: size.width * 0.045),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        nf.format(widget.budget.budgetValue -
-                                            total_spending),
-                                        style: TextStyle(
-                                          fontSize: size.width * 0.04,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      Text(
-                                        "đ",
-                                        style: TextStyle(
-                                          decoration: TextDecoration.underline,
-                                          fontSize: size.width * 0.04,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  (isOverSpending == false)
-                                      ? Text(
-                                          "Còn lại",
-                                          style: TextStyle(
-                                            fontSize: size.width * 0.03,
-                                            color: Colors.black,
-                                          ),
-                                        )
-                                      : Text(
-                                          "OverSpending",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: size.width * 0.03,
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                ],
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
               (listTransaction.isEmpty)
                   ? Container(
-                      padding: EdgeInsets.only(top: size.width * 0.5),
-                      alignment: Alignment.center,
+                      padding: EdgeInsets.only(top: size.width * 0.3),
                       child: Text(
                         "Không có giao dịch",
                         style: TextStyle(
@@ -345,145 +258,164 @@ class _BudgetDetailState extends State<BudgetDetail> {
                     )
                   : Container(
                       width: size.width,
-                      height: size.width * 1.31,
+                      height: size.width * 1.275,
                       child: ListView.builder(
-                          itemCount: 2,
+                          itemCount: 1,
                           itemBuilder: (context, index) {
                             return Padding(
-                              padding: EdgeInsets.only(top: size.width * 0.2),
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                    top: size.width * 0.02,
-                                    bottom: size.width * 0.02),
-                                width: size.width,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    width: size.width * 0.002,
-                                    color: Colors.black,
-                                  ),
+                              padding: EdgeInsets.only(top: size.width * 0.1),
+                              child: SingleRowContainer(
+                                boxDecoration: BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      offset: Offset(0, 0),
+                                      color: Colors.grey,
+                                      blurRadius: size.width * 0.02,
+                                    ),
+                                  ],
                                 ),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding:
-                                          EdgeInsets.all(size.width * 0.02),
-                                      width: size.width,
-                                      decoration: BoxDecoration(
-                                        border: Border(
-                                          bottom: BorderSide(
-                                            width: size.width * 0.002,
-                                            color: Colors.black,
+                                paddingTop: size.width * 0.01,
+                                paddingBottom: size.width * 0.01,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Container(
+                                        padding:
+                                            EdgeInsets.all(size.width * 0.02),
+                                        width: size.width,
+                                        decoration: BoxDecoration(
+                                          border: Border(
+                                            bottom: BorderSide(
+                                              width: size.width * 0.002,
+                                              color: Colors.black,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                right: size.width * 0.03),
-                                            child: Text(
-                                              "11",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: size.width * 0.07,
+                                        child: Row(
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  right: size.width * 0.03),
+                                              child: Text(
+                                                "11",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: size.width * 0.07,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          Expanded(
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text("Hôm nay"),
-                                                    Text("tháng 9 năm 2022"),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      "- ${nf.format(total_spending)}",
-                                                      style: TextStyle(
-                                                        fontSize:
-                                                            size.width * 0.05,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: size.width *
-                                                              0.03),
-                                                      child: Text(
-                                                        "đ",
-                                                        style: TextStyle(
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline,
-                                                          fontSize:
-                                                              size.width * 0.05,
-                                                          color: Colors.black,
+                                            Expanded(
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text("Hôm nay"),
+                                                      Text(
+                                                          "tháng ${widget.budget.endDate.month} năm 2022"),
+                                                    ],
+                                                  ),
+                                                  MoneyTextContainer(
+                                                    value: total_spending,
+                                                    textSize: size.width * 0.05,
+                                                    textFontWeight:
+                                                        FontWeight.w400,
+                                                    color: Colors.black,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        width: size.width,
+                                        height: size.width *
+                                            0.26 *
+                                            listTransaction.length,
+                                        child: ListView.builder(
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            itemCount: listTransaction.length,
+                                            itemBuilder: (context, index) {
+                                              return Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: size.width * 0.035),
+                                                child: InkWell(
+                                                  onTap: () async {
+                                                    await Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            TransactionDetail(
+                                                          listTransaction: widget
+                                                              .listTransaction,
+                                                          transaction:
+                                                              listTransaction
+                                                                  .elementAt(
+                                                            index,
+                                                          ),
                                                         ),
                                                       ),
+                                                    ).then((value) =>
+                                                        setState(() {
+                                                          if (value ==
+                                                              "Delete") {
+                                                            Fluttertoast.showToast(
+                                                                msg:
+                                                                    "Xóa giao dịch thành công !");
+                                                          } else if (value ==
+                                                              "Save") {
+                                                            Fluttertoast.showToast(
+                                                                msg:
+                                                                    "Thêm giao dịch thành công !");
+                                                          }
+                                                        }));
+                                                  },
+                                                  child: SingleRowContainer(
+                                                    boxDecoration:
+                                                        BoxDecoration(
+                                                      color: Colors.white,
+                                                      border: Border(
+                                                        top: BorderSide(
+                                                            width: size.width *
+                                                                0.0015,
+                                                            color:
+                                                                Colors.black),
+                                                        bottom: BorderSide(
+                                                            width: size.width *
+                                                                0.0015,
+                                                            color:
+                                                                Colors.black),
+                                                      ),
                                                     ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      width: size.width,
-                                      height: size.width *
-                                          0.23 *
-                                          listTransaction.length,
-                                      child: ListView.builder(
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          itemCount: listTransaction.length,
-                                          itemBuilder: (context, index) {
-                                            return Padding(
-                                              padding: EdgeInsets.only(
-                                                  top: size.width * 0.02),
-                                              child: InkWell(
-                                                onTap: () {},
-                                                child: Container(
-                                                  padding: EdgeInsets.all(
-                                                      size.width * 0.02),
-                                                  width: size.width,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
+                                                    paddingTop:
+                                                        size.width * 0.02,
+                                                    paddingBottom:
+                                                        size.width * 0.02,
                                                     children: [
                                                       Container(
-                                                        padding: EdgeInsets.all(
-                                                            size.width * 0.05),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          color: Colors
-                                                                  .primaries[
-                                                              _random.nextInt(
-                                                                  Colors
-                                                                      .primaries
-                                                                      .length)][_random
-                                                                  .nextInt(9) *
-                                                              100],
-                                                        ),
-                                                        child: SvgPicture.asset(
-                                                          listTransaction
-                                                              .elementAt(index)
-                                                              .rap
-                                                              .rapUrlImage,
-                                                          width:
-                                                              size.width * 0.07,
+                                                        width: size.width * 0.2,
+                                                        child:
+                                                            CircleIconContainer(
+                                                          urlImage:
+                                                              listTransaction
+                                                                  .elementAt(
+                                                                      index)
+                                                                  .rap
+                                                                  .rapUrlImage,
+                                                          iconSize:
+                                                              size.width * 0.08,
+                                                          backgroundColor: Colors
+                                                              .lightGreenAccent,
+                                                          padding: size.width *
+                                                              0.045,
                                                         ),
                                                       ),
                                                       Container(
@@ -500,9 +432,6 @@ class _BudgetDetailState extends State<BudgetDetail> {
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
                                                                       .start,
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
                                                                       .spaceBetween,
@@ -512,65 +441,60 @@ class _BudgetDetailState extends State<BudgetDetail> {
                                                                       bottom: size
                                                                               .width *
                                                                           0.03),
-                                                                  child: Text(
-                                                                    listTransaction
+                                                                  child:
+                                                                      TextContainer(
+                                                                    text: listTransaction
                                                                         .elementAt(
                                                                             index)
-                                                                        .transactionName,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontSize:
-                                                                          size.width *
-                                                                              0.045,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                    ),
+                                                                        .rap
+                                                                        .rapName,
+                                                                    textColor:
+                                                                        Colors
+                                                                            .black,
+                                                                    textSize:
+                                                                        size.width *
+                                                                            0.045,
+                                                                    textFontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    decoration:
+                                                                        TextDecoration
+                                                                            .none,
                                                                   ),
                                                                 ),
-                                                                Text("Đã chi"),
-                                                              ],
-                                                            ),
-                                                            Row(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .end,
-                                                              children: [
-                                                                Text(
-                                                                  (nf.format(listTransaction
+                                                                TextContainer(
+                                                                  text: df.format(listTransaction
                                                                       .elementAt(
                                                                           index)
-                                                                      .transactionValue)),
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .red,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                  ),
+                                                                      .createDate),
+                                                                  textColor:
+                                                                      Colors
+                                                                          .black,
+                                                                  textSize:
+                                                                      size.width *
+                                                                          0.03,
+                                                                  textFontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  decoration:
+                                                                      TextDecoration
+                                                                          .none,
                                                                 ),
-                                                                Padding(
-                                                                  padding: EdgeInsets.only(
-                                                                      left: size
-                                                                              .width *
-                                                                          0.01),
-                                                                  child: Text(
-                                                                    "đ",
-                                                                    style:
-                                                                        TextStyle(
-                                                                      decoration:
-                                                                          TextDecoration
-                                                                              .underline,
-                                                                      color: Colors
-                                                                          .red,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                    ),
-                                                                  ),
-                                                                ),
+                                                                // Text("Đã chi"),
                                                               ],
+                                                            ),
+                                                            MoneyTextContainer(
+                                                              value: listTransaction
+                                                                  .elementAt(
+                                                                      index)
+                                                                  .transactionValue,
+                                                              textSize:
+                                                                  size.width *
+                                                                      0.035,
+                                                              textFontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color: Colors.red,
                                                             ),
                                                           ],
                                                         ),
@@ -578,12 +502,12 @@ class _BudgetDetailState extends State<BudgetDetail> {
                                                     ],
                                                   ),
                                                 ),
-                                              ),
-                                            );
-                                          }),
-                                    ),
-                                  ],
-                                ),
+                                              );
+                                            }),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             );
                           }),

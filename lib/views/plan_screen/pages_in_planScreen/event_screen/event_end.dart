@@ -1,15 +1,25 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:graduation_thesis_project/dao/envent_dao.dart';
 import 'package:graduation_thesis_project/model/Event.dart';
+import 'package:graduation_thesis_project/model/Transaction.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/single_row_container.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_detail.dart';
 import 'package:intl/intl.dart';
 
 class EventEnd extends StatefulWidget {
   final List<Event> listEvent;
+  final List<Transactions> listTransaction;
 
   const EventEnd({
     Key? key,
     required this.listEvent,
+    required this.listTransaction,
   }) : super(key: key);
 
   @override
@@ -17,22 +27,28 @@ class EventEnd extends StatefulWidget {
 }
 
 class _EventEndState extends State<EventEnd> {
-  bool isEmpty = false;
   final _random = Random();
-  final nf = NumberFormat("###,###");
+  final NumberFormat nf = NumberFormat("###,###");
+  final List<Event> lsEventEnd = [];
 
   @override
   Widget build(BuildContext context) {
+    lsEventEnd.clear();
     Size size = MediaQuery.of(context).size;
+    widget.listEvent.forEach((element) {
+      if (element.status == true) lsEventEnd.add(element);
+    });
+
+    print(lsEventEnd.length);
     return Scaffold(
-      body: isEmpty
+      body: lsEventEnd.isEmpty
           ? Container(
               alignment: Alignment.center,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset(
-                    "icons/icons_1/calendar_icon_3.png",
+                  SvgPicture.asset(
+                    "images/CalendarIcon_2.svg",
                     width: size.width * 0.5,
                   ),
                   Text(
@@ -44,15 +60,13 @@ class _EventEndState extends State<EventEnd> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: size.width*0.03),
+                    padding: EdgeInsets.only(top: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text("Chọn nút "),
                         Padding(
-                          padding: EdgeInsets.only(
-                              left: size.width * 0.01,
-                              right: size.width * 0.01),
+                          padding: EdgeInsets.only(left: 10, right: 10),
                           child: Container(
                             width: size.width * 0.13,
                             padding: EdgeInsets.only(
@@ -86,10 +100,11 @@ class _EventEndState extends State<EventEnd> {
           : Container(
               width: size.width,
               child: ListView.builder(
-                  itemCount: widget.listEvent.length,
+                  itemCount: lsEventEnd.length,
                   itemBuilder: (context, index) {
-                    return widget.listEvent.elementAt(index).status
-                        ? Padding(
+                    return (lsEventEnd.elementAt(index).status == false)
+                        ? Container()
+                        : Padding(
                             padding: EdgeInsets.only(top: size.width * 0.07),
                             child: InkWell(
                               onTap: () async {
@@ -97,113 +112,98 @@ class _EventEndState extends State<EventEnd> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => EventDetail(
-                                      event: widget.listEvent.elementAt(index),
+                                      event: lsEventEnd.elementAt(index),
                                       listEvent: widget.listEvent,
-                                      index: index,
                                     ),
                                   ),
                                 ).then((value) => setState(() {
-                                      widget.listEvent.elementAt(index).status =
-                                          value;
+                                      if (value == "Delete") {
+                                        Fluttertoast.showToast(
+                                            msg: "Xóa sự kiện thành công !");
+                                      } else if (value == "Save") {
+                                        Fluttertoast.showToast(
+                                            msg: "Thêm sự kiện thành công !");
+                                      }
                                     }));
                               },
-                              child: Container(
-                                padding: EdgeInsets.all(size.width * 0.02),
-                                width: size.width,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
+                              child: SingleRowContainer(
+                                boxDecoration: BoxDecoration(
                                   border: Border.all(
-                                    width: size.width * 0.001,
-                                    color: Colors.black,
+                                      width: size.width * 0.001,
+                                      color: Colors.black),
+                                ),
+                                paddingTop: size.width * 0.02,
+                                paddingBottom: size.width * 0.02,
+                                children: [
+                                  Container(
+                                    width: size.width * 0.2,
+                                    child: CircleIconContainer(
+                                      urlImage:
+                                          lsEventEnd.elementAt(index).urlImage,
+                                      iconSize: size.width * 0.073,
+                                      backgroundColor: Colors.lightGreenAccent,
+                                      padding: size.width*0.045,
+                                    ),
                                   ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      padding:
-                                          EdgeInsets.all(size.width * 0.05),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.primaries[_random.nextInt(
-                                                Colors.primaries.length)]
-                                            [_random.nextInt(9) * 100],
-                                      ),
-                                      child: Image.asset(
-                                        "icons/icons_1/wallet_icon_1.png",
-                                        width: size.width * 0.06,
-                                      ),
-                                    ),
-                                    Container(
-                                      width: size.width * 0.7,
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    bottom: size.width * 0.03),
-                                                child: Text(
-                                                  widget.listEvent
-                                                      .elementAt(index)
-                                                      .eventName,
-                                                  style: TextStyle(
-                                                    fontSize:
-                                                        size.width * 0.045,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ),
-                                              Text("Đã chi"),
-                                            ],
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Text(
-                                                (nf.format(widget.listEvent
+                                  Container(
+                                    width: size.width * 0.7,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  bottom: size.width * 0.03),
+                                              child: TextContainer(
+                                                text: lsEventEnd
                                                     .elementAt(index)
-                                                    .totalSpending)),
-                                                style: TextStyle(
-                                                  color: Colors.red,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                                    .eventName,
+                                                textColor: Colors.black,
+                                                textSize: size.width * 0.045,
+                                                textFontWeight: FontWeight.w500,
+                                                decoration: TextDecoration.none,
                                               ),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: size.width * 0.01),
-                                                child: Text(
-                                                  "đ",
-                                                  style: TextStyle(
-                                                    decoration: TextDecoration
-                                                        .underline,
-                                                    color: Colors.red,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                            ),
+                                            Text("Đã chi"),
+                                          ],
+                                        ),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            TextContainer(
+                                              text: nf.format(lsEventEnd
+                                                  .elementAt(index)
+                                                  .totalSpending),
+                                              textColor: Colors.red,
+                                              textSize: size.width * 0.035,
+                                              textFontWeight: FontWeight.w500,
+                                              decoration: TextDecoration.none,
+                                            ),
+                                            TextContainer(
+                                              text: " đ",
+                                              textColor: Colors.red,
+                                              textSize: size.width * 0.035,
+                                              textFontWeight: FontWeight.w500,
+                                              decoration: TextDecoration.none,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
-                          )
-                        : Container();
+                          );
                   }),
             ),
     );

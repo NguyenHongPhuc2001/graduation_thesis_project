@@ -5,15 +5,22 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_thesis_project/dao/envent_dao.dart';
 import 'package:graduation_thesis_project/model/Event.dart';
+import 'package:graduation_thesis_project/model/Transaction.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/money_text_container.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/single_row_container.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_detail.dart';
 import 'package:intl/intl.dart';
 
 class EventHappening extends StatefulWidget {
   final List<Event> listEvent;
+  final List<Transactions> listTransaction;
 
   const EventHappening({
     Key? key,
     required this.listEvent,
+    required this.listTransaction,
   }) : super(key: key);
 
   @override
@@ -25,19 +32,25 @@ class _EventHappeningState extends State<EventHappening> {
 
   final _random = Random();
   final NumberFormat nf = NumberFormat("###,###");
+  final List<Event> lsEventHappenning = [];
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    lsEventHappenning.clear();
+    widget.listEvent.forEach((element) {
+      if (element.status == false) lsEventHappenning.add(element);
+    });
+
     return Scaffold(
-      body: isEmpty
+      body: lsEventHappenning.isEmpty
           ? Container(
               alignment: Alignment.center,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset(
-                    "icons/icons_1/calendar_icon_3.png",
+                  SvgPicture.asset(
+                    "images/CalendarIcon_2.svg",
                     width: size.width * 0.5,
                   ),
                   Text(
@@ -89,9 +102,9 @@ class _EventHappeningState extends State<EventHappening> {
           : Container(
               width: size.width,
               child: ListView.builder(
-                  itemCount: widget.listEvent.length,
+                  itemCount: lsEventHappenning.length,
                   itemBuilder: (context, index) {
-                    return widget.listEvent.elementAt(index).status
+                    return lsEventHappenning.elementAt(index).status
                         ? Container()
                         : Padding(
                             padding: EdgeInsets.only(top: size.width * 0.07),
@@ -101,8 +114,7 @@ class _EventHappeningState extends State<EventHappening> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => EventDetail(
-                                      index: index,
-                                      event: widget.listEvent.elementAt(index),
+                                      event: lsEventHappenning.elementAt(index),
                                       listEvent: widget.listEvent,
                                     ),
                                   ),
@@ -116,101 +128,68 @@ class _EventHappeningState extends State<EventHappening> {
                                       }
                                     }));
                               },
-                              child: Container(
-                                padding: EdgeInsets.all(size.width * 0.02),
-                                width: size.width,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
+                              child: SingleRowContainer(
+                                boxDecoration: BoxDecoration(
                                   border: Border.all(
-                                    width: size.width * 0.001,
-                                    color: Colors.black,
+                                      width: size.width * 0.001,
+                                      color: Colors.black),
+                                ),
+                                paddingTop: size.width * 0.02,
+                                paddingBottom: size.width * 0.02,
+                                children: [
+                                  Container(
+                                    width: size.width * 0.2,
+                                    child: CircleIconContainer(
+                                      urlImage: lsEventHappenning
+                                          .elementAt(index)
+                                          .urlImage,
+                                      iconSize: size.width * 0.08,
+                                      backgroundColor: Colors.lightGreenAccent,
+                                      padding: size.width*0.045,
+                                    ),
                                   ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      padding:
-                                          EdgeInsets.all(size.width * 0.05),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.primaries[_random.nextInt(
-                                                Colors.primaries.length)]
-                                            [_random.nextInt(9) * 100],
-                                      ),
-                                      child: SvgPicture.asset(
-                                        widget.listEvent
-                                            .elementAt(index)
-                                            .urlImage,
-                                        width: size.width * 0.07,
-                                      ),
-                                    ),
-                                    Container(
-                                      width: size.width * 0.7,
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    bottom: size.width * 0.03),
-                                                child: Text(
-                                                  widget.listEvent
-                                                      .elementAt(index)
-                                                      .eventName,
-                                                  style: TextStyle(
-                                                    fontSize:
-                                                        size.width * 0.045,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ),
-                                              Text("Đã chi"),
-                                            ],
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Text(
-                                                (nf.format(widget.listEvent
+                                  Container(
+                                    width: size.width * 0.7,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  bottom: size.width * 0.03),
+                                              child: TextContainer(
+                                                text: lsEventHappenning
                                                     .elementAt(index)
-                                                    .totalSpending)),
-                                                style: TextStyle(
-                                                  color: Colors.red,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                                    .eventName,
+                                                textColor: Colors.black,
+                                                textSize: size.width * 0.045,
+                                                textFontWeight: FontWeight.w500,
+                                                decoration: TextDecoration.none,
                                               ),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: size.width * 0.01),
-                                                child: Text(
-                                                  "đ",
-                                                  style: TextStyle(
-                                                    decoration: TextDecoration
-                                                        .underline,
-                                                    color: Colors.red,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                            ),
+                                            Text("Đã chi"),
+                                          ],
+                                        ),
+                                        MoneyTextContainer(
+                                          value: lsEventHappenning
+                                              .elementAt(index)
+                                              .totalSpending,
+                                          textSize: size.width * 0.035,
+                                          textFontWeight: FontWeight.w500,
+                                          color: Colors.red,
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           );

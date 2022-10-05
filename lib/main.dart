@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_thesis_project/dao/transaction_dao.dart';
+import 'package:graduation_thesis_project/model/Transaction.dart';
 import 'package:graduation_thesis_project/ui/about_us.dart';
 import 'package:graduation_thesis_project/ui/account_management.dart';
 import 'package:graduation_thesis_project/ui/change_password.dart';
@@ -13,10 +15,14 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

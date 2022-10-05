@@ -12,7 +12,12 @@ import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_screen.dart';
 
 class PlanMainScreen extends StatefulWidget {
-  const PlanMainScreen({Key? key}) : super(key: key);
+  final List<Transactions> listTransaction;
+
+  const PlanMainScreen({
+    Key? key,
+    required this.listTransaction,
+  }) : super(key: key);
 
   @override
   State<PlanMainScreen> createState() => _PlanMainScreenState();
@@ -23,7 +28,6 @@ class _PlanMainScreenState extends State<PlanMainScreen> {
   final List<Event> listEvent = EventDAO().getAllEvent();
   final List<Target> listTarget = TargetDAO().getAll();
   final List<Budget> listBudget = BudgetDAO().getAll();
-  final List<Transactions> listTransaction = TransactionDAO().getAll();
 
   @override
   Widget build(BuildContext context) {
@@ -97,12 +101,13 @@ class _PlanMainScreenState extends State<PlanMainScreen> {
               return BudgetScreen(
                 pageController: _pageController,
                 listBudget: listBudget,
-                listTransaction: listTransaction,
+                listTransaction: widget.listTransaction,
               );
             } else if (position == 2) {
               return EventScreen(
                 pageController: _pageController,
                 listEvent: listEvent,
+                listTransaction: widget.listTransaction,
               );
             } else {
               return TargetScreen(

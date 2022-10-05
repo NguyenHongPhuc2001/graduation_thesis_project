@@ -8,8 +8,9 @@ import 'package:graduation_thesis_project/dao/budget_dao.dart';
 import 'package:graduation_thesis_project/dao/wallet_dao.dart';
 import 'package:graduation_thesis_project/model/Budget.dart';
 import 'package:graduation_thesis_project/model/Wallet.dart';
-import 'package:graduation_thesis_project/views/plan_screen/commons/pages/select_wallet.dart';
 import 'package:intl/intl.dart';
+
+import '../../../commons/pages/select_wallet.dart';
 
 
 class UpdateBudget extends StatefulWidget {

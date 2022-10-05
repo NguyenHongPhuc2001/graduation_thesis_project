@@ -6,21 +6,28 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:graduation_thesis_project/dao/budget_dao.dart';
 import 'package:graduation_thesis_project/dao/rap_dao.dart';
+import 'package:graduation_thesis_project/dao/transaction_dao.dart';
 import 'package:graduation_thesis_project/dao/wallet_dao.dart';
 import 'package:graduation_thesis_project/model/Budget.dart';
 import 'package:graduation_thesis_project/model/RAP.dart';
+import 'package:graduation_thesis_project/model/Transaction.dart';
 import 'package:graduation_thesis_project/model/Wallet.dart';
-import 'package:graduation_thesis_project/views/plan_screen/commons/pages/select_wallet.dart';
+import 'package:graduation_thesis_project/views/page/transaction.dart';
+import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_screen.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_select_rap.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
+import '../../../commons/pages/select_wallet.dart';
+
 class AddBudget extends StatefulWidget {
   final List<Budget> listBudget;
+  final RAP? rapFromTransaction;
 
   const AddBudget({
     Key? key,
     required this.listBudget,
+    this.rapFromTransaction,
   }) : super(key: key);
 
   @override
@@ -41,6 +48,8 @@ class _AddBudgetState extends State<AddBudget> {
   String budgetValue = "";
   final List<Wallet> listWallet = WalletDAO().getAllWallet();
   final List<RAP> listRAP = RAPDAO().getAll();
+  final pageController = PageController();
+  final List<Transactions> listTransaction = TransactionDAO().getAll();
 
   Budget newBudget = BudgetDAO().bg1;
   Wallet wallet = WalletDAO().wl1;
@@ -57,7 +66,9 @@ class _AddBudgetState extends State<AddBudget> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery
+        .of(context)
+        .size;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -92,22 +103,36 @@ class _AddBudgetState extends State<AddBudget> {
             onPressed: () {
               setState(() {
                 newBudget.id = widget.listBudget.length + 1;
+
                 newBudget.budgetValue = _budgetMoneyController.numberValue;
-                newBudget.rap = rap;
+
+                if (widget.rapFromTransaction == null)
+                  newBudget.rap = rap;
+                else
+                  newBudget.rap = widget.rapFromTransaction!;
+
                 if (dateTime != null) newBudget.endDate = dateTime;
+
                 newBudget.wallet = wallet;
+
                 newBudget.createDate = DateTime.now();
+
                 newBudget.status = false;
               });
               widget.listBudget.add(newBudget);
-              Navigator.pop(context, "Save");
+              Navigator.of(context).pushReplacement<BudgetScreen, String>(
+                  MaterialPageRoute(builder: (context) =>
+                      BudgetScreen(pageController: pageController,
+                          listBudget: widget.listBudget,
+                          listTransaction: listTransaction)), result: "Save");
             },
           ),
         ],
       ),
       body: Column(
         children: [
-          Padding(
+          ((widget.rapFromTransaction == null) == true)
+              ? Padding(
             padding: EdgeInsets.only(top: size.width * 0.1),
             child: Container(
               padding: EdgeInsets.only(left: size.width * 0.04),
@@ -127,7 +152,8 @@ class _AddBudgetState extends State<AddBudget> {
                       MaterialPageRoute(
                         builder: (context) => SelectRap(),
                       ),
-                    ).then((value) => setState(() {
+                    ).then((value) =>
+                        setState(() {
                           rap = value as RAP;
                         }));
                   },
@@ -137,9 +163,9 @@ class _AddBudgetState extends State<AddBudget> {
                         padding: EdgeInsets.all(size.width * 0.03),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.primaries[
-                                  _random.nextInt(Colors.primaries.length)]
-                              [_random.nextInt(9) * 100],
+                          color: Colors.primaries[_random
+                              .nextInt(Colors.primaries.length)]
+                          [_random.nextInt(9) * 100],
                         ),
                         child: SvgPicture.asset(
                           rap.rapUrlImage,
@@ -169,6 +195,60 @@ class _AddBudgetState extends State<AddBudget> {
                       ),
                     ],
                   ),
+                ),
+              ),
+            ),
+          )
+              : Padding(
+            padding: EdgeInsets.only(top: size.width * 0.1),
+            child: Container(
+              padding: EdgeInsets.only(left: size.width * 0.04),
+              height: size.width * 0.2,
+              width: size.width,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: size.width * 0.001,
+                  color: Colors.black,
+                ),
+              ),
+              child: IntrinsicHeight(
+                child: Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(size.width * 0.03),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.primaries[
+                        _random.nextInt(Colors.primaries.length)]
+                        [_random.nextInt(9) * 100],
+                      ),
+                      child: SvgPicture.asset(
+                        widget.rapFromTransaction!.rapUrlImage,
+                        width: size.width * 0.09,
+                      ),
+                    ),
+                    VerticalDivider(
+                      thickness: size.width * 0.001,
+                      color: Colors.black,
+                      width: size.width * 0.1,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.rapFromTransaction!.rapName,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: size.width * 0.07,
+                              decoration: TextDecoration.none,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -246,21 +326,21 @@ class _AddBudgetState extends State<AddBudget> {
                       Expanded(
                         child: dateTime == null
                             ? Text(
-                                df.format(DateTime.now()),
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: size.width * 0.07,
-                                  decoration: TextDecoration.none,
-                                ),
-                              )
+                          df.format(DateTime.now()),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: size.width * 0.07,
+                            decoration: TextDecoration.none,
+                          ),
+                        )
                             : Text(
-                                df.format(dateTime),
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: size.width * 0.07,
-                                  decoration: TextDecoration.none,
-                                ),
-                              ),
+                          df.format(dateTime),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: size.width * 0.07,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -316,7 +396,7 @@ class _AddBudgetState extends State<AddBudget> {
                                 visible: _onTextClick,
                                 child: Padding(
                                   padding:
-                                      EdgeInsets.only(right: size.width * 0.03),
+                                  EdgeInsets.only(right: size.width * 0.03),
                                   child: _textInTargetDetail(
                                     text: "đ",
                                     textColor: Color(0xff8AC926),
@@ -384,7 +464,8 @@ class _AddBudgetState extends State<AddBudget> {
                         builder: (context) =>
                             SelectWallet(listWallet: listWallet),
                       ),
-                    ).then((value) => setState(() {
+                    ).then((value) =>
+                        setState(() {
                           wallet = value as Wallet;
                           // widget.budget.wallet = wallet;
                         }));
@@ -431,7 +512,9 @@ class _AddBudgetState extends State<AddBudget> {
   }
 
   _showCalendarDialog() {
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery
+        .of(context)
+        .size;
     showDialog(
         context: context,
         builder: (context) {
