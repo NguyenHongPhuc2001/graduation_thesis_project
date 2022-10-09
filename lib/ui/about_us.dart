@@ -12,9 +12,6 @@ class _AboutUsState extends State<AboutUs> {
 
   @override
   Widget build(BuildContext context) {
-
-    Size size = MediaQuery.of(context).size;
-
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: const Color(0xE9ECEFED),

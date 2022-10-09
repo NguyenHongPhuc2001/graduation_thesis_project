@@ -7,6 +7,7 @@ import 'package:graduation_thesis_project/ui/signup.dart';
 import 'package:graduation_thesis_project/ui/wallet_create.dart';
 import 'package:graduation_thesis_project/ui/wallet_list.dart';
 import 'package:graduation_thesis_project/ui/wallet_setting.dart';
+import 'package:graduation_thesis_project/views/page/overview.dart';
 import 'home.dart';
 
 void main() {
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: Home(),
+      home: const Overview(),
     );
   }
 }
