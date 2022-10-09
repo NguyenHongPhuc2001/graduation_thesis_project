@@ -4,7 +4,6 @@ import 'Wallet.dart';
 
 class Transactions {
   int id;
-  String transactionName;
   double transactionValue;
   DateTime createDate;
   RAP rap;
@@ -14,7 +13,6 @@ class Transactions {
 
   Transactions({
     required this.id,
-    required this.transactionName,
     required this.transactionNote,
     required this.transactionValue,
     required this.createDate,
@@ -25,7 +23,6 @@ class Transactions {
 
   Transactions.fromMap(Map<String, dynamic> data)
       : id = data["id"],
-        transactionName = data["transactionName"],
         transactionNote = data["transactionNote"],
         transactionValue = data["transactionValue"],
         createDate = data["createDate"],
@@ -36,7 +33,6 @@ class Transactions {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'transactionName': transactionName,
       'transactionNote': transactionNote,
       'transactionValue': transactionValue,
       'createDate': createDate,

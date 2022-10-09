@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:graduation_thesis_project/dao/envent_dao.dart';
 import 'package:graduation_thesis_project/model/Event.dart';
+import 'package:graduation_thesis_project/model/Transaction.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/appbar_container.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_addEvent.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_end.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_happening.dart';
@@ -11,14 +12,14 @@ class EventScreen extends StatefulWidget {
   final PageController pageController;
   final List<Event> listEvent;
   final Event? event;
-  final String checkInserDelete;
+  final List<Transactions> listTransaction;
 
   const EventScreen({
     Key? key,
     required this.pageController,
     required this.listEvent,
     this.event,
-    this.checkInserDelete = "",
+    required this.listTransaction,
   }) : super(key: key);
 
   @override
@@ -26,11 +27,10 @@ class EventScreen extends StatefulWidget {
 }
 
 class _EventScreenState extends State<EventScreen> {
-  final PageController _pageController = PageController();
+  final _eventPageController = PageController();
   bool statusOfInsert = false;
   int nbBeforInsert = 0, nbAfterInsert = 0;
   List<Event> ls = [];
-
 
   @override
   Widget build(BuildContext context) {
@@ -40,129 +40,44 @@ class _EventScreenState extends State<EventScreen> {
       child: DefaultTabController(
         length: 2,
         child: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: size.width * 0.23,
-            flexibleSpace: Column(
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          widget.pageController.jumpToPage(0);
-                        });
-                      },
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Container(
-                      width: size.width * 0.75,
-                      child: Text(
-                        "Sự kiện",
-                        style: TextStyle(
-                          fontSize: size.width * 0.075,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: size.width * 0.02),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(size.width * 0.1),
-                      color: Colors.blue,
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        customBorder: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(size.width * 0.1),
-                        ),
-                        onTap: () async {
-                          final data = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddEvent(
-                                listEvent: widget.listEvent,
-                                status: statusOfInsert,
-                              ),
-                            ),
-                          ).then((value) => setState(() {
-                            if(value == "Save")
-                              Fluttertoast.showToast(msg:"Thêm thành công !");
-                          }));
-
-                        },
-                        child: Container(
-                          width: size.width * 0.3,
-                          padding: EdgeInsets.only(
-                              top: size.width * 0.02,
-                              bottom: size.width * 0.02,
-                              right: size.width * 0.05,
-                              left: size.width * 0.05),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(size.width * 0.1),
-                          ),
-                          child: Text(
-                            "Thêm",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: size.width * 0.05,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
+          appBar: PreferredSize(
+            preferredSize: Size(size.width, size.width * 0.35),
+            child: AppBarContainer(
+              text: "Sự kiện",
+              screenPageController: _eventPageController,
+              pageController: widget.pageController,
+              onTap: () async {
+                final data = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddEvent(
+                      listEvent: widget.listEvent,
+                      status: statusOfInsert,
                     ),
                   ),
-                ),
-              ],
-            ),
-            backgroundColor: Colors.white,
-            bottom: TabBar(
-              onTap: (indexTab) {
-                _pageController.jumpToPage(indexTab);
+                ).then((value) => setState(() {
+                  if (value == "Save")
+                    Fluttertoast.showToast(
+                        msg: "Thêm thành công !");
+                }));
               },
-              labelColor: Colors.black,
-              unselectedLabelColor: Colors.grey,
-              labelStyle: TextStyle(
-                fontSize: size.width * 0.045,
-                fontWeight: FontWeight.bold,
-              ),
-              indicatorColor: Colors.black,
-              indicatorWeight: 3,
-              tabs: [
-                Padding(
-                  padding: EdgeInsets.all(5),
-                  child: Text("Đang diễn ra"),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(5),
-                  child: Text("Đã kết thúc"),
-                ),
-              ],
             ),
           ),
           body: PageView.builder(
-              controller: _pageController,
+              controller: _eventPageController,
               itemCount: 2,
               itemBuilder: (context, pagePosition) {
                 if (pagePosition == 0)
                   return EventHappening(
+                    listTransaction: widget.listTransaction,
                     listEvent: widget.listEvent,
                   );
-                else
+                else {
                   return EventEnd(
+                    listTransaction: widget.listTransaction,
                     listEvent: widget.listEvent,
                   );
+                }
               }),
         ),
       ),

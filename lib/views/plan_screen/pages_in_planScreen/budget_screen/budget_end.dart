@@ -5,6 +5,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_thesis_project/model/Budget.dart';
 import 'package:graduation_thesis_project/model/Transaction.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/single_row_container.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_detail.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -120,8 +123,7 @@ class _BudgetEndState extends State<BudgetEnd> {
 
                     }
                     return Padding(
-                      padding: EdgeInsets.only(
-                          top: size.width * 0.07, bottom: size.width * 0.07),
+                      padding: EdgeInsets.only(top: size.width * 0.07),
                       child: InkWell(
                         onTap: () async {
                           await Navigator.push(
@@ -134,72 +136,52 @@ class _BudgetEndState extends State<BudgetEnd> {
                               ),
                             ),
                           ).then((value) => setState(() {
-                                if (value == "Delete")
-                                  Fluttertoast.showToast(
-                                      msg: "Xóa ngân sách thành công !");
-                              }));
+                            if (value == "Delete")
+                              Fluttertoast.showToast(
+                                  msg: "Xóa ngân sách thành công !");
+                          }));
                         },
-                        child: Container(
-                          padding: EdgeInsets.only(
-                              top: size.width * 0.02,
-                              bottom: size.width * 0.02),
-                          width: size.width,
-                          decoration: BoxDecoration(
+                        child: SingleRowContainer(
+                          boxDecoration: BoxDecoration(
                             border: Border.all(
-                              width: size.width * 0.001,
-                              color: Colors.black,
-                            ),
+                                width: size.width * 0.001,
+                                color: Colors.black),
                           ),
-                          child: Row(
+                            paddingTop: size.width * 0.02,
+                            paddingBottom: size.width * 0.02,
                             children: [
-                              Padding(
-                                padding: EdgeInsets.all(size.width * 0.02),
-                                child: Container(
-                                  padding: EdgeInsets.all(size.width * 0.04),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.primaries[_random
-                                            .nextInt(Colors.primaries.length)]
-                                        [_random.nextInt(9) * 100],
-                                  ),
-                                  child: (listBudgetEnd
-                                              .elementAt(index)
-                                              .rap
-                                              .rapUrlImage ==
-                                          "")
-                                      ? Icon(
-                                          Icons.question_mark,
-                                          color: Colors.grey,
-                                          size: size.width * 0.08,
-                                        )
-                                      : SvgPicture.asset(
-                                          listBudgetEnd
-                                              .elementAt(index)
-                                              .rap
-                                              .rapUrlImage,
-                                          width: size.width * 0.08,
-                                        ),
+                              Container(
+                                width: size.width * 0.23,
+                                child: CircleIconContainer(
+                                  urlImage: listBudgetEnd
+                                      .elementAt(index)
+                                      .rap
+                                      .rapUrlImage,
+                                  iconSize: size.width * 0.1,
+                                  backgroundColor: Colors.orange,
+                                  padding: size.width*0.045,
                                 ),
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        left: size.width * 0.02),
-                                    child: Container(
-                                      width: size.width * 0.77,
+                              Container(
+                                width: size.width * 0.76,
+                                padding:
+                                EdgeInsets.only(right: size.width * 0.02),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(left: size.width*0.025),
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                         children: [
                                           Column(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.start,
+                                                MainAxisAlignment.start,
                                                 children: [
                                                   Text(
                                                     listBudgetEnd
@@ -209,18 +191,23 @@ class _BudgetEndState extends State<BudgetEnd> {
                                                     style: TextStyle(
                                                       color: Colors.black,
                                                       fontWeight:
-                                                          FontWeight.bold,
+                                                      FontWeight.bold,
                                                       fontSize:
-                                                          size.width * 0.05,
+                                                      size.width * 0.05,
                                                     ),
                                                   ),
                                                   Padding(
-                                                    padding: EdgeInsets.only(left: size.width*0.03),
+                                                    padding: EdgeInsets.only(
+                                                        left:
+                                                        size.width * 0.03),
                                                     child: Visibility(
-                                                      visible: isOverSpending? true:false,
+                                                      visible: isOverSpending
+                                                          ? true
+                                                          : false,
                                                       child: SvgPicture.asset(
                                                         "images/WarningIcon.svg",
-                                                        width: size.width * 0.045,
+                                                        width:
+                                                        size.width * 0.045,
                                                       ),
                                                     ),
                                                   ),
@@ -245,294 +232,269 @@ class _BudgetEndState extends State<BudgetEnd> {
                                         ],
                                       ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        left: size.width * 0.02,
-                                        top: size.width * 0.01,
-                                        bottom: size.width * 0.01),
-                                    child: Container(
-                                      width: size.width * 0.713,
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: size.width * 0.025,
+                                          top: size.width * 0.01,
+                                          bottom: size.width * 0.01),
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Container(
-                                            child: Row(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      nf.format(totalSpending),
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize:
-                                                            size.width * 0.03,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: size.width *
-                                                              0.007,
-                                                          right: size.width *
-                                                              0.015),
-                                                      child: Text(
-                                                        "đ",
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize:
-                                                              size.width * 0.03,
-                                                          color: Colors.black,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      ((percentSpending -
-                                                                      percentSpending
-                                                                          .toInt() ==
-                                                                  0) ==
-                                                              true)
-                                                          ? "${percentSpending.toInt().toStringAsFixed(1)}"
-                                                          : "${percentSpending.toStringAsFixed(1)}",
-                                                      style: TextStyle(
-                                                        fontSize:
-                                                            size.width * 0.03,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      "%",
-                                                      style: TextStyle(
-                                                        fontSize:
-                                                            size.width * 0.03,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )
-                                              ],
-                                            ),
+                                          Row(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  TextContainer(
+                                                    text: nf
+                                                        .format(totalSpending),
+                                                    textColor: Colors.black,
+                                                    textSize: size.width * 0.03,
+                                                    textFontWeight:
+                                                    FontWeight.bold,
+                                                    decoration:
+                                                    TextDecoration.none,
+                                                  ),
+                                                  TextContainer(
+                                                    text: " đ  ",
+                                                    textColor: Colors.black,
+                                                    textSize: size.width * 0.03,
+                                                    textFontWeight:
+                                                    FontWeight.bold,
+                                                    decoration: TextDecoration
+                                                        .underline,
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  TextContainer(
+                                                    text: ((percentSpending -
+                                                        percentSpending
+                                                            .toInt() ==
+                                                        0) ==
+                                                        true)
+                                                        ? "${percentSpending.toInt().toStringAsFixed(1)}"
+                                                        : "${percentSpending.toStringAsFixed(1)}",
+                                                    textColor: Colors.black,
+                                                    textSize: size.width * 0.03,
+                                                    textFontWeight:
+                                                    FontWeight.w400,
+                                                    decoration:
+                                                    TextDecoration.none,
+                                                  ),
+                                                  TextContainer(
+                                                    text: "%",
+                                                    textColor: Colors.black,
+                                                    textSize: size.width * 0.03,
+                                                    textFontWeight:
+                                                    FontWeight.w400,
+                                                    decoration: TextDecoration
+                                                        .none,
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
-                                          Container(
+                                          Padding(
+                                            padding: EdgeInsets.only(right: size.width*0.023),
                                             child: Row(
                                               children: [
                                                 Row(
                                                   children: [
-                                                    Text(
-                                                      nf.format(listBudgetEnd
-                                                              .elementAt(index)
+                                                    TextContainer(
+                                                      text: nf.format(
+                                                          listBudgetEnd
+                                                              .elementAt(
+                                                              index)
                                                               .budgetValue -
-                                                          totalSpending),
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize:
-                                                            size.width * 0.03,
-                                                        color: Colors.black,
-                                                      ),
+                                                              totalSpending),
+                                                      textColor: Colors.black,
+                                                      textSize: size.width * 0.03,
+                                                      textFontWeight:
+                                                      FontWeight.bold,
+                                                      decoration:
+                                                      TextDecoration.none,
                                                     ),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: size.width *
-                                                              0.007,
-                                                          right: size.width *
-                                                              0.015),
-                                                      child: Text(
-                                                        "đ",
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize:
-                                                              size.width * 0.03,
-                                                          color: Colors.black,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline,
-                                                        ),
-                                                      ),
+                                                    TextContainer(
+                                                      text: " đ  ",
+                                                      textColor: Colors.black,
+                                                      textSize: size.width * 0.03,
+                                                      textFontWeight:
+                                                      FontWeight.bold,
+                                                      decoration: TextDecoration
+                                                          .underline,
                                                     ),
                                                   ],
                                                 ),
                                                 Row(
                                                   children: [
-                                                    Text(
-                                                      (((100 - percentSpending) -
-                                                                      (100 -
-                                                                          percentSpending
-                                                                              .toInt()) ==
-                                                                  0) ==
-                                                              true)
+                                                    TextContainer(
+                                                      text: (((100 - percentSpending) -
+                                                          (100 -
+                                                              percentSpending
+                                                                  .toInt()) ==
+                                                          0) ==
+                                                          true)
                                                           ? "${(100 - (percentSpending.toInt())).toStringAsFixed(1)}"
                                                           : "${(100 - percentSpending).toStringAsFixed(1)}",
-                                                      style: TextStyle(
-                                                        fontSize:
-                                                            size.width * 0.03,
-                                                        color: Colors.black,
-                                                      ),
+                                                      textColor: Colors.black,
+                                                      textSize: size.width * 0.03,
+                                                      textFontWeight:
+                                                      FontWeight.w400,
+                                                      decoration:
+                                                      TextDecoration.none,
                                                     ),
-                                                    Text(
-                                                      "%",
-                                                      style: TextStyle(
-                                                        fontSize:
-                                                            size.width * 0.03,
-                                                        color: Colors.black,
-                                                      ),
+                                                    TextContainer(
+                                                      text: "%",
+                                                      textColor: Colors.black,
+                                                      textSize: size.width * 0.03,
+                                                      textFontWeight:
+                                                      FontWeight.w400,
+                                                      decoration: TextDecoration
+                                                          .none,
                                                     ),
                                                   ],
-                                                )
+                                                ),
                                               ],
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.only(top: size.width * 0.01),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          top: size.width * 0.02),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.end,
+                                        children: [
+                                          LinearPercentIndicator(
+                                            barRadius: Radius.circular(
+                                                size.width * 0.008),
+                                            lineHeight: size.width * 0.02,
+                                            percent: isOverSpending
+                                                ? 1
+                                                : percentSpending / 100,
+                                            progressColor: isOverSpending
+                                                ? Colors.red
+                                                : Colors.green,
+                                            width: size.width * 0.74,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: size.width * 0.02,
+                                                right: size.width * 0.025),
+                                            child: TextContainer(
+                                              text: "Còn 3 ngày",
+                                              textColor: Colors.black,
+                                              textSize: size.width * 0.03,
+                                              textFontWeight: FontWeight.w400,
+                                              decoration: TextDecoration.none,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Row(
                                       children: [
-                                        LinearPercentIndicator(
-                                          barRadius: Radius.circular(
-                                              size.width * 0.008),
-                                          lineHeight: size.width * 0.02,
-                                          percent: isOverSpending? 1:percentSpending/100,
-                                          progressColor: isOverSpending ? Colors.red: Colors.green,
-                                          width: size.width * 0.76,
-                                        ),
-                                        Container(
+                                        Padding(
                                           padding: EdgeInsets.only(
-                                              top: size.width * 0.01),
-                                          width: size.width * 0.73,
+                                              left: size.width * 0.028),
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
                                             children: [
-                                              Text(
-                                                "Còn 3 ngày",
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: size.width * 0.03,
-                                                  color: Colors.black,
+                                              Container(
+                                                padding: EdgeInsets.all(
+                                                    size.width * 0.015),
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.rectangle,
+                                                  color: Colors.green,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: size.width * 0.01),
+                                                child: TextContainer(
+                                                  text: "Đã chi",
+                                                  textColor: Colors.black,
+                                                  textSize: size.width * 0.03,
+                                                  textFontWeight:
+                                                  FontWeight.w300,
+                                                  decoration:
+                                                  TextDecoration.none,
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: size.width * 0.028),
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    padding: EdgeInsets.all(
-                                                        size.width * 0.015),
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.rectangle,
-                                                      color: Colors.green,
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left:
-                                                            size.width * 0.01),
-                                                    child: Text(
-                                                      "Đã chi",
-                                                      style: TextStyle(
-                                                        fontSize:
-                                                            size.width * 0.03,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: size.width * 0.028),
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    padding: EdgeInsets.all(
-                                                        size.width * 0.015),
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.rectangle,
-                                                      color: Colors.grey,
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left:
-                                                            size.width * 0.01),
-                                                    child: Text(
-                                                      "Còn lại",
-                                                      style: TextStyle(
-                                                        fontSize:
-                                                            size.width * 0.03,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Visibility(
-                                              visible: isOverSpending?true:false,
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: size.width * 0.028),
-                                                child: Row(
-                                                  children: [
-                                                    Container(
-                                                      padding: EdgeInsets.all(
-                                                          size.width * 0.015),
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.rectangle,
-                                                        color: Colors.red,
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left:
-                                                          size.width * 0.01),
-                                                      child: Text(
-                                                        "Overspending",
-                                                        style: TextStyle(
-                                                          fontSize:
-                                                          size.width * 0.03,
-                                                          color: Colors.black,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left: size.width * 0.028),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(
+                                                    size.width * 0.015),
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.rectangle,
+                                                  color: Colors.grey,
                                                 ),
                                               ),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: size.width * 0.01),
+                                                child: TextContainer(
+                                                  text: "Còn lại",
+                                                  textColor: Colors.black,
+                                                  textSize: size.width * 0.03,
+                                                  textFontWeight:
+                                                  FontWeight.w300,
+                                                  decoration:
+                                                  TextDecoration.none,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible:
+                                          isOverSpending ? true : false,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                                left: size.width * 0.028),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  padding: EdgeInsets.all(
+                                                      size.width * 0.015),
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.rectangle,
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: size.width * 0.01),
+                                                  child: Text(
+                                                    "Overspending",
+                                                    style: TextStyle(
+                                                      fontSize:
+                                                      size.width * 0.03,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
+                                          ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ],
-                          ),
-                        ),
+                            ),
                       ),
                     );
                   }),

@@ -8,11 +8,12 @@ import 'package:graduation_thesis_project/dao/envent_dao.dart';
 import 'package:graduation_thesis_project/dao/wallet_dao.dart';
 import 'package:graduation_thesis_project/model/Event.dart';
 import 'package:graduation_thesis_project/model/Wallet.dart';
-import 'package:graduation_thesis_project/views/plan_screen/commons/pages/select_icon.dart';
-import 'package:graduation_thesis_project/views/plan_screen/commons/pages/select_wallet.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_screen.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_selectWallet.dart';
 import 'package:intl/intl.dart';
+
+import '../../../commons/pages/select_icon.dart';
+import '../../../commons/pages/select_wallet.dart';
 
 class UpdateEvent extends StatefulWidget {
   final Event event;

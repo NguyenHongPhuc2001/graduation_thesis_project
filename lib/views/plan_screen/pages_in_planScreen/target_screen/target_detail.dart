@@ -2,8 +2,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_thesis_project/model/target.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/appbar_container_2.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/custom_round_rectangle_button.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/money_text_container.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/percent_text_container.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
+import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_screen.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_update.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -30,6 +36,7 @@ class _TargetDetailState extends State<TargetDetail> {
   final NumberFormat nf = NumberFormat("###,###");
   double percentTarget = 0;
   final TextEditingController _moneyTextController = TextEditingController();
+  final _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -39,34 +46,59 @@ class _TargetDetailState extends State<TargetDetail> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          centerTitle: true,
-          title: Text(
-            "Chi tiết mục tiêu",
-            style: TextStyle(
-              fontSize: size.width * 0.065,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-          actions: [
-            IconButton(
-              splashRadius: size.width * 0.07,
-              icon: Icon(
-                Icons.edit,
-                color: Colors.black,
-              ),
-              onPressed: () {
+        // appBar: AppBar(
+        //   backgroundColor: Colors.white,
+        //   leading: IconButton(
+        //     icon: Icon(
+        //       Icons.arrow_back,
+        //       color: Colors.black,
+        //     ),
+        //     onPressed: () {
+        //       Navigator.pop(context);
+        //     },
+        //   ),
+        //   centerTitle: true,
+        //   title: Text(
+        //     "Chi tiết mục tiêu",
+        //     style: TextStyle(
+        //       fontSize: size.width * 0.065,
+        //       fontWeight: FontWeight.bold,
+        //       color: Colors.black,
+        //     ),
+        //   ),
+        //   actions: [
+        //     IconButton(
+        //       splashRadius: size.width * 0.07,
+        //       icon: Icon(
+        //         Icons.edit,
+        //         color: Colors.black,
+        //       ),
+        //       onPressed: () {
+        //         Navigator.push(
+        //           context,
+        //           MaterialPageRoute(
+        //             builder: (context) => UpdateTarget(
+        //               target: widget.target,
+        //               listTarget: widget.listTarget,
+        //               index: widget.index,
+        //             ),
+        //           ),
+        //         );
+        //       },
+        //     ),
+        //   ],
+        // ),
+        appBar: PreferredSize(
+          preferredSize: Size(size.width, size.width * 0.15),
+          child: AppBarContainer2(
+              text: "Chi tiết",
+              backIcon: Icons.arrow_back,
+              prefixIcon1: Icons.edit,
+              prefixIcon2: Icons.delete,
+              onBackTap: () {
+                Navigator.pop(context);
+              },
+              onPrefixIcon1Tap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -78,8 +110,9 @@ class _TargetDetailState extends State<TargetDetail> {
                   ),
                 );
               },
-            ),
-          ],
+              onPrefixIcon2Tap: () {
+                _showDeleteDialog(widget.target);
+              }),
         ),
         body: SingleChildScrollView(
           child: Container(
@@ -92,57 +125,40 @@ class _TargetDetailState extends State<TargetDetail> {
               children: [
                 Row(
                   children: [
-                    Container(
-                      padding: EdgeInsets.all(size.width * 0.045),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.primaries[
-                                _random.nextInt(Colors.primaries.length)]
-                            [_random.nextInt(9) * 100],
-                      ),
-                      child: (widget.target.urlImage == "")
-                          ? Icon(
-                              Icons.question_mark,
-                              color: Colors.black,
-                            )
-                          : SvgPicture.asset(
-                              widget.target.urlImage,
-                              width: size.width * 0.1,
-                            ),
-                    ),
+                    CircleIconContainer(
+                        urlImage: widget.target.urlImage,
+                        iconSize: size.width * 0.1,
+                        backgroundColor: Colors.blueAccent,padding: size.width*0.045,),
                     Container(
                       padding: EdgeInsets.only(left: size.width * 0.05),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            widget.target.targetName,
-                            style: TextStyle(
-                              fontSize: size.width * 0.055,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          TextContainer(
+                            text: widget.target.targetName,
+                            textColor: Colors.black,
+                            textSize: size.width * 0.055,
+                            textFontWeight: FontWeight.bold,
+                            decoration: TextDecoration.none,
                           ),
                           Padding(
                             padding: EdgeInsets.only(top: size.width * 0.02),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text(
-                                  "Ngày hoàn thành: ",
-                                  style: TextStyle(
-                                    fontSize: size.width * 0.04,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                                TextContainer(
+                                  text: "Ngày hoàn thành: ",
+                                  textColor: Colors.black,
+                                  textSize: size.width * 0.04,
+                                  textFontWeight: FontWeight.w400,
+                                  decoration: TextDecoration.none,
                                 ),
-                                Text(
-                                  df.format(widget.target.endDate),
-                                  style: TextStyle(
-                                    fontSize: size.width * 0.04,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                                TextContainer(
+                                  text: df.format(widget.target.endDate),
+                                  textColor: Colors.black,
+                                  textSize: size.width * 0.04,
+                                  textFontWeight: FontWeight.w400,
+                                  decoration: TextDecoration.none,
                                 ),
                               ],
                             ),
@@ -162,79 +178,71 @@ class _TargetDetailState extends State<TargetDetail> {
                       progressColor: Color(0xff70E000),
                       percent: percentTarget,
                       lineWidth: size.width * 0.06,
-                      center: Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: size.width * 0.15),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
+                      center: Container(
+                        padding: EdgeInsets.only(top: size.width * 0.15),
+                        width: size.width,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Column(
                               children: [
-                                _textInTargetDetail(
-                                  text: (percentTarget == 0)
-                                      ? "0"
-                                      : percentTarget.toStringAsFixed(1),
-                                  textColor: Color(0xff70E000),
+                                PercentTextContainer(
+                                  value: "0",
                                   textSize: size.width * 0.055,
                                   textFontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.none,
+                                  color: Colors.lightGreen,
                                 ),
-                                _textInTargetDetail(
-                                  text: " %",
-                                  textColor: Color(0xff70E000),
-                                  textSize: size.width * 0.055,
-                                  textFontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.none,
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(top: size.width * 0.07),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          TextContainer(
+                                            text: nf.format(
+                                                widget.target.currentMoney),
+                                            textColor: Colors.grey,
+                                            textSize: size.width * 0.045,
+                                            textFontWeight: FontWeight.w500,
+                                            decoration: TextDecoration.none,
+                                          ),
+                                          TextContainer(
+                                            text: "/",
+                                            textColor: Colors.grey,
+                                            textSize: size.width * 0.045,
+                                            textFontWeight: FontWeight.w500,
+                                            decoration: TextDecoration.none,
+                                          ),
+                                          TextContainer(
+                                            text: nf.format(
+                                                widget.target.targetMoney),
+                                            textColor: Colors.grey,
+                                            textSize: size.width * 0.045,
+                                            textFontWeight: FontWeight.w500,
+                                            decoration: TextDecoration.none,
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(top: size.width * 0.05),
+                                  child: TextContainer(
+                                    text: "đ",
+                                    textColor: Colors.grey,
+                                    textSize: size.width * 0.05,
+                                    textFontWeight: FontWeight.w500,
+                                    decoration: TextDecoration.underline,
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: size.width * 0.07),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
-                                  children: [
-                                    _textInTargetDetail(
-                                      text:
-                                          nf.format(widget.target.currentMoney),
-                                      textColor: Colors.grey,
-                                      textSize: size.width * 0.045,
-                                      textFontWeight: FontWeight.w500,
-                                      decoration: TextDecoration.none,
-                                    ),
-                                    _textInTargetDetail(
-                                      text: " / ",
-                                      textColor: Colors.grey,
-                                      textSize: size.width * 0.045,
-                                      textFontWeight: FontWeight.w500,
-                                      decoration: TextDecoration.none,
-                                    ),
-                                    _textInTargetDetail(
-                                      text:
-                                          nf.format(widget.target.targetMoney),
-                                      textColor: Colors.grey,
-                                      textSize: size.width * 0.045,
-                                      textFontWeight: FontWeight.w500,
-                                      decoration: TextDecoration.none,
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: size.width * 0.05),
-                            child: _textInTargetDetail(
-                              text: "đ",
-                              decoration: TextDecoration.underline,
-                              textColor: Colors.grey,
-                              textSize: size.width * 0.05,
-                              textFontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -242,145 +250,96 @@ class _TargetDetailState extends State<TargetDetail> {
                 Container(
                   padding: EdgeInsets.only(top: size.width * 0.07),
                   width: size.width,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Column(
                         children: [
-                          _textInTargetDetail(
-                            text: "Số tiền còn lại để đạt được mục tiêu",
-                            textColor: Colors.black,
-                            textSize: size.width * 0.04,
-                            textFontWeight: FontWeight.w400,
-                            decoration: TextDecoration.none,
+                          Column(
+                            children: [
+                              TextContainer(
+                                text: "Số tiền còn lại để đạt được mục tiêu",
+                                textColor: Colors.grey,
+                                textSize: size.width * 0.045,
+                                textFontWeight: FontWeight.w500,
+                                decoration: TextDecoration.none,
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(top: size.width * 0.03),
+                                child: MoneyTextContainer(
+                                  value: widget.target.targetMoney -
+                                      widget.target.currentMoney,
+                                  textSize: size.width * 0.04,
+                                  textFontWeight: FontWeight.w400,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: size.width * 0.03),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            padding: EdgeInsets.only(top: size.width * 0.05),
+                            child: Column(
                               children: [
-                                _textInTargetDetail(
-                                  text: nf.format(widget.target.targetMoney -
-                                      widget.target.currentMoney),
-                                  textColor: Colors.black,
-                                  textSize: size.width * 0.04,
+                                TextContainer(
+                                  text: "Số tiền tích lũy gần nhất",
+                                  textColor: Colors.grey,
+                                  textSize: size.width * 0.045,
                                   textFontWeight: FontWeight.w500,
                                   decoration: TextDecoration.none,
                                 ),
                                 Padding(
                                   padding:
-                                      EdgeInsets.only(left: size.width * 0.01),
-                                  child: _textInTargetDetail(
-                                    text: "đ",
-                                    textColor: Colors.black,
+                                      EdgeInsets.only(top: size.width * 0.03),
+                                  child: MoneyTextContainer(
+                                    value: 1000000,
                                     textSize: size.width * 0.04,
-                                    textFontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.underline,
+                                    textFontWeight: FontWeight.w400,
+                                    color: Colors.black,
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: size.width * 0.07),
-                        child: Column(
-                          children: [
-                            _textInTargetDetail(
-                              text: "Số tiền tích lũy gần nhất",
-                              textColor: Colors.black,
-                              textSize: size.width * 0.04,
-                              textFontWeight: FontWeight.w400,
-                              decoration: TextDecoration.none,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: size.width * 0.03),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  _textInTargetDetail(
-                                    text: "100,000",
-                                    textColor: Colors.black,
-                                    textSize: size.width * 0.04,
-                                    textFontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.none,
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        left: size.width * 0.01),
-                                    child: _textInTargetDetail(
-                                      text: "đ",
-                                      textColor: Colors.black,
-                                      textSize: size.width * 0.04,
-                                      textFontWeight: FontWeight.w500,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                     ],
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.only(top: size.width * 0.1),
-                  width: size.width,
-                  child: Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          _showEnterMoneyDialog();
-                        },
-                        child: Container(
-                          padding: EdgeInsets.only(
-                              top: size.width * 0.02,
-                              bottom: size.width * 0.02,
-                              right: size.width * 0.05,
-                              left: size.width * 0.05),
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(size.width * 0.01),
-                            color: Color(0xff70E000),
-                          ),
-                          child: _textInTargetDetail(
-                            text: "THÊM SỐ TIỀN VÀO MỤC TIÊU",
-                            textColor: Colors.white,
-                            textSize: size.width * 0.05,
-                            textFontWeight: FontWeight.bold,
-                            decoration: TextDecoration.none,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: size.width * 0.05),
-                        child: InkWell(
-                          onTap: () {},
-                          child: Container(
-                            padding: EdgeInsets.only(
-                                top: size.width * 0.01,
-                                bottom: size.width * 0.01,
-                                right: size.width * 0.05,
-                                left: size.width * 0.05),
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.circular(size.width * 0.01),
-                              color: Colors.white,
-                            ),
-                            child: _textInTargetDetail(
-                              text: "HOÀN THÀNH MỤC TIÊU",
-                              textColor: Colors.blue,
-                              textSize: size.width * 0.05,
-                              textFontWeight: FontWeight.bold,
-                              decoration: TextDecoration.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                SizedBox(
+                  height: size.width * 0.1,
+                ),
+                CustomRoundRectangleButton(
+                  backgroundColor: Colors.lightGreen,
+                  onTap: () {
+                    _showEnterMoneyDialog();
+                  },
+                  buttonWith: size.width * 0.8,
+                  padding: size.width * 0.03,
+                  borderRadius: size.width * 0.01,
+                  text: TextContainer(
+                    text: "THÊM SỐ TIỀN VÀO MỤC TIÊU",
+                    textColor: Colors.white,
+                    textSize: size.width * 0.05,
+                    textFontWeight: FontWeight.bold,
+                    decoration: TextDecoration.none,
+                  ),
+                ),
+                SizedBox(
+                  height: size.width * 0.01,
+                ),
+                CustomRoundRectangleButton(
+                  backgroundColor: Colors.transparent,
+                  onTap: () {},
+                  buttonWith: size.width * 0.8,
+                  padding: size.width * 0.03,
+                  borderRadius: size.width * 0.01,
+                  text: TextContainer(
+                    text: "HOÀN THÀNH MỤC TIÊU",
+                    textColor: Colors.lightGreen,
+                    textSize: size.width * 0.05,
+                    textFontWeight: FontWeight.bold,
+                    decoration: TextDecoration.none,
                   ),
                 ),
               ],
@@ -403,7 +362,7 @@ class _TargetDetailState extends State<TargetDetail> {
           title: Container(
             alignment: Alignment.center,
             width: size.width,
-            child: _textInTargetDetail(
+            child: TextContainer(
               text: "Nhập số tiền tích lũy",
               textColor: Colors.black,
               textSize: size.width * 0.06,
@@ -440,7 +399,7 @@ class _TargetDetailState extends State<TargetDetail> {
                     color: Colors.black,
                   ),
                 ),
-                child: _textInTargetDetail(
+                child: TextContainer(
                   text: "Hủy",
                   textColor: Colors.black,
                   textSize: size.width * 0.05,
@@ -463,7 +422,7 @@ class _TargetDetailState extends State<TargetDetail> {
                   shape: BoxShape.rectangle,
                   color: Colors.blue,
                 ),
-                child: _textInTargetDetail(
+                child: TextContainer(
                   text: "Xác nhận",
                   textColor: Colors.white,
                   textSize: size.width * 0.05,
@@ -477,34 +436,120 @@ class _TargetDetailState extends State<TargetDetail> {
       },
     );
   }
-}
 
-class _textInTargetDetail extends StatelessWidget {
-  final String text;
-  final Color textColor;
-  final double textSize;
-  final FontWeight textFontWeight;
-  final TextDecoration decoration;
-
-  const _textInTargetDetail({
-    Key? key,
-    required this.text,
-    required this.textColor,
-    required this.textSize,
-    required this.textFontWeight,
-    required this.decoration,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-        fontSize: textSize,
-        color: textColor,
-        fontWeight: textFontWeight,
-        decoration: decoration,
-      ),
-    );
+  _showDeleteDialog(Target tg) {
+    Size size = MediaQuery.of(context).size;
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  color: Colors.blue,
+                  size: size.width * 0.1,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: size.width * 0.06),
+                  child: Text(
+                    "Xin đợi chút !",
+                    style: TextStyle(
+                      fontSize: size.width * 0.07,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            content: RichText(
+              text: TextSpan(
+                style: TextStyle(
+                  fontSize: size.width * 0.045,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                ),
+                children: [
+                  TextSpan(text: "Bạn có chắc muốn xóa mục tiêu "),
+                  TextSpan(
+                      text: "${tg.targetName}",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      )),
+                  TextSpan(text: " chứ ?"),
+                ],
+              ),
+            ),
+            actions: [
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.only(
+                      top: size.width * 0.009, bottom: size.width * 0.009),
+                  width: size.width * 0.3,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(size.width * 0.016),
+                    border: Border.all(
+                      width: size.width * 0.002,
+                      color: Colors.black,
+                    ),
+                    color: Colors.white,
+                  ),
+                  child: Text(
+                    "Hủy",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: size.width * 0.05,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  List<Target> lsTarget = [];
+                  setState(() {
+                    widget.listTarget.removeAt(widget.index);
+                    lsTarget = widget.listTarget;
+                    Navigator.pop(
+                      context,
+                      TargetScreen(
+                        pageController: _pageController,
+                        listTarget: lsTarget,
+                      ),
+                    );
+                    Navigator.pop(context);
+                    Navigator.pop(context, "Delete");
+                  });
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.only(
+                      top: size.width * 0.011, bottom: size.width * 0.011),
+                  width: size.width * 0.3,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(size.width * 0.016),
+                    color: Colors.blueAccent,
+                  ),
+                  child: Text(
+                    "Xác nhận",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: size.width * 0.05,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
   }
 }

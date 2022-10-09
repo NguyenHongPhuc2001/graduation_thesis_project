@@ -2,23 +2,28 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:graduation_thesis_project/dao/transaction_dao.dart';
 import 'package:graduation_thesis_project/model/Event.dart';
+import 'package:graduation_thesis_project/model/Transaction.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/appbar_container_2.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/custom_round_rectangle_button.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/single_row_container.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_screen.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_updateEvent.dart';
+import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/list_transaction.dart';
 import 'package:intl/intl.dart';
 
 class EventDetail extends StatefulWidget {
   final Event event;
   final List<Event> listEvent;
-  final int index;
 
   const EventDetail({
     Key? key,
     required this.event,
     required this.listEvent,
-    required this.index,
   }) : super(key: key);
 
   @override
@@ -29,45 +34,35 @@ class _EventDetailState extends State<EventDetail> {
   final _random = Random();
   final PageController _pageController = PageController();
   final DateFormat df = DateFormat("yyy-MM-dd");
+  final List<Transactions> listTransaction = TransactionDAO().getAll();
 
   var check;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    List<Transactions> lsTransaction = [];
+    final Duration dayLeft = widget.event.endDate.difference(DateTime.now());
 
-    final Duration dayLeft =
-        widget.event.endDate.difference(widget.event.createDate);
+    listTransaction.forEach((element) {
+      if (element.event != null) {
+        if (element.event!.id == widget.event.id) lsTransaction.add(element);
+      }
+    });
+
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: Icon(
-              CupertinoIcons.xmark,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.pop(context, widget.event.status);
-            },
-          ),
-          centerTitle: true,
-          title: Text(
-            "Chi tiết",
-            style: TextStyle(
-              fontSize: size.width * 0.065,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-          actions: [
-            IconButton(
-              splashRadius: size.width * 0.07,
-              icon: Icon(
-                Icons.edit,
-                color: Colors.black,
-              ),
-              onPressed: () async {
+        appBar: PreferredSize(
+          preferredSize: Size(size.width, size.width * 0.15),
+          child: AppBarContainer2(
+              text: "Chi tiết",
+              backIcon: CupertinoIcons.xmark,
+              prefixIcon1: Icons.edit,
+              prefixIcon2: Icons.delete,
+              onBackTap: () {
+                Navigator.pop(context, widget.event.status);
+              },
+              onPrefixIcon1Tap: () async {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -80,130 +75,103 @@ class _EventDetailState extends State<EventDetail> {
                         Fluttertoast.showToast(msg: "Cập nhật thành công !");
                     }));
               },
-            ),
-            IconButton(
-              splashRadius: size.width * 0.07,
-              icon: Icon(
-                CupertinoIcons.delete_solid,
-                color: Colors.black,
-              ),
-              onPressed: () {
+              onPrefixIcon2Tap: () {
                 _showDeleteDialog(widget.event);
-              },
-            ),
-          ],
+              }),
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Container(
+              height: size.height * 0.5,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(size.width * 0.03),
-                    width: size.width,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: size.width * 0.035),
-                          child: Container(
-                            padding: EdgeInsets.all(size.width * 0.045),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.primaries[
-                                      _random.nextInt(Colors.primaries.length)]
-                                  [_random.nextInt(9) * 100],
-                            ),
-                            child: SvgPicture.asset(
-                              widget.event.urlImage,
-                              width: size.width * 0.07,
-                            ),
-                          ),
+                  SingleRowContainer(
+                    paddingTop: size.width * 0.01,
+                    paddingBottom: size.width * 0.01,
+                    children: <Widget>[
+                      Container(
+                        width: size.width * 0.3,
+                        child: CircleIconContainer(
+                          urlImage: widget.event.urlImage,
+                          iconSize: size.width * 0.1,
+                          backgroundColor: Colors.green, padding: size.width*0.045,
                         ),
-                        Container(
-                          width: size.width * 0.5,
-                          child: Text(
-                            widget.event.eventName,
-                            style: TextStyle(
-                              fontSize: size.width * 0.07,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
+                      ),
+                      Container(
+                        width: size.width * 0.62,
+                        child: TextContainer(
+                          text: widget.event.eventName,
+                          textColor: Colors.black,
+                          textSize: size.width * 0.06,
+                          textFontWeight: FontWeight.w400,
+                          decoration: TextDecoration.none,
                         ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: size.width * 0.07),
-                    child: Container(
-                      padding: EdgeInsets.all(size.width * 0.03),
-                      width: size.width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(size.width * 0.045),
-                            child: Image.asset(
-                              "icons/icons_1/calendar_icon_3.png",
-                              width: size.width * 0.14,
-                            ),
-                          ),
-                          Container(
-                            width: size.width * 0.5,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  df.format(widget.event.createDate),
-                                  style: TextStyle(
-                                    fontSize: size.width * 0.07,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                Text(
-                                  "Còn ${dayLeft.inDays} ngày",
-                                  style: TextStyle(
-                                    fontSize: size.width * 0.04,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
                       ),
-                    ),
+                    ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: size.width * 0.07),
-                    child: Container(
-                      padding: EdgeInsets.all(size.width * 0.03),
-                      width: size.width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.all(size.width * 0.05),
-                            child: Image.asset(
-                              "icons/icons_1/wallet_icon_2.png",
-                              width: size.width * 0.14,
-                            ),
-                          ),
-                          Container(
-                            width: size.width * 0.5,
-                            child: Text(
-                              widget.event.wallet.walletName,
-                              style: TextStyle(
-                                fontSize: size.width * 0.07,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ),
-                        ],
+                  SingleRowContainer(
+                    paddingTop: size.width * 0.1,
+                    paddingBottom: size.width * 0.01,
+                    children: <Widget>[
+                      Container(
+                        width: size.width * 0.3,
+                        child: CircleIconContainer(
+                          urlImage: "images/CalendarIcon_4.svg",
+                          iconSize: size.width * 0.1,
+                          backgroundColor: Colors.transparent,
+                          padding: size.width*0.045,
+                        ),
                       ),
-                    ),
+                      Container(
+                        width: size.width * 0.62,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextContainer(
+                              text: df.format(widget.event.createDate),
+                              textColor: Colors.black,
+                              textSize: size.width * 0.06,
+                              textFontWeight: FontWeight.w400,
+                              decoration: TextDecoration.none,
+                            ),
+                            TextContainer(
+                              text: "Còn ${dayLeft.inDays} ngày",
+                              textColor: Colors.black,
+                              textSize: size.width * 0.03,
+                              textFontWeight: FontWeight.w300,
+                              decoration: TextDecoration.none,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SingleRowContainer(
+                    paddingTop: size.width * 0.01,
+                    paddingBottom: size.width * 0.01,
+                    children: <Widget>[
+                      Container(
+                        width: size.width * 0.3,
+                        child: CircleIconContainer(
+                          urlImage: "images/WalletIcon_1.svg",
+                          iconSize: size.width * 0.1,
+                          backgroundColor: Colors.transparent,
+                          padding: size.width*0.045,
+                        ),
+                      ),
+                      Container(
+                        width: size.width * 0.62,
+                        child: TextContainer(
+                          text: widget.event.wallet.walletName,
+                          textColor: Colors.black,
+                          textSize: size.width * 0.06,
+                          textFontWeight: FontWeight.w400,
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -214,70 +182,65 @@ class _EventDetailState extends State<EventDetail> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   widget.event.status
-                      ? InkWell(
+                      ? CustomRoundRectangleButton(
+                    backgroundColor: Colors.blue,
                           onTap: () {
                             setState(() {
                               widget.event.status = false;
-                              check = widget.event.status;
                             });
                           },
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: size.width * 0.85,
-                            padding: EdgeInsets.all(size.width * 0.04),
-                            decoration: BoxDecoration(
-                                color: Colors.lightBlue,
-                                borderRadius:
-                                    BorderRadius.circular(size.width * 0.03)),
-                            child: Text(
-                              "ĐÁNH DẤU CHƯA HOÀN TẤT",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: size.width * 0.05),
-                            ),
+                          buttonWith: size.width * 0.85,
+                          padding: size.width * 0.04,
+                          borderRadius: size.width * 0.015,
+                          text: TextContainer(
+                            text: "ĐÁNH DẤU CHƯA HOÀN TẤT",
+                            textColor: Colors.white,
+                            textSize: size.width * 0.05,
+                            textFontWeight: FontWeight.bold,
+                            decoration: TextDecoration.none,
                           ),
                         )
-                      : InkWell(
+                      : CustomRoundRectangleButton(
+                    backgroundColor: Colors.blue,
                           onTap: () {
                             setState(() {
                               widget.event.status = true;
                             });
                           },
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: size.width * 0.85,
-                            padding: EdgeInsets.all(size.width * 0.04),
-                            decoration: BoxDecoration(
-                                color: Colors.lightBlue,
-                                borderRadius:
-                                    BorderRadius.circular(size.width * 0.03)),
-                            child: Text(
-                              "ĐÁNH DẤU HOÀN TẤT",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: size.width * 0.05),
-                            ),
+                          buttonWith: size.width * 0.85,
+                          padding: size.width * 0.04,
+                          borderRadius: size.width * 0.015,
+                          text: TextContainer(
+                            text: "ĐÁNH DẤU HOÀN TẤT",
+                            textColor: Colors.white,
+                            textSize: size.width * 0.05,
+                            textFontWeight: FontWeight.bold,
+                            decoration: TextDecoration.none,
                           ),
                         ),
-                  InkWell(
-                    onTap: () {},
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: size.width * 0.85,
-                      padding: EdgeInsets.all(size.width * 0.04),
-                      decoration: BoxDecoration(
-                          color: Colors.lightBlue,
-                          borderRadius:
-                              BorderRadius.circular(size.width * 0.03)),
-                      child: Text(
-                        "XEM DANH SÁCH GIAO DỊCH",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: size.width * 0.05),
-                      ),
+                  CustomRoundRectangleButton(
+                    backgroundColor: Colors.blue,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ListTransaction(
+                            event: widget.event,
+                            listTransaction:
+                                lsTransaction.isEmpty ? [] : lsTransaction,
+                          ),
+                        ),
+                      );
+                    },
+                    buttonWith: size.width * 0.85,
+                    padding: size.width * 0.04,
+                    borderRadius: size.width * 0.015,
+                    text: TextContainer(
+                      text: "XEM DANH SÁCH GIAO DỊCH",
+                      textColor: Colors.white,
+                      textSize: size.width * 0.05,
+                      textFontWeight: FontWeight.bold,
+                      decoration: TextDecoration.none,
                     ),
                   ),
                 ],
@@ -365,16 +328,15 @@ class _EventDetailState extends State<EventDetail> {
               ),
               InkWell(
                 onTap: () {
-                  List<Event> lsEvent = [];
                   setState(() {
-                    widget.listEvent.removeAt(widget.index);
-                    lsEvent = widget.listEvent;
+                    widget.listEvent.removeWhere(
+                        (element) => element.id == widget.event.id);
                     Navigator.pop(
                       context,
                       EventScreen(
                         pageController: _pageController,
                         listEvent: widget.listEvent,
-                        checkInserDelete: "Delete",
+                        listTransaction: [],
                       ),
                     );
                     Navigator.pop(context, "Delete");
