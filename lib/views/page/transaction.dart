@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../model/Transaction.dart';
+import '../../models/Transaction.dart';
 import '../manage_transactions/manage_transaction_main_screen.dart';
 
 class Transaction extends StatefulWidget {

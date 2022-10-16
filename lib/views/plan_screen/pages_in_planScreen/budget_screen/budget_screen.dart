@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:graduation_thesis_project/model/Budget.dart';
-import 'package:graduation_thesis_project/model/Transaction.dart';
+import 'package:graduation_thesis_project/models/Budget.dart';
+import 'package:graduation_thesis_project/models/Transaction.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/appbar_container.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_add.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_end.dart';
@@ -9,13 +9,13 @@ import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/
 
 class BudgetScreen extends StatefulWidget {
   final PageController pageController;
-  final List<Budget> listBudget;
+  final List<Budget>? listBudget;
   final List<Transactions> listTransaction;
 
   const BudgetScreen(
       {Key? key,
       required this.pageController,
-      required this.listBudget,
+        this.listBudget,
       required this.listTransaction})
       : super(key: key);
 

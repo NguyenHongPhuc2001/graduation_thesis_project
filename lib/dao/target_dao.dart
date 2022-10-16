@@ -1,4 +1,4 @@
-import 'package:graduation_thesis_project/model/target.dart';
+import 'package:graduation_thesis_project/models/target.dart';
 
 class TargetDAO {
   Target tg1 = Target(

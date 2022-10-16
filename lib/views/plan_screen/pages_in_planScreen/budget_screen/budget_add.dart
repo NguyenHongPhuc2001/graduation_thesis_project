@@ -4,14 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:graduation_thesis_project/dao/budget_dao.dart';
 import 'package:graduation_thesis_project/dao/rap_dao.dart';
-import 'package:graduation_thesis_project/dao/transaction_dao.dart';
-import 'package:graduation_thesis_project/dao/wallet_dao.dart';
-import 'package:graduation_thesis_project/model/Budget.dart';
-import 'package:graduation_thesis_project/model/RAP.dart';
-import 'package:graduation_thesis_project/model/Transaction.dart';
-import 'package:graduation_thesis_project/model/Wallet.dart';
+import 'package:graduation_thesis_project/models/Budget.dart';
+import 'package:graduation_thesis_project/models/RAP.dart';
+import 'package:graduation_thesis_project/models/Transaction.dart';
+import 'package:graduation_thesis_project/models/wallet.dart';
 import 'package:graduation_thesis_project/views/page/transaction.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_screen.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_select_rap.dart';
@@ -21,12 +18,12 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import '../../../commons/pages/select_wallet.dart';
 
 class AddBudget extends StatefulWidget {
-  final List<Budget> listBudget;
+  final List<Budget>? listBudget;
   final RAP? rapFromTransaction;
 
   const AddBudget({
     Key? key,
-    required this.listBudget,
+    this.listBudget,
     this.rapFromTransaction,
   }) : super(key: key);
 
@@ -46,13 +43,9 @@ class _AddBudgetState extends State<AddBudget> {
   final NumberFormat nf = NumberFormat("###,###");
   var dateTime, linkIcon;
   String budgetValue = "";
-  final List<Wallet> listWallet = WalletDAO().getAllWallet();
   final List<RAP> listRAP = RAPDAO().getAll();
   final pageController = PageController();
-  final List<Transactions> listTransaction = TransactionDAO().getAll();
 
-  Budget newBudget = BudgetDAO().bg1;
-  Wallet wallet = WalletDAO().wl1;
   RAP rap = RAPDAO().r1;
   bool _onTextClick = false;
 
@@ -102,29 +95,13 @@ class _AddBudgetState extends State<AddBudget> {
             ),
             onPressed: () {
               setState(() {
-                newBudget.id = widget.listBudget.length + 1;
 
-                newBudget.budgetValue = _budgetMoneyController.numberValue;
-
-                if (widget.rapFromTransaction == null)
-                  newBudget.rap = rap;
-                else
-                  newBudget.rap = widget.rapFromTransaction!;
-
-                if (dateTime != null) newBudget.endDate = dateTime;
-
-                newBudget.wallet = wallet;
-
-                newBudget.createDate = DateTime.now();
-
-                newBudget.status = false;
               });
-              widget.listBudget.add(newBudget);
-              Navigator.of(context).pushReplacement<BudgetScreen, String>(
-                  MaterialPageRoute(builder: (context) =>
-                      BudgetScreen(pageController: pageController,
-                          listBudget: widget.listBudget,
-                          listTransaction: listTransaction)), result: "Save");
+              // Navigator.of(context).pushReplacement<BudgetScreen, String>(
+              //     MaterialPageRoute(builder: (context) =>
+              //         BudgetScreen(pageController: pageController,
+              //             listBudget: widget.listBudget,
+              //             listTransaction: listTransaction)), result: "Save");
             },
           ),
         ],
@@ -462,11 +439,10 @@ class _AddBudgetState extends State<AddBudget> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            SelectWallet(listWallet: listWallet),
+                            SelectWallet(listWallet: null),
                       ),
                     ).then((value) =>
                         setState(() {
-                          wallet = value as Wallet;
                           // widget.budget.wallet = wallet;
                         }));
                   },
@@ -490,7 +466,7 @@ class _AddBudgetState extends State<AddBudget> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              (wallet == null) ? "Chọn ví" : wallet.walletName,
+                             "",
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: size.width * 0.07,

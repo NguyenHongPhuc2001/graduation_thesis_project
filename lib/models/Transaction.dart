@@ -1,6 +1,6 @@
 import 'Event.dart';
 import 'RAP.dart';
-import 'Wallet.dart';
+import 'wallet.dart';
 
 class Transactions {
   int id;

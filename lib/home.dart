@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:graduation_thesis_project/dao/transaction_dao.dart';
-import 'package:graduation_thesis_project/model/Transaction.dart';
+import 'package:graduation_thesis_project/models/Transaction.dart';
 import 'package:graduation_thesis_project/views/page/overview.dart';
 import 'package:graduation_thesis_project/views/page/planning.dart';
 import 'package:graduation_thesis_project/views/page/setting.dart';
@@ -19,7 +18,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int currentTab = 0;
-  final List<Transactions> listTran = TransactionDAO().getAll();
 
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentScreen = const Overview();
@@ -37,18 +35,7 @@ class _HomeState extends State<Home> {
         child: FittedBox(
           child: FloatingActionButton(
             onPressed: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddTransaction(
-                    listTransaction: listTran,
-                  ),
-                ),
-              ).then((value) => setState(() {
-                    if (value == "Save Transaction")
-                      Fluttertoast.showToast(
-                          msg: "Thêm giao dịch thành công !");
-                  }));
+
             },
             child: const Icon(Icons.add),
           ),
@@ -96,10 +83,7 @@ class _HomeState extends State<Home> {
                 minWidth: 40,
                 onPressed: () {
                   setState(() {
-                    currentScreen = Transaction(
-                      listTransaction: listTran,
-                    );
-                    currentTab = 1;
+
                   });
                 },
                 child: Column(
@@ -129,10 +113,7 @@ class _HomeState extends State<Home> {
                 minWidth: 40,
                 onPressed: () {
                   setState(() {
-                    currentTab = 2;
-                    currentScreen = Planning(
-                      listTransaction: listTran,
-                    );
+
                   });
                 },
                 child: Column(

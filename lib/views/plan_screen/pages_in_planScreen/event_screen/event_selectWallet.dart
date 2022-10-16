@@ -1,7 +1,7 @@
 // import 'dart:math';
 //
 // import 'package:flutter/material.dart';
-// import 'package:graduation_thesis_project/model/Wallet.dart';
+// import 'package:graduation_thesis_project/models/wallet.dart';
 // import 'package:intl/intl.dart';
 //
 // class SelectWallet extends StatefulWidget {

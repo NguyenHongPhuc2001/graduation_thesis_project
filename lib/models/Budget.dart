@@ -1,5 +1,5 @@
 import 'RAP.dart';
-import 'Wallet.dart';
+import 'wallet.dart';
 
 class Budget {
   int id;

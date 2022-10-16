@@ -4,10 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:graduation_thesis_project/dao/budget_dao.dart';
-import 'package:graduation_thesis_project/dao/wallet_dao.dart';
-import 'package:graduation_thesis_project/model/Budget.dart';
-import 'package:graduation_thesis_project/model/Wallet.dart';
+import 'package:graduation_thesis_project/models/Budget.dart';
+import 'package:graduation_thesis_project/models/wallet.dart';
 import 'package:intl/intl.dart';
 
 import '../../../commons/pages/select_wallet.dart';
@@ -38,9 +36,6 @@ class _UpdateBudgetState extends State<UpdateBudget> {
   final DateFormat df = DateFormat("yyyy-MM-dd");
   final NumberFormat nf = NumberFormat("###,###");
   var dateTime, linkIcon;
-  final List<Wallet> listWallet = WalletDAO().getAllWallet();
-  Budget newBudget = BudgetDAO().bg1;
-  Wallet wallet = WalletDAO().wl1;
   bool _onTextClick = true, _onTextFieldClick = false;
 
   @override
@@ -88,7 +83,6 @@ class _UpdateBudgetState extends State<UpdateBudget> {
             ),
             onPressed: () {
               setState(() {
-                newBudget = widget.budget;
               });
               Navigator.pop(context, "Update");
             },
@@ -423,16 +417,16 @@ class _UpdateBudgetState extends State<UpdateBudget> {
               child: IntrinsicHeight(
                 child: InkWell(
                   onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            SelectWallet(listWallet: listWallet),
-                      ),
-                    ).then((value) => setState(() {
-                          wallet = value as Wallet;
-                          widget.budget.wallet = wallet;
-                        }));
+                    // await Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) =>
+                    //         SelectWallet(listWallet: listWallet),
+                    //   ),
+                    // ).then((value) => setState(() {
+                    //       wallet = value as Wallet;
+                    //       widget.budget.wallet = wallet;
+                    //     }));
                   },
                   child: Row(
                     children: [
@@ -454,7 +448,7 @@ class _UpdateBudgetState extends State<UpdateBudget> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              widget.budget.wallet.walletName,
+                              "",
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: size.width * 0.07,

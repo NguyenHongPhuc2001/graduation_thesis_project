@@ -5,11 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:graduation_thesis_project/dao/budget_dao.dart';
-import 'package:graduation_thesis_project/dao/transaction_dao.dart';
-import 'package:graduation_thesis_project/model/Budget.dart';
-import 'package:graduation_thesis_project/model/RAP.dart';
-import 'package:graduation_thesis_project/model/Transaction.dart';
+import 'package:graduation_thesis_project/models/Budget.dart';
+import 'package:graduation_thesis_project/models/RAP.dart';
+import 'package:graduation_thesis_project/models/Transaction.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/appbar_container_2.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/custom_round_rectangle_button.dart';
@@ -39,8 +37,6 @@ class _TransactionDetailState extends State<TransactionDetail> {
   final _random = Random();
   final df = DateFormat("dd-MM-yyyy");
   final nf = NumberFormat("###,###");
-  final List<Budget> listBudget = BudgetDAO().getAll();
-  final List<Transactions> listTransaction = TransactionDAO().getAll();
   final pageController = PageController();
 
   @override
@@ -232,7 +228,7 @@ class _TransactionDetailState extends State<TransactionDetail> {
                               Container(
                                 width: size.width * 0.67,
                                 child: Text(
-                                  widget.transaction.wallet.walletName,
+                                  "",
                                   style: TextStyle(
                                     fontSize: size.width * 0.05,
                                     fontWeight: FontWeight.w300,
@@ -358,15 +354,7 @@ class _TransactionDetailState extends State<TransactionDetail> {
                     ),
                     CustomRoundRectangleButton(
                       onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddBudget(
-                              listBudget: listBudget,
-                              rapFromTransaction: rap,
-                            ),
-                          ),
-                        );
+
                       },
                       buttonWith: size.width * 0.75,
                       padding: size.width * 0.03,

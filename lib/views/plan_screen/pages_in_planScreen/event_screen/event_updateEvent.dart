@@ -4,10 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:graduation_thesis_project/dao/envent_dao.dart';
-import 'package:graduation_thesis_project/dao/wallet_dao.dart';
-import 'package:graduation_thesis_project/model/Event.dart';
-import 'package:graduation_thesis_project/model/Wallet.dart';
+import 'package:graduation_thesis_project/models/Event.dart';
+import 'package:graduation_thesis_project/models/wallet.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_screen.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_selectWallet.dart';
 import 'package:intl/intl.dart';
@@ -29,7 +27,6 @@ class UpdateEvent extends StatefulWidget {
 
 class _UpdateEventState extends State<UpdateEvent> {
   final _random = Random();
-  final List<Wallet> listWallet = WalletDAO().getAllWallet();
   final TextEditingController _eventNameController = TextEditingController();
   final DateFormat df = DateFormat("yyyy-MM-dd");
   final PageController _pageController = PageController();
@@ -38,7 +35,6 @@ class _UpdateEventState extends State<UpdateEvent> {
 
 
 
-  Event newEvent = EventDAO().ev_1;
 
   @override
   void initState() {
@@ -86,12 +82,6 @@ class _UpdateEventState extends State<UpdateEvent> {
             onPressed: () {
               print("i'm update in update !");
               setState(() {
-                newEvent.eventName = _eventNameController.text;
-                if (dateTime != null) newEvent.endDate = dateTime;
-                newEvent.wallet = widget.event.wallet;
-                if (linkIcon != null) newEvent.urlImage = linkIcon as String;
-
-                EventDAO().updateEvent(widget.event, newEvent);
               });
               Navigator.pop(context, "Update");
             },
@@ -406,16 +396,16 @@ class _UpdateEventState extends State<UpdateEvent> {
             padding: EdgeInsets.only(top: size.width * 0.1),
             child: InkWell(
               onTap: () async {
-                final data = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SelectWallet(
-                      listWallet: listWallet,
-                    ),
-                  ),
-                ).then((value) => setState(() {
-                      widget.event.wallet = value;
-                    }));
+                // final data = await Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => SelectWallet(
+                //       listWallet: listWallet,
+                //     ),
+                //   ),
+                // ).then((value) => setState(() {
+                //       widget.event.wallet = value;
+                //     }));
               },
               child: Container(
                 padding: EdgeInsets.only(left: size.width * 0.04),
@@ -444,7 +434,7 @@ class _UpdateEventState extends State<UpdateEvent> {
                       ),
                       Expanded(
                         child: Text(
-                           widget.event.wallet.walletName ,
+                           "",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: size.width * 0.07,

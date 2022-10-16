@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graduation_thesis_project/dao/rap_dao.dart';
-import 'package:graduation_thesis_project/model/RAP.dart';
-import 'package:graduation_thesis_project/model/RAPCategory.dart';
+import 'package:graduation_thesis_project/models/RAP.dart';
+import 'package:graduation_thesis_project/models/RAPCategory.dart';
 
 class ListRAPByRAPCate extends StatefulWidget {
   final RAPCategory rapCategory;

@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graduation_thesis_project/dao/rapCate_dao.dart';
 import 'package:graduation_thesis_project/dao/rap_dao.dart';
-import 'package:graduation_thesis_project/model/RAP.dart';
-import 'package:graduation_thesis_project/model/RAPCategory.dart';
+import 'package:graduation_thesis_project/models/RAP.dart';
+import 'package:graduation_thesis_project/models/RAPCategory.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/list_rap_by_rapCate.dart';
 
 class SelectRap extends StatefulWidget {

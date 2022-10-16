@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_thesis_project/dao/transaction_dao.dart';
 import 'package:intl/intl.dart';
 
-import '../../model/Transaction.dart';
+import '../../models/Transaction.dart';
 import '../commons/widgets/circle_icon_container.dart';
 import '../commons/widgets/custom_round_rectangle_button.dart';
 import '../commons/widgets/money_text_container.dart';

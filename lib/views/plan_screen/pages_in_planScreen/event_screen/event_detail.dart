@@ -3,9 +3,8 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:graduation_thesis_project/dao/transaction_dao.dart';
-import 'package:graduation_thesis_project/model/Event.dart';
-import 'package:graduation_thesis_project/model/Transaction.dart';
+import 'package:graduation_thesis_project/models/Event.dart';
+import 'package:graduation_thesis_project/models/Transaction.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/appbar_container_2.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/custom_round_rectangle_button.dart';
@@ -34,7 +33,6 @@ class _EventDetailState extends State<EventDetail> {
   final _random = Random();
   final PageController _pageController = PageController();
   final DateFormat df = DateFormat("yyy-MM-dd");
-  final List<Transactions> listTransaction = TransactionDAO().getAll();
 
   var check;
 
@@ -43,12 +41,6 @@ class _EventDetailState extends State<EventDetail> {
     Size size = MediaQuery.of(context).size;
     List<Transactions> lsTransaction = [];
     final Duration dayLeft = widget.event.endDate.difference(DateTime.now());
-
-    listTransaction.forEach((element) {
-      if (element.event != null) {
-        if (element.event!.id == widget.event.id) lsTransaction.add(element);
-      }
-    });
 
     return SafeArea(
       child: Scaffold(
@@ -164,7 +156,7 @@ class _EventDetailState extends State<EventDetail> {
                       Container(
                         width: size.width * 0.62,
                         child: TextContainer(
-                          text: widget.event.wallet.walletName,
+                          text: "",
                           textColor: Colors.black,
                           textSize: size.width * 0.06,
                           textFontWeight: FontWeight.w400,

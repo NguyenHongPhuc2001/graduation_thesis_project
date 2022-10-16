@@ -1,4 +1,4 @@
-import 'package:graduation_thesis_project/model/RAPCategory.dart';
+import 'package:graduation_thesis_project/models/RAPCategory.dart';
 
 class RAPCategoryDAO {
   RAPCategory rct1 = RAPCategory(

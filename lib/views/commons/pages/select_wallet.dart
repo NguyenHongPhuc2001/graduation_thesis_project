@@ -1,15 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:graduation_thesis_project/model/Wallet.dart';
+import 'package:graduation_thesis_project/models/wallet.dart';
 import 'package:intl/intl.dart';
 
 class SelectWallet extends StatefulWidget {
-  final List<Wallet> listWallet;
+  final List<Wallet>? listWallet;
 
   const SelectWallet({
     Key? key,
-    required this.listWallet,
+    this.listWallet,
   }) : super(key: key);
 
   @override
@@ -46,14 +46,13 @@ class _SelectWalletState extends State<SelectWallet> {
         ),
       ),
       body: ListView.builder(
-          itemCount: widget.listWallet.length,
+          itemCount: 0,
           itemBuilder: (context, index) {
             return Padding(
               padding: EdgeInsets.only(top: size.width * 0.04),
               child: InkWell(
                 onTap: () {
                   setState(() {
-                    Navigator.pop(context, widget.listWallet.elementAt(index));
                   });
                 },
                 child: Container(
@@ -86,7 +85,7 @@ class _SelectWalletState extends State<SelectWallet> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              widget.listWallet.elementAt(index).walletName,
+                              "",
                               style: TextStyle(
                                 fontSize: size.width * 0.07,
                                 fontWeight: FontWeight.w400,
@@ -98,9 +97,7 @@ class _SelectWalletState extends State<SelectWallet> {
                               child: Row(
                                 children: [
                                   Text(
-                                    nf.format(widget.listWallet
-                                        .elementAt(index)
-                                        .walletBlanace),
+                                    nf.format(""),
                                     style: TextStyle(
                                       fontSize: size.width * 0.04,
                                       fontWeight: FontWeight.w400,

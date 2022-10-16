@@ -4,13 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:graduation_thesis_project/dao/envent_dao.dart';
-import 'package:graduation_thesis_project/dao/transaction_dao.dart';
-import 'package:graduation_thesis_project/dao/wallet_dao.dart';
-import 'package:graduation_thesis_project/model/Event.dart';
-import 'package:graduation_thesis_project/model/RAP.dart';
-import 'package:graduation_thesis_project/model/Transaction.dart';
-import 'package:graduation_thesis_project/model/Wallet.dart';
+import 'package:graduation_thesis_project/models/Event.dart';
+import 'package:graduation_thesis_project/models/RAP.dart';
+import 'package:graduation_thesis_project/models/Transaction.dart';
+import 'package:graduation_thesis_project/models/wallet.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/appbar_container_2.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/single_row_container.dart';
@@ -42,12 +39,9 @@ class _AddTransactionState extends State<AddTransaction> {
       precision: 0);
   final _transactionNoteController = TextEditingController();
   final df = DateFormat("dd-MM-yyyy");
-  final List<Wallet> listWallet = WalletDAO().getAllWallet();
-  final List<Transactions> listTran = TransactionDAO().getAll();
 
   var linkIcon, dateTime, event, noteData, wallet, rap;
   bool _onTextClick = false;
-  Transactions transactions = TransactionDAO().tran1;
 
   @override
   void initState() {
@@ -70,15 +64,7 @@ class _AddTransactionState extends State<AddTransaction> {
             prefixIcon2: Icons.save,
             onPrefixIcon2Tap: () {
               setState(() {
-                transactions.id = listTran.length + 1;
-                transactions.wallet = wallet;
-                transactions.createDate = dateTime;
-                transactions.rap = rap;
-                transactions.transactionValue =
-                    _transactionMoneyController.numberValue;
-                if (noteData != null) transactions.transactionNote = noteData;
-                transactions.event = event;
-                widget.listTransaction.add(transactions);
+
               });
               Navigator.pop(context, "Save Transaction");
             },
@@ -322,16 +308,6 @@ class _AddTransactionState extends State<AddTransaction> {
                 ),
                 InkWell(
                   onTap: () async {
-                    final data = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SelectWallet(
-                          listWallet: listWallet,
-                        ),
-                      ),
-                    ).then((value) => setState(() {
-                          wallet = value as Wallet;
-                        }));
                   },
                   child: SingleRowContainer(
                     boxDecoration: BoxDecoration(

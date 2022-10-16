@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_thesis_project/dao/budget_dao.dart';
-import 'package:graduation_thesis_project/dao/envent_dao.dart';
 import 'package:graduation_thesis_project/dao/target_dao.dart';
-import 'package:graduation_thesis_project/dao/transaction_dao.dart';
-import 'package:graduation_thesis_project/model/Budget.dart';
-import 'package:graduation_thesis_project/model/Event.dart';
-import 'package:graduation_thesis_project/model/Transaction.dart';
-import 'package:graduation_thesis_project/model/target.dart';
+import 'package:graduation_thesis_project/models/Budget.dart';
+import 'package:graduation_thesis_project/models/Event.dart';
+import 'package:graduation_thesis_project/models/Transaction.dart';
+import 'package:graduation_thesis_project/models/target.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_screen.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_screen.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_screen.dart';
@@ -25,9 +22,7 @@ class PlanMainScreen extends StatefulWidget {
 
 class _PlanMainScreenState extends State<PlanMainScreen> {
   final PageController _pageController = PageController();
-  final List<Event> listEvent = EventDAO().getAllEvent();
   final List<Target> listTarget = TargetDAO().getAll();
-  final List<Budget> listBudget = BudgetDAO().getAll();
 
   @override
   Widget build(BuildContext context) {
@@ -100,13 +95,13 @@ class _PlanMainScreenState extends State<PlanMainScreen> {
             } else if (position == 1) {
               return BudgetScreen(
                 pageController: _pageController,
-                listBudget: listBudget,
+                listBudget: null,
                 listTransaction: widget.listTransaction,
               );
             } else if (position == 2) {
               return EventScreen(
                 pageController: _pageController,
-                listEvent: listEvent,
+                listEvent: null,
                 listTransaction: widget.listTransaction,
               );
             } else {

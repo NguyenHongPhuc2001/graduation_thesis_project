@@ -1,18 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:graduation_thesis_project/models/Account.dart';
+import 'package:graduation_thesis_project/services/remote_services.dart';
 
 class WalletSetting extends StatefulWidget {
-  const WalletSetting({Key? key}) : super(key: key);
+
+  int? walletId;
+  String? walletName;
+  String? walletBalance;
+
+  WalletSetting({Key? key,required this.walletId, required this.walletName, required this.walletBalance}) :  super(key: key);
+
 
   @override
   State<WalletSetting> createState() => _WalletSettingState();
 }
 
 class _WalletSettingState extends State<WalletSetting> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-
     Size size = MediaQuery.of(context).size;
+
+    final controllerWalletName = TextEditingController();
+    final controllerWalletBalance = TextEditingController();
+
+    controllerWalletName.text = widget.walletName!;
+    controllerWalletBalance.text = widget.walletBalance.toString();
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -50,138 +71,150 @@ class _WalletSettingState extends State<WalletSetting> {
                     )
                   ],
                 ),
-                child: Stack(
-                  alignment: Alignment.topRight,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(3),
-                      margin: const EdgeInsets.all(7),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(100),
-                          boxShadow: const [
-                            BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 2
-                            )
-                          ]
+                child: GestureDetector(
+                  onTap: () async {
+                    RemoteService().deleteWallet(widget.walletId);
+                    Get.back();
+                  },
+                  child: Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(3),
+                        margin: const EdgeInsets.all(7),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(100),
+                            boxShadow: const [
+                              BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 2
+                              )
+                            ]
+                        ),
+                        child: const Icon(
+                          Icons.delete,
+                          size: 15,
+                        ),
                       ),
-                      child: const Icon(
-                        Icons.delete,
-                        size: 15,
-                      ),
-                    ),
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Colors.pinkAccent,
-                                borderRadius: BorderRadius.circular(100)
-                            ),
-                            padding: const EdgeInsets.all(18),
-                            child: SvgPicture.asset("images/simple_wallet.svg"),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 60),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black),
-                                ),
-                                hintText: "Ví A",
-                                hintStyle: TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.black
-                                ),
+                      Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.pinkAccent,
+                                  borderRadius: BorderRadius.circular(100)
                               ),
-                              textAlign: TextAlign.center,
+                              padding: const EdgeInsets.all(18),
+                              child: SvgPicture.asset("images/simple_wallet.svg"),
                             ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(15.0),
-                            child: Text(
-                              "Số dư",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey,
-                                fontSize: 16
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 60),
+                              child: TextField(
+                                controller: controllerWalletName,
+                                onChanged: (value) => widget.walletName = value,
+                                decoration: const InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black),
+                                  ),
+                                  hintText: "Tên ví",
+                                  hintStyle: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.black
+                                  ),
+                                ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(3),
-                            width: size.width * 0.5,
-                            height: size.width * 0.1,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(100),
-                                boxShadow: const [
-                                  BoxShadow(
-                                      color: Colors.grey,
-                                      blurRadius: 2
+                            const Padding(
+                              padding: EdgeInsets.all(15.0),
+                              child: Text(
+                                "Số dư",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey,
+                                  fontSize: 16
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(3),
+                              width: size.width * 0.5,
+                              height: size.width * 0.1,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(100),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        color: Colors.grey,
+                                        blurRadius: 2
+                                    )
+                                  ]
+                              ),
+                              child: Stack(
+                                alignment: Alignment.centerRight,
+                                children: [
+                                  SizedBox(
+                                    height : 40,
+                                    child: TextField(
+                                      controller: controllerWalletBalance,
+                                      onChanged: (value) => widget.walletBalance = value,
+                                      autofocus: false,
+                                      decoration: InputDecoration(
+                                        contentPadding: const EdgeInsets.only(left: 15, top: 5, bottom: 15),
+                                        enabledBorder: UnderlineInputBorder(
+                                            borderRadius: BorderRadius.circular(30),
+                                            borderSide: BorderSide.none
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(30),
+                                            borderSide: BorderSide.none
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        hintText: "Giá trị ví",
+                                        hintStyle: const TextStyle(
+                                            fontSize: 13,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w300
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.all(3),
+                                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                                    decoration: BoxDecoration(
+                                        color: Colors.redAccent,
+                                        borderRadius: BorderRadius.circular(100)
+                                    ),
+                                    child: const Text(
+                                      "VNĐ",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 8
+                                      ),
+                                    ),
                                   )
-                                ]
+                                ],
+                              ),
                             ),
-                            child: Stack(
-                              alignment: Alignment.centerRight,
-                              children: [
-                                SizedBox(
-                                  height : 40,
-                                  child: TextField(
-                                    autofocus: false,
-                                    decoration: InputDecoration(
-                                      contentPadding: const EdgeInsets.only(left: 15, top: 5, bottom: 15),
-                                      enabledBorder: UnderlineInputBorder(
-                                          borderRadius: BorderRadius.circular(30),
-                                          borderSide: BorderSide.none
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(30),
-                                          borderSide: BorderSide.none
-                                      ),
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      hintText: "2.050.000",
-                                      hintStyle: const TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w300
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(3),
-                                  margin: const EdgeInsets.symmetric(horizontal: 10),
-                                  decoration: BoxDecoration(
-                                      color: Colors.redAccent,
-                                      borderRadius: BorderRadius.circular(100)
-                                  ),
-                                  child: const Text(
-                                    "VNĐ",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 8
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
 
-                  ],
+                    ],
+                  ),
                 ),
               ),
               ElevatedButton(
                 onPressed: (){
-
+                  Account account = Account(accountId: null, accountUsername: "ChuTT", accountPassword: null, newPassword: null, rePassword: null);
+                  RemoteService().updateWallet(widget.walletId, widget.walletName, widget.walletBalance, account);
+                  Get.back();
                 },
                 style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
@@ -194,7 +227,7 @@ class _WalletSettingState extends State<WalletSetting> {
               ),
               ElevatedButton(
                 onPressed: (){
-
+                  Get.back();
                 },
                 style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),

@@ -7,12 +7,10 @@ import 'package:graduation_thesis_project/views/commons/widgets/text_container.d
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_select_rap.dart';
 import 'package:intl/intl.dart';
 
-import '../../dao/transaction_dao.dart';
-import '../../dao/wallet_dao.dart';
-import '../../model/Event.dart';
-import '../../model/RAP.dart';
-import '../../model/Transaction.dart';
-import '../../model/Wallet.dart';
+import '../../models/Event.dart';
+import '../../models/RAP.dart';
+import '../../models/Transaction.dart';
+import '../../models/wallet.dart';
 import '../commons/pages/select_event.dart';
 import '../commons/pages/select_wallet.dart';
 import '../commons/widgets/single_row_container.dart';
@@ -38,12 +36,9 @@ class _UpdateTransactionState extends State<UpdateTransaction> {
       precision: 0);
   final _transactionNoteController = TextEditingController();
   final df = DateFormat("dd-MM-yyyy");
-  final List<Wallet> listWallet = WalletDAO().getAllWallet();
-  final List<Transactions> listTran = TransactionDAO().getAll();
 
   var linkIcon, dateTime, event, noteData, wallet, rap;
   bool _onTextClick = false;
-  Transactions newTran = TransactionDAO().tran1;
 
   @override
   void initState() {
@@ -72,15 +67,7 @@ class _UpdateTransactionState extends State<UpdateTransaction> {
             prefixIcon2: Icons.save,
             onPrefixIcon2Tap: () {
               setState((){
-                newTran.createDate = dateTime;
-                newTran.transactionValue = _transactionMoneyController.numberValue;
-                newTran.event = event;
-                newTran.transactionNote = _transactionNoteController.text;
-                newTran.wallet = wallet;
-                newTran.rap = rap;
-                newTran.id = widget.transactions.id;
-                String state = TransactionDAO().update(widget.transactions, newTran);
-                Navigator.pop(context, state);
+
               });
             },
             text: "Sửa giao dịch",
@@ -317,16 +304,7 @@ class _UpdateTransactionState extends State<UpdateTransaction> {
                 ),
                 InkWell(
                   onTap: () async {
-                    final data = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SelectWallet(
-                          listWallet: listWallet,
-                        ),
-                      ),
-                    ).then((value) => setState(() {
-                          wallet = value as Wallet;
-                        }));
+
                   },
                   child: SingleRowContainer(
                     boxDecoration: BoxDecoration(

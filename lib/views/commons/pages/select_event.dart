@@ -2,9 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:graduation_thesis_project/dao/envent_dao.dart';
 
-import '../../../../model/Event.dart';
+import '../../../../models/Event.dart';
 
 class SelectEvent extends StatefulWidget {
   const SelectEvent({Key? key}) : super(key: key);
@@ -16,7 +15,6 @@ class SelectEvent extends StatefulWidget {
 class _SelectEventState extends State<SelectEvent> {
   final _random = Random();
   // final NumberFormat nf = NumberFormat("###,###");
-  final List<Event> listEvent = EventDAO().getAllEvent();
 
 
   @override
@@ -45,14 +43,14 @@ class _SelectEventState extends State<SelectEvent> {
         ),
       ),
       body: ListView.builder(
-          itemCount: listEvent.length,
+          itemCount: 0,
           itemBuilder: (context, index) {
             return Padding(
               padding: EdgeInsets.only(top: size.width * 0.04),
               child: InkWell(
                 onTap: () {
                   setState(() {
-                    Navigator.pop(context,listEvent.elementAt(index));
+                    Navigator.pop(context,0);
                   });
                 },
                 child: Container(
@@ -85,7 +83,7 @@ class _SelectEventState extends State<SelectEvent> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              listEvent.elementAt(index).eventName,
+                              "",
                               style: TextStyle(
                                 fontSize: size.width * 0.07,
                                 fontWeight: FontWeight.w400,

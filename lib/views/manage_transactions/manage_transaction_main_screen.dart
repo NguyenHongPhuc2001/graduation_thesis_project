@@ -9,7 +9,7 @@ import 'package:graduation_thesis_project/views/manage_transactions/overview_man
 import 'package:graduation_thesis_project/views/transaction_screen/transaction_detail.dart';
 import 'package:intl/intl.dart';
 
-import '../../model/Transaction.dart';
+import '../../models/Transaction.dart';
 
 class ManageTransaction extends StatefulWidget {
   final List<Transactions> listTransaction;

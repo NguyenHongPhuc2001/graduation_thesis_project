@@ -26,6 +26,16 @@ class _WalletCreateState extends State<WalletCreate> {
                 fontSize: 15.0
             ),
           ),
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+              size: 20,
+            ),
+            onPressed: () {
+
+            },
+          ),
           centerTitle: true,
           backgroundColor: Colors.white,
           elevation: 2,

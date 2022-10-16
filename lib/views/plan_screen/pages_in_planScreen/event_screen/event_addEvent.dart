@@ -4,10 +4,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:graduation_thesis_project/dao/envent_dao.dart';
-import 'package:graduation_thesis_project/dao/wallet_dao.dart';
-import 'package:graduation_thesis_project/model/Event.dart';
-import 'package:graduation_thesis_project/model/Wallet.dart';
+import 'package:graduation_thesis_project/models/Event.dart';
+import 'package:graduation_thesis_project/models/wallet.dart';
 import 'package:intl/intl.dart';
 
 import '../../../commons/pages/select_icon.dart';
@@ -29,14 +27,11 @@ class AddEvent extends StatefulWidget {
 
 class _AddEventState extends State<AddEvent> {
   final _random = Random();
-  final List<Wallet> listWallet = WalletDAO().getAllWallet();
   final TextEditingController _eventNameController = TextEditingController();
   final DateFormat df = DateFormat("yyyy-MM-dd");
   final PageController _pageController = PageController();
   var dateTime, linkIcon;
 
-  Wallet wallet = WalletDAO().wl1;
-  Event event = EventDAO().ev_1;
 
   @override
   Widget build(BuildContext context) {
@@ -74,15 +69,6 @@ class _AddEventState extends State<AddEvent> {
             onPressed: () {
               List<Event> listEvent = [];
               setState(() {
-                String check = "Insert";
-                event.eventName = _eventNameController.text;
-                event.endDate = dateTime;
-                event.totalSpending = 0;
-                event.wallet = wallet;
-                event.id = 5;
-                event.urlImage = linkIcon;
-                widget.listEvent.add(event);
-                widget.status = EventDAO().insertEvent(event);
                 listEvent = widget.listEvent;
                 Navigator.pop(
                   context,
@@ -276,17 +262,17 @@ class _AddEventState extends State<AddEvent> {
             padding: EdgeInsets.only(top: size.width * 0.1),
             child: InkWell(
               onTap: () async {
-                final data = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SelectWallet(
-                      listWallet: listWallet,
-                    ),
-                  ),
-                ).then((value) => setState(() {
-                      wallet = value;
-                      print(wallet.walletName);
-                    }));
+                // final data = await Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => SelectWallet(
+                //       listWallet: listWallet,
+                //     ),
+                //   ),
+                // ).then((value) => setState(() {
+                //       wallet = value;
+                //       print(wallet.walletName);
+                //     }));
               },
               child: Container(
                 padding: EdgeInsets.only(left: size.width * 0.04),
@@ -315,7 +301,7 @@ class _AddEventState extends State<AddEvent> {
                       ),
                       Expanded(
                         child: Text(
-                          wallet.walletName,
+                          "",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: size.width * 0.07,

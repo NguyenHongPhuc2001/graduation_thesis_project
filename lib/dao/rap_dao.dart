@@ -1,5 +1,5 @@
 import 'package:graduation_thesis_project/dao/rapCate_dao.dart';
-import 'package:graduation_thesis_project/model/RAP.dart';
+import 'package:graduation_thesis_project/models/RAP.dart';
 
 class RAPDAO {
   RAP r1 = RAP(

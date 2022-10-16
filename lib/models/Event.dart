@@ -1,4 +1,4 @@
-import 'package:graduation_thesis_project/model/Wallet.dart';
+import 'package:graduation_thesis_project/models/wallet.dart';
 
 class Event {
   int id;

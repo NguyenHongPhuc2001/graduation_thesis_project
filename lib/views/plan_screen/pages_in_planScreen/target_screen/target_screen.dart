@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_thesis_project/dao/target_dao.dart';
-import 'package:graduation_thesis_project/model/target.dart';
+import 'package:graduation_thesis_project/models/target.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/appbar_container.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_add.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_end.dart';

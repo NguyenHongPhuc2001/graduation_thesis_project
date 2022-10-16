@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:graduation_thesis_project/model/Budget.dart';
-import 'package:graduation_thesis_project/model/Transaction.dart';
+import 'package:graduation_thesis_project/models/Budget.dart';
+import 'package:graduation_thesis_project/models/Transaction.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/single_row_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
@@ -13,12 +13,12 @@ import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class BudgetHappening extends StatefulWidget {
-  final List<Budget> listBudget;
+  final List<Budget>? listBudget;
   final List<Transactions> listTransaction;
 
   const BudgetHappening({
     Key? key,
-    required this.listBudget,
+    this.listBudget,
     required this.listTransaction,
   }) : super(key: key);
 
@@ -38,11 +38,7 @@ class _BudgetHappeningState extends State<BudgetHappening> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     listBudgetHappening.clear();
-    widget.listBudget.forEach((element) {
-      if (element.status == false) {
-        listBudgetHappening.add(element);
-      }
-    });
+
 
     double totalSpending = 0, percentSpending = 0, percentOver = 0;
     bool isOverSpending = false;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_thesis_project/model/Transaction.dart';
+import 'package:graduation_thesis_project/models/Transaction.dart';
 import 'package:graduation_thesis_project/views/plan_screen/plan_main_screen.dart';
 
 class Planning extends StatefulWidget {

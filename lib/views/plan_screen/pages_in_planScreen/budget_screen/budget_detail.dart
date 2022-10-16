@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:graduation_thesis_project/model/Budget.dart';
-import 'package:graduation_thesis_project/model/Transaction.dart';
+import 'package:graduation_thesis_project/models/Budget.dart';
+import 'package:graduation_thesis_project/models/Transaction.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/appbar_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/appbar_container_2.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
@@ -21,14 +21,14 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class BudgetDetail extends StatefulWidget {
   final List<Transactions> listTransaction;
-  final List<Budget> listBudget;
+  final List<Budget>? listBudget;
   final Budget budget;
 
   const BudgetDetail({
     Key? key,
     required this.listTransaction,
     required this.budget,
-    required this.listBudget,
+    this.listBudget,
   }) : super(key: key);
 
   @override
@@ -78,18 +78,7 @@ class _BudgetDetailState extends State<BudgetDetail> {
                 Navigator.pop(context);
               },
               onPrefixIcon1Tap: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => UpdateBudget(
-                        index: 1,
-                        budget: widget.budget,
-                        listBudget: widget.listBudget),
-                  ),
-                ).then((value) => setState(() {
-                      if (value == "Update")
-                        Fluttertoast.showToast(msg: "Cập nhật thành công !");
-                    }));
+
               },
               onPrefixIcon2Tap: () {
                 _showDeleteDialog(widget.budget);
@@ -597,17 +586,7 @@ class _BudgetDetailState extends State<BudgetDetail> {
                 onTap: () {
                   List<Budget> lsBudget = [];
                   setState(() {
-                    widget.listBudget
-                        .removeWhere((element) => element.id == bg.id);
-                    lsBudget = widget.listBudget;
-                    Navigator.pop(
-                      context,
-                      BudgetScreen(
-                          pageController: _pageController,
-                          listBudget: lsBudget,
-                          listTransaction: listTransaction),
-                    );
-                    Navigator.pop(context, "Delete");
+
                   });
                 },
                 child: Container(
