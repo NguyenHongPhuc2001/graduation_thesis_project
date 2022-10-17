@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/Transaction.dart';
+import 'package:graduation_thesis_project/ui/wallet_create.dart';
 import 'package:graduation_thesis_project/views/page/overview.dart';
 import 'package:graduation_thesis_project/views/page/planning.dart';
 import 'package:graduation_thesis_project/views/page/setting.dart';
@@ -35,7 +37,7 @@ class _HomeState extends State<Home> {
         child: FittedBox(
           child: FloatingActionButton(
             onPressed: () async {
-
+              Get.to(const WalletCreate());
             },
             child: const Icon(Icons.add),
           ),

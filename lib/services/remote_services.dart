@@ -89,4 +89,31 @@ class RemoteService {
 
     return false;
   }
+
+  Future<bool?> createWallet(String? walletName, double? walletBalance, Account? account) async{
+
+    final queryParameters = {
+      "walletName" : walletName,
+      "walletBalance" : walletBalance,
+      "account" : account
+    };
+
+    final request = http.Request(
+        'POST',
+        Uri.http(ApiPaths.BE_DOMAIN, ApiPaths.WALLET_DOMAIN + ApiPaths.MODEL_CREATE_DOMAIN)
+    );
+
+    request.headers['content-type'] = 'application/json';
+    request.body = jsonEncode(queryParameters);
+
+    final streamedRequest = await request.send();
+    final response = await http.Response.fromStream(streamedRequest);
+
+    if(response.statusCode == 200){
+      return true;
+    }
+
+    return false;
+  }
+
 }

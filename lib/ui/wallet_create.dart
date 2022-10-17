@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:graduation_thesis_project/models/Account.dart';
+
+import '../services/remote_services.dart';
 
 class WalletCreate extends StatefulWidget {
   const WalletCreate({Key? key}) : super(key: key);
@@ -9,10 +13,21 @@ class WalletCreate extends StatefulWidget {
 }
 
 class _WalletCreateState extends State<WalletCreate> {
+
+  String? _walletName = "";
+  double? _walletBalance = 0.0;
+  Account? _account;
+
   @override
   Widget build(BuildContext context) {
 
     Size size = MediaQuery.of(context).size;
+
+    final controllerWalletName = TextEditingController();
+    final controllerWalletBalance = TextEditingController();
+
+    controllerWalletName.text = _walletName!;
+    controllerWalletBalance.text = _walletBalance.toString();
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -33,7 +48,7 @@ class _WalletCreateState extends State<WalletCreate> {
               size: 20,
             ),
             onPressed: () {
-
+              Get.back();
             },
           ),
           centerTitle: true,
@@ -63,24 +78,6 @@ class _WalletCreateState extends State<WalletCreate> {
                 child: Stack(
                   alignment: Alignment.topRight,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(3),
-                      margin: const EdgeInsets.all(7),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(100),
-                          boxShadow: const [
-                            BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 2
-                            )
-                          ]
-                      ),
-                      child: const Icon(
-                        Icons.delete,
-                        size: 15,
-                      ),
-                    ),
                     Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -94,14 +91,16 @@ class _WalletCreateState extends State<WalletCreate> {
                             padding: const EdgeInsets.all(18),
                             child: SvgPicture.asset("images/simple_wallet.svg"),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 60),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 60),
                             child: TextField(
-                              decoration: InputDecoration(
+                              controller: controllerWalletName,
+                              onChanged: (value) => _walletName = value,
+                              decoration: const InputDecoration(
                                 enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black),
                                 ),
-                                hintText: "Ví A",
+                                hintText: "Nhập tên ví của bạn",
                                 hintStyle: TextStyle(
                                     fontSize: 13,
                                     color: Colors.black
@@ -141,6 +140,8 @@ class _WalletCreateState extends State<WalletCreate> {
                                 SizedBox(
                                   height : 40,
                                   child: TextField(
+                                    controller: controllerWalletBalance,
+                                    onChanged: (value) => _walletBalance = double.parse(value),
                                     autofocus: false,
                                     decoration: InputDecoration(
                                       contentPadding: const EdgeInsets.only(left: 15, top: 5, bottom: 15),
@@ -154,7 +155,7 @@ class _WalletCreateState extends State<WalletCreate> {
                                       ),
                                       filled: true,
                                       fillColor: Colors.white,
-                                      hintText: "2.050.000",
+                                      hintText: "Nhập số dư",
                                       hintStyle: const TextStyle(
                                           fontSize: 13,
                                           color: Colors.black,
@@ -191,7 +192,9 @@ class _WalletCreateState extends State<WalletCreate> {
               ),
               ElevatedButton(
                 onPressed: (){
-
+                  _account = Account(accountUsername: "ChuTT");
+                  RemoteService().createWallet(_walletName, _walletBalance, _account);
+                  Get.back();
                 },
                 style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
@@ -204,7 +207,7 @@ class _WalletCreateState extends State<WalletCreate> {
               ),
               ElevatedButton(
                 onPressed: (){
-
+                  Get.back();
                 },
                 style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:graduation_thesis_project/models/wallet.dart';
+import 'package:graduation_thesis_project/services/remote_services.dart';
+import 'package:graduation_thesis_project/ui/wallet_list.dart';
 
 class Overview extends StatefulWidget {
   const Overview({Key? key}) : super(key: key);
@@ -52,8 +56,9 @@ class _OverviewState extends State<Overview> {
                               SizedBox(
                                 width: size.width * 0.07,
                                 child: ElevatedButton(
-                                  onPressed: () {
-
+                                  onPressed: () async{
+                                    List<Wallet> wallets = await RemoteService().getWallets("ChuTT") as List<Wallet>;
+                                    Get.to(WalletList(wallets: wallets));
                                   },
                                   style: ButtonStyle(
                                     shape: MaterialStateProperty.all(

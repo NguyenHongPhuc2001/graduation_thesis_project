@@ -20,12 +20,6 @@ class WalletSetting extends StatefulWidget {
 class _WalletSettingState extends State<WalletSetting> {
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 

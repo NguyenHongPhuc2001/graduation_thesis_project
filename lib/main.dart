@@ -32,7 +32,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: const WalletList(),
+      home: const Home(),
     );
   }
 }
