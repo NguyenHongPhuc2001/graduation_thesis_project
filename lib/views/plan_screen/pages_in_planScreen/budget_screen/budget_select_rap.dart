@@ -3,53 +3,56 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:graduation_thesis_project/dao/rapCate_dao.dart';
-import 'package:graduation_thesis_project/dao/rap_dao.dart';
-import 'package:graduation_thesis_project/models/RAP.dart';
-import 'package:graduation_thesis_project/models/RAPCategory.dart';
-import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/list_rap_by_rapCate.dart';
+import 'package:get/get.dart';
+import 'package:graduation_thesis_project/controllers/expense_controller.dart';
+
 
 class SelectRap extends StatefulWidget {
-  const SelectRap({Key? key}) : super(key: key);
+
+  final expenseController = Get.put(ExpenseController());
+
+  SelectRap({Key? key}) : super(key: key);
 
   @override
   State<SelectRap> createState() => _SelectRapState();
 }
 
 class _SelectRapState extends State<SelectRap> {
+
   final _random = Random();
+
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
 
-    List<RAP> listRAP = RAPDAO().getAll();
-    List<RAPCategory> listRAPCate = RAPCategoryDAO().getAll();
+    Size size = MediaQuery.of(context).size;
+    _loadExpenseList();
 
     return SafeArea(
-        child: Scaffold(
+      child: Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             CupertinoIcons.xmark,
             color: Colors.black,
+            size: 18,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Get.back();
           },
         ),
         centerTitle: true,
         title: Text(
-          "Chọn danh mục",
+          "Chọn chi tiêu",
           style: TextStyle(
-            fontSize: size.width * 0.065,
+            fontSize: size.width * 0.055,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
         ),
       ),
-      body: Container(
+      body: SizedBox(
         width: size.width,
         height: size.height * 0.9,
 
@@ -62,30 +65,23 @@ class _SelectRapState extends State<SelectRap> {
                   left: size.width * 0.03),
               width: size.width,
               child: _textInTargetDetail(
-                text: "Tất cả danh mục",
+                text: "Tất cả nhóm chi tiêu",
                 textColor: Colors.grey,
-                textSize: size.width * 0.06,
+                textSize: size.width * 0.05,
                 textFontWeight: FontWeight.bold,
                 decoration: TextDecoration.none,
               ),
             ),
-            Container(
+            SizedBox(
               width: size.width,
-              height: size.width * 0.23 * listRAP.length,
+              height: size.height * 0.7,
               child: ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: listRAPCate.length,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: widget.expenseController.expenseList.length,
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ListRAPByRAPCate(
-                              rapCategory: listRAPCate.elementAt(index),
-                            ),
-                          ),
-                        );
+                        print(widget.expenseController.expenseList[index].toJson());
                       },
                       child: Container(
                         padding: EdgeInsets.all(size.width * 0.02),
@@ -107,15 +103,15 @@ class _SelectRapState extends State<SelectRap> {
                                     [_random.nextInt(9) * 100],
                               ),
                               child: SvgPicture.asset(
-                                listRAPCate.elementAt(index).rapCateUrlImage,
+                                "images/logo_money.svg",
                                 width: size.width * 0.07,
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               width: size.width * 0.7,
                               child: _textInTargetDetail(
                                 text:
-                                    "${listRAPCate.elementAt(index).rapCateName}",
+                                    widget.expenseController.expenseList[index].expenseName,
                                 textColor: Colors.black,
                                 textSize: size.width * 0.05,
                                 textFontWeight: FontWeight.bold,
@@ -132,6 +128,10 @@ class _SelectRapState extends State<SelectRap> {
         ),
       ),
     ));
+  }
+
+  _loadExpenseList() {
+    widget.expenseController.getExpenses();
   }
 }
 
@@ -164,3 +164,5 @@ class _textInTargetDetail extends StatelessWidget {
     );
   }
 }
+
+

@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:graduation_thesis_project/models/Budget.dart';
+import 'package:graduation_thesis_project/models/budget.dart';
 import 'package:graduation_thesis_project/models/RAP.dart';
 import 'package:graduation_thesis_project/models/Transaction.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/appbar_container_2.dart';
@@ -14,7 +14,7 @@ import 'package:graduation_thesis_project/views/commons/widgets/custom_round_rec
 import 'package:graduation_thesis_project/views/commons/widgets/money_text_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/single_row_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
-import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_add.dart';
+import 'package:graduation_thesis_project/ui/budget_add.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_screen.dart';
 import 'package:graduation_thesis_project/views/transaction_screen/transaction_update.dart';
 import 'package:intl/intl.dart';

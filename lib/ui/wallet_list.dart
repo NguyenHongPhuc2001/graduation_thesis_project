@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/wallet.dart';
-import 'package:graduation_thesis_project/services/remote_services.dart';
 import 'package:graduation_thesis_project/ui/wallet_setting.dart';
 
 class WalletList extends StatefulWidget {
@@ -59,7 +58,6 @@ class _WalletListState extends State<WalletList> {
 
   Widget _loadWalletItem(List<Wallet>? wallets) {
 
-    print(wallets?.length);
     List<Widget> walletItems = <Widget>[];
     if(wallets != null){
       for (var item in wallets) {

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:graduation_thesis_project/models/expense.dart';
 import 'package:graduation_thesis_project/models/response/response_model.dart';
 import 'package:graduation_thesis_project/models/wallet.dart';
 import 'package:graduation_thesis_project/utils/api.dart';
@@ -101,6 +102,117 @@ class RemoteService {
     final request = http.Request(
         'POST',
         Uri.http(ApiPaths.BE_DOMAIN, ApiPaths.WALLET_DOMAIN + ApiPaths.MODEL_CREATE_DOMAIN)
+    );
+
+    request.headers['content-type'] = 'application/json';
+    request.body = jsonEncode(queryParameters);
+
+    final streamedRequest = await request.send();
+    final response = await http.Response.fromStream(streamedRequest);
+
+    if(response.statusCode == 200){
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<List<Expense>?> getExpenses(String accountUsername) async {
+
+    final queryParameters = {
+      "accountUsername" : accountUsername
+    };
+
+    final request = http.Request(
+        'GET',
+        Uri.http(ApiPaths.BE_DOMAIN, ApiPaths.EXPENSE_DOMAIN + ApiPaths.MODEL_GET_LIST_DOMAIN)
+    );
+
+    request.headers['content-type'] = 'application/json';
+    request.body = jsonEncode(queryParameters);
+
+    final streamedRequest = await request.send();
+    final response = await http.Response.fromStream(streamedRequest);
+
+    if(response.statusCode == 200){
+
+      ResponseModel model = responseModelFromJson(response.body);
+      List<Expense> expenses = expensesFromJson(model.modelList!.toList());
+
+      return expenses;
+
+    }
+
+    return null;
+  }
+
+  Future<bool?> createExpense(String? expenseName, String? expenseType, String? expenseIcon, Account? account) async{
+
+    final queryParameters = {
+      "expenseName" : expenseName,
+      "expenseType" : expenseType,
+      "expenseIcon" : expenseIcon,
+      "isExpenseSystem" : false,
+      "account" : account
+    };
+
+    final request = http.Request(
+        'POST',
+        Uri.http(ApiPaths.BE_DOMAIN, ApiPaths.EXPENSE_DOMAIN + ApiPaths.MODEL_CREATE_DOMAIN)
+    );
+
+    request.headers['content-type'] = 'application/json';
+    request.body = jsonEncode(queryParameters);
+
+    final streamedRequest = await request.send();
+    final response = await http.Response.fromStream(streamedRequest);
+
+    if(response.statusCode == 200){
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<bool?> updateExpense(int? expenseId, String? expenseName, String? expenseType, String? expenseIcon, Account? account) async{
+
+    final queryParameters = {
+      "expenseId" : expenseId,
+      "expenseName" : expenseName,
+      "expenseType" : expenseType,
+      "expenseIcon" : expenseIcon,
+      "isExpenseSystem" : false,
+      "account" : account
+    };
+
+    final request = http.Request(
+        'PUT',
+        Uri.http(ApiPaths.BE_DOMAIN, ApiPaths.EXPENSE_DOMAIN + ApiPaths.MODEL_UPDATE_DOMAIN)
+    );
+
+    request.headers['content-type'] = 'application/json';
+    request.body = jsonEncode(queryParameters);
+
+    final streamedRequest = await request.send();
+    final response = await http.Response.fromStream(streamedRequest);
+
+    if(response.statusCode == 200){
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<bool?> deleteExpense(int? expenseId, Account? account) async{
+
+    final queryParameters = {
+      "expenseId" : expenseId,
+      "account" : account
+    };
+
+    final request = http.Request(
+        'DELETE',
+        Uri.http(ApiPaths.BE_DOMAIN, ApiPaths.EXPENSE_DOMAIN + ApiPaths.MODEL_DELETE_DOMAIN)
     );
 
     request.headers['content-type'] = 'application/json';

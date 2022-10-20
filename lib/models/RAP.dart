@@ -1,4 +1,4 @@
-import 'package:graduation_thesis_project/models/Budget.dart';
+import 'package:graduation_thesis_project/models/budget.dart';
 import 'package:graduation_thesis_project/models/RAPCategory.dart';
 import 'package:graduation_thesis_project/views/page/transaction.dart';
 
