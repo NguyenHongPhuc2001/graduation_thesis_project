@@ -4,6 +4,12 @@ import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/wallet.dart';
 import 'package:graduation_thesis_project/services/remote_services.dart';
 import 'package:graduation_thesis_project/ui/wallet_list.dart';
+import 'package:graduation_thesis_project/utils/charts/bar.dart';
+import 'package:graduation_thesis_project/utils/date/date_utils.dart';
+import 'package:charts_flutter_new/flutter.dart' as charts;
+
+import '../../controllers/entites/history_controller.dart';
+import '../../models/history.dart';
 
 class Overview extends StatefulWidget {
   const Overview({Key? key}) : super(key: key);
@@ -14,8 +20,26 @@ class Overview extends StatefulWidget {
 
 class _OverviewState extends State<Overview> {
 
+  List<charts.Series<Withdraw, String>> dataWeek = [];
+  List<charts.Series<Withdraw, String>> dataMonth = [];
+
+  List<String> items = [
+    "Tuần",
+    "Tháng"
+  ];
+
+  var choose = 'month';
+
   @override
   Widget build(BuildContext context) {
+
+    _createDataWeek().then((value){
+      dataWeek = value;
+    });
+
+    _createDataMonth().then((value){
+      dataMonth = value;
+    });
 
     Size size = MediaQuery.of(context).size;
 
@@ -413,6 +437,153 @@ class _OverviewState extends State<Overview> {
                           ),
                         ),
                         Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: Container(
+                              width: size.width * 0.6,
+                              height: size.height * 0.06,
+                              decoration: BoxDecoration(
+                                color: Colors.black26,
+                                borderRadius: BorderRadius.circular(50)
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: AnimatedContainer(
+                                      alignment: Alignment.center,
+                                      width: size.width * 0.28,
+                                      decoration: BoxDecoration(
+                                          color: choose == 'week' ? Colors.blue : Colors.white,
+                                          borderRadius: BorderRadius.circular(50),
+                                          boxShadow: const [
+                                             BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 1,
+                                              spreadRadius: 1
+                                            )
+                                          ]
+                                      ),
+                                      duration: const Duration(seconds: 300),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            choose = 'week';
+                                          });
+                                        },
+                                        child: Text(
+                                          "Tuần",
+                                          style: choose == 'week' ?
+                                          const TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold
+                                          ) : const TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: AnimatedContainer(
+                                      alignment: Alignment.center,
+                                      width: size.width * 0.28,
+                                      decoration: BoxDecoration(
+                                          color: choose == 'month' ? Colors.blue : Colors.white,
+                                          borderRadius: BorderRadius.circular(50),
+                                          boxShadow: const [
+                                            BoxShadow(
+                                                color: Colors.black26,
+                                                blurRadius: 1,
+                                                spreadRadius: 1
+                                            )
+                                          ]
+                                      ),
+                                      duration: const Duration(seconds: 300),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            choose = 'month';
+                                          });
+                                        },
+                                        child: Text(
+                                          "Tháng",
+                                          style: choose == 'month' ?
+                                          const TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold
+                                          ) : const TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(size.width * 0.04),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Row(
+                              children: [
+                                const Text(
+                                  "Tổng chi tháng này",
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12
+                                  ),
+                                ),
+                                Stack(
+                                  alignment: Alignment.centerRight,
+                                  children: const [
+                                    Text(
+                                        "2.050.000"
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                            height: size.height * 0.5,
+                            width: size.width * 0.9,
+                            child: CustomRoundedBars(seriesList: choose == 'week' ? dataWeek : dataMonth, animate: false,)
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(size.width * 0.04),
+                          child: Row (
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: size.width * 0.6,
+                                child: const Divider(
+                                  height: 1,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              const Spacer(),
+                              const Text(
+                                  "Chi nhiều nhất",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12
+                                  ),
+                              )
+                            ],
+                          )
+                        ),
+                        Padding(
                           padding: EdgeInsets.all(size.width * 0.04),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -626,4 +797,124 @@ class _OverviewState extends State<Overview> {
       ),
     );
   }
+
+  Future<double> _totalWithdraw(List<String> dates) async {
+
+    Future<List<History>?> histories = HistoryController().getHistoriesByWithdraw("ChuTT");
+    double totalWithdraw = 0.0;
+    await histories.then((value) {
+      for (var h in value!) {
+        for (var d in dates) {
+          if(h.historyNotedDate!.trim() == d.trim()){
+            totalWithdraw += h.historyCost!;
+            break;
+          }
+        }
+      }
+    });
+
+    return totalWithdraw;
+  }
+
+  Future<List<charts.Series<Withdraw, String>>> _createDataWeek() async {
+
+    List<String> dateOfCurrentWeek = DateUtilsCustom().getDateOfWeek(DateTime.now());
+    List<String> dateOfLastWeek = DateUtilsCustom().getDateOfWeek(DateTime.now().subtract(const Duration(days: 7)));
+
+    double totalLastWithdraw = 0.0;
+    double totalCurrentWithdraw = 0.0;
+
+    await _totalWithdraw(dateOfCurrentWeek).then((value){
+      totalCurrentWithdraw = value;
+    });
+
+    await _totalWithdraw(dateOfLastWeek).then((value){
+      totalLastWithdraw = value;
+    });
+
+    final data = [
+      Withdraw("Tuần trước", totalLastWithdraw),
+      Withdraw("Tuần này", totalCurrentWithdraw),
+    ];
+
+    return [
+      charts.Series<Withdraw, String>(
+        id: 'Withdraw',
+        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
+        domainFn: (Withdraw withdraw, _) => withdraw.title,
+        measureFn: (Withdraw withdraw, _) => withdraw.total,
+        data: data,
+      )
+    ];
+  }
+
+  Future<List<charts.Series<Withdraw, String>>> _createDataMonth() async {
+
+    List<String> datesOfCurrentMonth = [];
+    List<String> datesOfLastMonth = [];
+
+    int currentMonth = DateTime.now().month;
+    int currentYear = DateTime.now().year;
+
+    bool check = false;
+
+    int totalDatesOfCurrentMonth = DateUtils.getDaysInMonth(currentYear, currentMonth);
+    int totalDatesOfLastMonth = 0;
+
+    if(currentMonth - 1 == 0){
+      check = true;
+      totalDatesOfLastMonth = DateUtils.getDaysInMonth(currentYear - 1, 12);
+    }else{
+      totalDatesOfLastMonth = DateUtils.getDaysInMonth(currentYear, currentMonth - 1);
+    }
+
+    for (var i = 0; i < totalDatesOfCurrentMonth; i++) {
+      datesOfLastMonth.add( '$currentYear-$currentMonth-${i + 1}');
+    }
+
+    if (check) {
+      for (var i = 0; i < totalDatesOfLastMonth; i++) {
+        datesOfLastMonth.add( '${currentYear-1}-12-${i + 1}');
+      }
+    }else{
+      for (var i = 0; i < totalDatesOfLastMonth; i++) {
+        datesOfLastMonth.add( '$currentYear-${currentMonth - 1}-${i + 1}');
+      }
+    }
+
+    double totalLastWithdraw = 0.0;
+    double totalCurrentWithdraw = 0.0;
+
+    await _totalWithdraw(datesOfCurrentMonth).then((value){
+      totalCurrentWithdraw = value;
+    });
+
+    await _totalWithdraw(datesOfLastMonth).then((value){
+      totalLastWithdraw = value;
+    });
+
+    final data = [
+      Withdraw("Tháng trước", totalLastWithdraw),
+      Withdraw("Tháng này", totalCurrentWithdraw),
+    ];
+
+    return [
+      charts.Series<Withdraw, String>(
+        id: 'Withdraw',
+        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
+        domainFn: (Withdraw withdraw, _) => withdraw.title,
+        measureFn: (Withdraw withdraw, _) => withdraw.total,
+        data: data,
+      )
+    ];
+  }
+
+}
+
+class Withdraw {
+  final String title;
+  final double total;
+
+  Withdraw(this.title, this.total);
+
 }

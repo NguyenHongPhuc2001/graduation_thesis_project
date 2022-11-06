@@ -4,7 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:graduation_thesis_project/controllers/expense_controller.dart';
+
+import '../../../../controllers/entites/expense_controller.dart';
 
 
 class SelectRap extends StatefulWidget {

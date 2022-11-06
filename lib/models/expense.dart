@@ -36,7 +36,7 @@ class Expense extends BaseModel {
   );
 
   Map<String, dynamic> toJson () => {
-      "expenseId": expenseIcon,
+      "expenseId": expenseId,
       "expenseName": expenseName,
       "expenseType": expenseType,
       "expenseIcon": expenseIcon,

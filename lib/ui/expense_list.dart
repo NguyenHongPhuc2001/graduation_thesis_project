@@ -5,14 +5,14 @@ import 'package:graduation_thesis_project/models/expense.dart';
 import 'package:graduation_thesis_project/ui/expense_setting.dart';
 import 'package:graduation_thesis_project/utils/enums/expense_type.dart';
 import 'package:graduation_thesis_project/utils/enums/history_type.dart';
-import '../controllers/expense_controller.dart';
+import '../controllers/entites/expense_controller.dart';
 import 'expense_create.dart';
 
 class ExpenseList extends StatefulWidget {
 
   final expenseController = Get.put(ExpenseController());
-
-  ExpenseList({Key? key}) : super(key: key);
+  final bool isLoadByBudget;
+  ExpenseList({Key? key, required this.isLoadByBudget}) : super(key: key);
 
   @override
   State<ExpenseList> createState() => _ExpenseListState();
@@ -54,7 +54,7 @@ class _ExpenseListState extends State<ExpenseList> {
         body: SingleChildScrollView(
             child: Column(
               children: [
-                _loadWalletItem(widget.expenseController.expenseList),
+                _loadExpenseItem(widget.expenseController.expenseList, widget.isLoadByBudget),
                 const SizedBox(),
                 _addExpenseButton()
               ],
@@ -85,11 +85,11 @@ class _ExpenseListState extends State<ExpenseList> {
         alignment: FractionalOffset.bottomCenter,
         child: InkWell(
           onTap: (){
-            Get.to(ExpenseCreate());
+            Get.to(ExpenseCreate(isLoadByBudget: true,));
           },
-          child: const Text(
-                "Thêm mới chi tiêu",
-                style: TextStyle(
+          child: Text(
+                widget.isLoadByBudget ? "Thêm mới chi tiêu" : "Thêm mới chi tiêu",
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white
                 ),
@@ -99,13 +99,20 @@ class _ExpenseListState extends State<ExpenseList> {
     );
   }
 
-  Widget _loadWalletItem(List<Expense> expenses) {
+  Widget _loadExpenseItem(List<Expense> expenses, bool isLoadByBudget) {
 
     List<Widget> walletItems = <Widget>[];
+    if(isLoadByBudget){
+      expenses = expenses.where((e) => e.expenseType == ExpenseType.DISBURSE.name).toList();
+    }
     for (var item in expenses) {
       walletItems.add(GestureDetector(
         onTap: () {
-          Get.to(ExpenseSetting(expenseId: item.expenseId, expenseName: item.expenseName, expenseType: item.expenseType, expenseIcon: item.expenseIcon));
+          if(isLoadByBudget){
+            Navigator.of(context).pop(item);
+          }else{
+            Get.to(ExpenseSetting(expenseId: item.expenseId, expenseName: item.expenseName, expenseType: item.expenseType, expenseIcon: item.expenseIcon));
+          }
         },
         child: Container(
           alignment: Alignment.center,
@@ -126,28 +133,28 @@ class _ExpenseListState extends State<ExpenseList> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                    margin: const EdgeInsets.only(left: 5),
-                    child: Stack(
-                      alignment: Alignment.centerLeft,
-                      children: [
-                        Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              color: Colors.amberAccent,
-                              borderRadius: BorderRadius.circular(100)
-                          ),
-                          padding: const EdgeInsets.all(10),
-                          child: SvgPicture.asset(item.expenseIcon),
-                        )
-                      ],
-                    ),
+                margin: const EdgeInsets.only(left: 5),
+                child: Stack(
+                  alignment: Alignment.centerLeft,
+                  children: [
+                    Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                          color: Colors.amberAccent,
+                          borderRadius: BorderRadius.circular(100)
+                      ),
+                      padding: const EdgeInsets.all(10),
+                      child: SvgPicture.asset(item.expenseIcon),
+                    )
+                  ],
+                ),
               ),
               Text(
-                    item.expenseName,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold
-                    ),
+                item.expenseName,
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold
+                ),
               ),
               Container(
                 margin: const EdgeInsets.only(right: 10),

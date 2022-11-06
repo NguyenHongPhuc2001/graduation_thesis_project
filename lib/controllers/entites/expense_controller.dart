@@ -2,7 +2,8 @@ import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/expense.dart';
 import 'package:graduation_thesis_project/services/remote_services.dart';
 
-import '../models/Account.dart';
+import '../../models/account.dart';
+
 
 class ExpenseController extends GetxController{
 
@@ -23,6 +24,10 @@ class ExpenseController extends GetxController{
 
   Future<bool?> deleteExpense(int? expenseId, Account? account) async {
     return await RemoteService().deleteExpense(expenseId, account);
+  }
+
+  Future<Expense?> getExpense(int expenseId) async {
+    return await RemoteService().getExpense(expenseId);
   }
 
 }

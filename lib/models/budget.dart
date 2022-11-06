@@ -1,34 +1,34 @@
 import 'dart:convert';
 
-import 'package:graduation_thesis_project/models/Account.dart';
-import 'package:graduation_thesis_project/models/expense.dart';
-import 'package:graduation_thesis_project/models/history.dart';
+Budget budgetFromJson(String str) => Budget.fromJson(json.decode(str));
+List<Budget> budgetsFromJson(List<dynamic> json) => List<Budget>.from(json.map((b) => Budget.fromJson(b))).toList();
 
-Budget expenseFromJson(String str) => Budget.fromJson(json.decode(str));
-List<Budget> expensesFromJson(List<dynamic> json) => List<Budget>.from(json.map((b) => Expense.fromJson(b))).toList();
-
-String expenseToJson(Budget budget) => json.encode(budget);
-String expensesToJson(List<Budget> budgets) => json.encode(List<dynamic>.from(budgets.map((b) => b.toJson())));
+String budgetToJson(Budget budget) => json.encode(budget);
+String budgetsToJson(List<Budget> budgets) => json.encode(List<dynamic>.from(budgets.map((b) => b.toJson())));
 
 class Budget {
 
   int? budgetId;
   String budgetName;
   String budgetIcon;
+  double? budgetPresentValue;
   double budgetValue;
   String budgetMothYear;
-  bool budgetStatus;
-  Account? account;
-  Expense? expense;
-  List<History>? histories;
+  bool? budgetStatus;
+  bool? budgetExpired;
+  dynamic account;
+  dynamic expense;
+  List<dynamic>? histories;
 
   Budget({
     this.budgetId,
     required this.budgetName,
     required this.budgetIcon,
+    this.budgetPresentValue,
     required this.budgetValue,
     required this.budgetMothYear,
-    required this.budgetStatus,
+    this.budgetStatus,
+    this.budgetExpired,
     this.account,
     this.expense,
     this.histories
@@ -38,9 +38,11 @@ class Budget {
       budgetId: json['budgetId'],
       budgetName: json['budgetName'],
       budgetIcon: json['budgetIcon'],
+      budgetPresentValue: json['budgetPresentValue'],
       budgetValue: json['budgetValue'],
       budgetMothYear: json['budgetMothYear'],
       budgetStatus: json['budgetStatus'],
+      budgetExpired: json['budgetExpired'],
       account: json['account'],
       expense: json['expense'],
       histories: json['histories']
@@ -50,9 +52,11 @@ class Budget {
     "budgetId": budgetId,
     "budgetName": budgetName,
     "budgetIcon": budgetIcon,
+    "budgetPresentValue": budgetPresentValue,
     "budgetValue": budgetValue,
     "budgetMothYear": budgetMothYear,
     "budgetStatus": budgetStatus,
+    "budgetExpired": budgetExpired,
     "account": account,
     "expense": expense,
     "histories": histories

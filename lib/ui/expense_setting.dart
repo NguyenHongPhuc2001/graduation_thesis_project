@@ -3,8 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/utils/enums/expense_type.dart';
 
-import '../controllers/expense_controller.dart';
-import '../models/Account.dart';
+import '../controllers/entites/expense_controller.dart';
+import '../models/account.dart';
 import '../views/commons/pages/select_icon.dart';
 
 // ignore: must_be_immutable

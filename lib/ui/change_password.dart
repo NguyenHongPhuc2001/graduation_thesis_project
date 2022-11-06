@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_thesis_project/services/remote_services.dart';
+
 class ChangePassword extends StatefulWidget {
   const ChangePassword({Key? key}) : super(key: key);
 
@@ -7,6 +9,15 @@ class ChangePassword extends StatefulWidget {
 }
 
 class _ChangePasswordState extends State<ChangePassword> {
+
+  String? password;
+  String? newPassword;
+  String? rePassword;
+
+  final passwordController = TextEditingController();
+  final newPasswordController = TextEditingController();
+  final rePasswordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,6 +59,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                         SizedBox(
                             height : 40,
                             child: TextField(
+                              controller: passwordController,
+                              onChanged: (value) => password = value,
                               autofocus: false,
                               decoration: InputDecoration(
                                 contentPadding: const EdgeInsets.only(left: 15, top: 5, bottom: 15),
@@ -99,6 +112,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                         SizedBox(
                           height : 40,
                           child: TextField(
+                            controller: newPasswordController,
+                            onChanged: (value) => newPassword = value,
                             autofocus: false,
                             decoration: InputDecoration(
                               contentPadding: const EdgeInsets.only(left: 15, top: 5, bottom: 15),
@@ -150,6 +165,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                         SizedBox(
                           height : 40,
                           child: TextField(
+                            controller: rePasswordController,
+                            onChanged: (value) => rePassword = value,
                             autofocus: false,
                             decoration: InputDecoration(
                               contentPadding: const EdgeInsets.only(left: 15, top: 5, bottom: 15),
@@ -200,7 +217,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: ElevatedButton(
                 onPressed: (){
-
+                  RemoteService().changePassword("ChuTT", password, newPassword, rePassword);
                 },
                 style: ElevatedButton.styleFrom(
                   shape: const StadiumBorder(),

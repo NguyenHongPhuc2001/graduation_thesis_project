@@ -1,3 +1,8 @@
+import 'dart:convert';
+
+String accountToJson(Account account) => json.encode(account);
+Account accountFromJson(String str) => Account.fromJson(json.decode(str));
+
 class Account {
 
   int? accountId;
@@ -13,10 +18,6 @@ class Account {
     this.newPassword,
     this.rePassword
   });
-
-  String get getAccountUsername {
-    return accountUsername;
-  }
 
   factory Account.fromJson(Map<String, dynamic> json) => Account(
       accountId: json["accountId"],

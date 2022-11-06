@@ -14,7 +14,7 @@ import 'package:graduation_thesis_project/views/commons/widgets/custom_round_rec
 import 'package:graduation_thesis_project/views/commons/widgets/money_text_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/single_row_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
-import 'package:graduation_thesis_project/ui/budget_add.dart';
+import 'package:graduation_thesis_project/ui/budget_create.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_screen.dart';
 import 'package:graduation_thesis_project/views/transaction_screen/transaction_update.dart';
 import 'package:intl/intl.dart';

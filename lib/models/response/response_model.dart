@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:convert';
 
 ResponseModel responseModelFromJson(String str) => ResponseModel.fromJson(json.decode(str));

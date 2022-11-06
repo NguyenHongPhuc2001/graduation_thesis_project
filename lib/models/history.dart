@@ -1,22 +1,19 @@
 import 'dart:convert';
 
 import 'package:graduation_thesis_project/models/base/base_model.dart';
-import 'package:graduation_thesis_project/utils/enums/history_action.dart';
-
-import '../utils/enums/history_type.dart';
 
 History historyFromJson(String str) => History.fromJson(json.decode(str));
 List<History> historiesFromJson(List<dynamic> json) => List<History>.from(json.map((h) => History.fromJson(h))).toList();
 
-String historyToJson(History history) => json.encode(history.toJson());
+String historyToJson(History history) => json.encode(history);
 String historiesToJson(List<History> histories) => json.encode(List<dynamic>.from(histories.map((h) => h.toJson())));
 
 class History extends BaseModel{
 
   int? historyId;
-  HistoryType historyType;
+  String historyType;
   String? historyNotedDate;
-  HistoryAction? historyAction;
+  String? historyAction;
   double? historyCost;
   String? historyNote;
   String accountUsername;

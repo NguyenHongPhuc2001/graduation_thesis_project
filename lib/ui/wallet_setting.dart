@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:graduation_thesis_project/models/Account.dart';
+import 'package:graduation_thesis_project/models/account.dart';
 import 'package:graduation_thesis_project/services/remote_services.dart';
 
+// ignore: must_be_immutable
 class WalletSetting extends StatefulWidget {
 
   int? walletId;

@@ -4,14 +4,16 @@ import 'package:get/get.dart';
 import 'package:graduation_thesis_project/utils/enums/expense_type.dart';
 import 'package:graduation_thesis_project/views/commons/pages/select_icon.dart';
 
-import '../controllers/expense_controller.dart';
-import '../models/Account.dart';
+import '../controllers/entites/expense_controller.dart';
+import '../models/account.dart';
 
+// ignore: must_be_immutable
 class ExpenseCreate extends StatefulWidget {
 
   final expenseController = Get.put(ExpenseController());
+  bool isLoadByBudget;
 
-  ExpenseCreate({Key? key}) : super(key: key);
+  ExpenseCreate({Key? key, required this.isLoadByBudget}) : super(key: key);
 
   @override
   State<ExpenseCreate> createState() => _ExpenseCreateState();
@@ -21,12 +23,13 @@ class _ExpenseCreateState extends State<ExpenseCreate> {
 
   String? valueChoose;
   String? _expenseName = "";
-  final List expenseTypes = ['Thu nhập', 'Chi tiêu'];
   Account? _account;
   String? _expenseIcon = "images/palm_tree.svg";
 
   @override
   Widget build(BuildContext context) {
+
+    final List expenseTypes = widget.isLoadByBudget ? ['Chi tiêu'] : ['Thu nhập', 'Chi tiêu'];
 
     Size size = MediaQuery.of(context).size;
 
@@ -38,9 +41,9 @@ class _ExpenseCreateState extends State<ExpenseCreate> {
         resizeToAvoidBottomInset: false,
         backgroundColor: const Color(0xE9ECEFED),
         appBar: AppBar(
-          title: const Text(
-            "Thêm mới thu chi",
-            style: TextStyle(
+          title: Text(
+            widget.isLoadByBudget ? "Thêm mới chi tiêu" : "Thêm mới thu chi",
+            style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
                 fontSize: 15.0
@@ -114,7 +117,7 @@ class _ExpenseCreateState extends State<ExpenseCreate> {
                           ),
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: "Nhập tên thu chi",
+                          hintText: widget.isLoadByBudget ? "Nhập tên chi tiêu" : "Nhập tên thu chi",
                           hintStyle: const TextStyle(
                               fontSize: 13,
                               color: Colors.black,
@@ -128,7 +131,7 @@ class _ExpenseCreateState extends State<ExpenseCreate> {
                       onTap: () async {
                         _expenseIcon = await Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => const SelectIcons())
-                        );
+                        ).then((value) => null);
                       },
                       child: Container(
                         height: 50,
@@ -210,8 +213,8 @@ class _ExpenseCreateState extends State<ExpenseCreate> {
                     shape: const StadiumBorder(),
                     minimumSize: const Size(250, 30)
                 ),
-                child: const Text(
-                    "Tạo mới thu chi"
+                child: Text(
+                    widget.isLoadByBudget ? "Tạo mới chi tiêu" : "Tạo mới thu chi"
                 ),
               ),
             ],
