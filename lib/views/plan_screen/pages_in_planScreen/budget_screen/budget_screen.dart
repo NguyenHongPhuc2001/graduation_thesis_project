@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:graduation_thesis_project/ui/budget_create.dart';
+
 import 'package:graduation_thesis_project/views/commons/widgets/appbar_container.dart';
 
 import '../../../../controllers/entites/budget_controller.dart';
+import 'budget_create.dart';
 import 'budget_end.dart';
 import 'budget_happening.dart';
 
 class BudgetScreen extends StatefulWidget {
 
-  final PageController pageController = PageController(initialPage: 1);
+  final PageController pageController;
   final budgetController = Get.put(BudgetController());
 
-  BudgetScreen( {Key? key}) : super(key: key);
+  BudgetScreen( {Key? key, required this.pageController}) : super(key: key);
 
   @override
   State<BudgetScreen> createState() => _BudgetScreenState();

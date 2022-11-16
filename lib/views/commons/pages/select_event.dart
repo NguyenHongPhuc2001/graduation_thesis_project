@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../models/Event.dart';
 
 class SelectEvent extends StatefulWidget {
   const SelectEvent({Key? key}) : super(key: key);

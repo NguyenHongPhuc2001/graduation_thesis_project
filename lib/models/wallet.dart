@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:graduation_thesis_project/models/base/base_model.dart';
+import 'base/base_model.dart';
 
 Wallet walletFromJson(String str) => Wallet.fromJson(json.decode(str));
 List<Wallet> walletsFromJson(List<dynamic> json) => List<Wallet>.from(json.map((w) => Wallet.fromJson(w))).toList();

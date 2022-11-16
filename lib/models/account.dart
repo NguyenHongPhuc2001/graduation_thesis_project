@@ -1,10 +1,9 @@
 import 'dart:convert';
 
-String accountToJson(Account account) => json.encode(account);
-Account accountFromJson(String str) => Account.fromJson(json.decode(str));
+// String accountToJson(Account account) => json.encode(account);
+// Account accountFromJson(String str) => Account.fromJson(json.decode(str));
 
 class Account {
-
   int? accountId;
   String accountUsername;
   String? accountPassword;

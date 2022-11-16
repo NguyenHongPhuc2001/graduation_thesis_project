@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import '../../../../controllers/entites/expense_controller.dart';
+import '../../../../remote/controllers/entites/expense_controller.dart';
 
 
 class SelectRap extends StatefulWidget {

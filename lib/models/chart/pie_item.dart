@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:graduation_thesis_project/models/base/base_model.dart';
+import '../base/base_model.dart';
+
 
 List<PieItem> pieItemsFromJson(List<dynamic> json) => List<PieItem>.from(json.map((p) => PieItem.fromJson(p))).toList();
 

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:graduation_thesis_project/dao/target_dao.dart';
-import 'package:graduation_thesis_project/models/target.dart';
+import 'package:graduation_thesis_project/remote/controllers/entites/goal_controller.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/appbar_container.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_add.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_end.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_happening.dart';
 
+import '../../../../models/goal.dart';
+
 class TargetScreen extends StatefulWidget {
   final PageController pageController;
-  final List<Target> listTarget;
+  final List<Goal> listTarget;
 
   const TargetScreen({
     Key? key,
@@ -23,10 +24,23 @@ class TargetScreen extends StatefulWidget {
 
 class _TargetScreenState extends State<TargetScreen> {
   final PageController _targetPageController = PageController();
+  List<Goal> listGoal = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    GoalController().getListGoal("Phuc").then((value) {
+      setState(() {
+        listGoal = List.from(value);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return SafeArea(
       child: DefaultTabController(
         length: 2,
@@ -41,14 +55,21 @@ class _TargetScreenState extends State<TargetScreen> {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddTarget(
-                      listTarget: widget.listTarget,
-                    ),
+                    builder: (context) => AddTarget(),
                   ),
                 ).then((value) => setState(() {
-                      if (value == "Save")
+                      if (value == "Create") {
+                        listGoal.clear();
+                          GoalController().getListGoal("Phuc").then((value) {
+                            value.forEach((element) {
+                              setState(() {
+                                listGoal.add(element);
+                              });
+                            });
+                          });
                         Fluttertoast.showToast(
                             msg: "Thêm mục tiêu thành công !");
+                      }
                     }));
               },
             ),
@@ -59,11 +80,11 @@ class _TargetScreenState extends State<TargetScreen> {
               itemBuilder: (context, pagePosition) {
                 if (pagePosition == 0)
                   return TargetHappening(
-                    listTarget: widget.listTarget,
+                    listTarget: listGoal,
                   );
                 else
                   return TargetEnd(
-                    listTarget: widget.listTarget,
+                    listTarget: listGoal,
                   );
               }),
         ),

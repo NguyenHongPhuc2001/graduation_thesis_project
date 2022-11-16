@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/budget.dart';
-import 'package:graduation_thesis_project/models/Transaction.dart';
+import 'package:graduation_thesis_project/models/expense.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/appbar_container_2.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/money_text_container.dart';
@@ -31,7 +31,7 @@ class BudgetDetail extends StatefulWidget {
 class _BudgetDetailState extends State<BudgetDetail> {
   final _random = Random();
   final nf = NumberFormat("###,###");
-  List<Transactions> listTransaction = [];
+  List<Expense> listTransaction = [];
   final _pageController = PageController();
   final df = DateFormat("dd-MM-yyyy");
 
@@ -379,11 +379,7 @@ class _BudgetDetailState extends State<BudgetDetail> {
                                                         child:
                                                             CircleIconContainer(
                                                           urlImage:
-                                                              listTransaction
-                                                                  .elementAt(
-                                                                      index)
-                                                                  .rap
-                                                                  .rapUrlImage,
+                                                              "",
                                                           iconSize:
                                                               size.width * 0.08,
                                                           backgroundColor: Colors
@@ -417,11 +413,7 @@ class _BudgetDetailState extends State<BudgetDetail> {
                                                                           0.03),
                                                                   child:
                                                                       TextContainer(
-                                                                    text: listTransaction
-                                                                        .elementAt(
-                                                                            index)
-                                                                        .rap
-                                                                        .rapName,
+                                                                    text: "sss",
                                                                     textColor:
                                                                         Colors
                                                                             .black,
@@ -437,10 +429,7 @@ class _BudgetDetailState extends State<BudgetDetail> {
                                                                   ),
                                                                 ),
                                                                 TextContainer(
-                                                                  text: df.format(listTransaction
-                                                                      .elementAt(
-                                                                          index)
-                                                                      .createDate),
+                                                                  text: "ssss",
                                                                   textColor:
                                                                       Colors
                                                                           .black,
@@ -458,10 +447,7 @@ class _BudgetDetailState extends State<BudgetDetail> {
                                                               ],
                                                             ),
                                                             MoneyTextContainer(
-                                                              value: listTransaction
-                                                                  .elementAt(
-                                                                      index)
-                                                                  .transactionValue,
+                                                              value: 10000,
                                                               textSize:
                                                                   size.width *
                                                                       0.035,

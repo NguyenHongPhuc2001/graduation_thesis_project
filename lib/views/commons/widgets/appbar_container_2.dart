@@ -32,21 +32,21 @@ class _AppBarContainer2State extends State<AppBarContainer2> {
       leading: IconButton(
         icon: Icon(
           widget.backIcon,
-          color: Colors.black,
+          color: Colors.black.withAlpha(160),
         ),
         onPressed: widget.onBackTap,
       ),
       centerTitle: true,
       title: TextHeaderContainer(
         text: widget.text,
-        textColor: Colors.black,
+        textColor: Colors.black.withAlpha(160),
       ),
       actions: [
         IconButton(
           splashRadius: size.width * 0.07,
           icon: Icon(
             widget.prefixIcon1,
-            color: Colors.black,
+            color: Colors.black.withAlpha(160),
           ),
           onPressed: widget.onPrefixIcon1Tap,
         ),
@@ -54,7 +54,7 @@ class _AppBarContainer2State extends State<AppBarContainer2> {
           splashRadius: size.width * 0.07,
           icon: Icon(
             widget.prefixIcon2,
-            color: Colors.black,
+            color: Colors.black.withAlpha(160),
           ),
           onPressed: widget.onPrefixIcon2Tap,
         ),

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:graduation_thesis_project/models/base/base_model.dart';
+import 'base/base_model.dart';
 
 History historyFromJson(String str) => History.fromJson(json.decode(str));
 List<History> historiesFromJson(List<dynamic> json) => List<History>.from(json.map((h) => History.fromJson(h))).toList();

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
-import 'package:graduation_thesis_project/models/Transaction.dart';
-import 'package:graduation_thesis_project/ui/wallet_create.dart';
+
 import 'package:graduation_thesis_project/views/page/overview.dart';
 import 'package:graduation_thesis_project/views/page/planning.dart';
+
 import 'package:graduation_thesis_project/views/page/setting.dart';
-import 'package:graduation_thesis_project/views/page/transaction.dart';
-import 'package:graduation_thesis_project/views/transaction_screen/transaction_add.dart';
+import 'package:graduation_thesis_project/views/plan_screen/plan_main_screen.dart';
+import 'package:graduation_thesis_project/views/transaction_screen/expense_screen/expense_create.dart';
+
+import 'views/manage_transactions_screen/manage_transaction_main_screen.dart';
 
 class Home extends StatefulWidget {
   const Home({
@@ -37,7 +37,14 @@ class _HomeState extends State<Home> {
         child: FittedBox(
           child: FloatingActionButton(
             onPressed: () async {
-              Get.to(const WalletCreate());
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ExpenseCreate(
+                    isLoadByBudget: false,
+                  ),
+                ),
+              );
             },
             child: const Icon(Icons.add),
           ),
@@ -85,7 +92,15 @@ class _HomeState extends State<Home> {
                 minWidth: 40,
                 onPressed: () {
                   setState(() {
-
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => ManageTransaction(
+                    //               listTransaction: [],
+                    //             )));
+                    currentScreen =
+                        const ManageTransaction(listTransaction: []);
+                    currentTab = 1;
                   });
                 },
                 child: Column(
@@ -115,7 +130,13 @@ class _HomeState extends State<Home> {
                 minWidth: 40,
                 onPressed: () {
                   setState(() {
-
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) =>
+                    //             PlanMainScreen(listTransaction: [])));
+                    currentScreen = const PlanMainScreen(listTransaction: []);
+                    currentTab = 2;
                   });
                 },
                 child: Column(

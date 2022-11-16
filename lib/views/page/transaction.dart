@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_thesis_project/models/expense.dart';
 
-import '../../models/Transaction.dart';
-import '../manage_transactions/manage_transaction_main_screen.dart';
+import '../manage_transactions_screen/manage_transaction_main_screen.dart';
+
 
 class Transaction extends StatefulWidget {
-  final List<Transactions> listTransaction;
+  final List<Expense> listTransaction;
 
   const Transaction({
     Key? key,

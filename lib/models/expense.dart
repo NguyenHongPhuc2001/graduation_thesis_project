@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:graduation_thesis_project/models/base/base_model.dart';
+import 'base/base_model.dart';
+
 
 Expense expenseFromJson(String str) => Expense.fromJson(json.decode(str));
 List<Expense> expensesFromJson(List<dynamic> json) => List<Expense>.from(json.map((e) => Expense.fromJson(e))).toList();

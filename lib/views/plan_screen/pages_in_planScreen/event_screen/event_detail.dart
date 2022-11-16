@@ -3,8 +3,9 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:graduation_thesis_project/models/Event.dart';
-import 'package:graduation_thesis_project/models/Transaction.dart';
+import 'package:graduation_thesis_project/models/expense.dart';
+import 'package:graduation_thesis_project/remote/api/Event_API.dart';
+import 'package:graduation_thesis_project/remote/controllers/entites/event_controller.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/appbar_container_2.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/custom_round_rectangle_button.dart';
@@ -15,14 +16,14 @@ import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/list_transaction.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../models/event.dart';
+
 class EventDetail extends StatefulWidget {
   final Event event;
-  final List<Event> listEvent;
 
   const EventDetail({
     Key? key,
     required this.event,
-    required this.listEvent,
   }) : super(key: key);
 
   @override
@@ -30,18 +31,40 @@ class EventDetail extends StatefulWidget {
 }
 
 class _EventDetailState extends State<EventDetail> {
-  final _random = Random();
   final PageController _pageController = PageController();
   final DateFormat df = DateFormat("yyy-MM-dd");
+  var event, check;
 
-  var check;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // EventAPI().getOne(widget.event.eventId!).then((value) {
+    //   setState(() {
+    //     event = value as Event;
+    //     check = value.eventStatus;
+    //   });
+    // });
+    EventController().getOneEvent(widget.event.eventId!).then((value) {
+      setState(() {
+        event = value as Event;
+        check = event.eventStatus;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    List<Transactions> lsTransaction = [];
-    final Duration dayLeft = widget.event.endDate.difference(DateTime.now());
+    List<Expense> lsTransaction = [];
+    final Duration dayLeft =
+        DateTime.parse(widget.event.eventEndDate).difference(DateTime.now());
 
+    DateTime dateTime = DateTime.parse(event.eventEndDate);
+    String correctDate =
+        "${dateTime.year}-${dateTime.month}-${dateTime.day + 1}";
+
+    print(dateTime);
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
@@ -51,8 +74,8 @@ class _EventDetailState extends State<EventDetail> {
               backIcon: CupertinoIcons.xmark,
               prefixIcon1: Icons.edit,
               prefixIcon2: Icons.delete,
-              onBackTap: () {
-                Navigator.pop(context, widget.event.status);
+              onBackTap: () async {
+                Navigator.pop(context, "Cancle");
               },
               onPrefixIcon1Tap: () async {
                 await Navigator.push(
@@ -63,8 +86,16 @@ class _EventDetailState extends State<EventDetail> {
                     ),
                   ),
                 ).then((value) => setState(() {
-                      if (value == "Update")
-                        Fluttertoast.showToast(msg: "Cập nhật thành công !");
+                      if (value == "Update") {
+                        // EventAPI().getOne(widget.event.eventId!).then((value) {
+                        //   setState(() {
+                        //     event = value as Event;
+                        //   });
+                        // });
+                        event = EventController()
+                            .getOneEvent(widget.event.eventId!);
+                        Fluttertoast.showToast(msg: "Update success !");
+                      }
                     }));
               },
               onPrefixIcon2Tap: () {
@@ -80,26 +111,46 @@ class _EventDetailState extends State<EventDetail> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   SingleRowContainer(
-                    paddingTop: size.width * 0.01,
-                    paddingBottom: size.width * 0.01,
+                    width: size.width * 0.9,
+                    boxDecoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          offset: Offset(0, 5),
+                          color: Colors.grey,
+                          blurRadius: size.width * 0.02,
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(size.width * 0.05),
+                      color: Color(0xffedf2f4),
+                    ),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    paddingTop: size.width * 0.03,
+                    paddingBottom: size.width * 0.03,
                     children: <Widget>[
-                      Container(
-                        width: size.width * 0.3,
-                        child: CircleIconContainer(
-                          urlImage: widget.event.urlImage,
-                          iconSize: size.width * 0.1,
-                          backgroundColor: Colors.green, padding: size.width*0.045,
-                        ),
-                      ),
-                      Container(
-                        width: size.width * 0.62,
-                        child: TextContainer(
-                          text: widget.event.eventName,
-                          textColor: Colors.black,
-                          textSize: size.width * 0.06,
-                          textFontWeight: FontWeight.w400,
-                          decoration: TextDecoration.none,
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          CircleIconContainer(
+                            urlImage: (event != null)
+                                ? event.eventIcon
+                                : widget.event.eventIcon,
+                            iconSize: size.width * 0.1,
+                            backgroundColor: Colors.green,
+                            padding: size.width * 0.045,
+                          ),
+                          SizedBox(
+                            height: size.width * 0.03,
+                          ),
+                          TextContainer(
+                            text: (event != null)
+                                ? event.eventName
+                                : widget.event.eventName,
+                            textColor: Colors.black,
+                            textSize: size.width * 0.06,
+                            textFontWeight: FontWeight.bold,
+                            decoration: TextDecoration.none,
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -113,7 +164,7 @@ class _EventDetailState extends State<EventDetail> {
                           urlImage: "images/CalendarIcon_4.svg",
                           iconSize: size.width * 0.1,
                           backgroundColor: Colors.transparent,
-                          padding: size.width*0.045,
+                          padding: size.width * 0.045,
                         ),
                       ),
                       Container(
@@ -122,17 +173,17 @@ class _EventDetailState extends State<EventDetail> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             TextContainer(
-                              text: df.format(widget.event.createDate),
+                              text: correctDate,
                               textColor: Colors.black,
                               textSize: size.width * 0.06,
-                              textFontWeight: FontWeight.w400,
+                              textFontWeight: FontWeight.bold,
                               decoration: TextDecoration.none,
                             ),
                             TextContainer(
                               text: "Còn ${dayLeft.inDays} ngày",
                               textColor: Colors.black,
                               textSize: size.width * 0.03,
-                              textFontWeight: FontWeight.w300,
+                              textFontWeight: FontWeight.w500,
                               decoration: TextDecoration.none,
                             ),
                           ],
@@ -150,16 +201,20 @@ class _EventDetailState extends State<EventDetail> {
                           urlImage: "images/WalletIcon_1.svg",
                           iconSize: size.width * 0.1,
                           backgroundColor: Colors.transparent,
-                          padding: size.width*0.045,
+                          padding: size.width * 0.045,
                         ),
                       ),
                       Container(
                         width: size.width * 0.62,
                         child: TextContainer(
-                          text: "",
+                          text: (event != null)
+                              ? event.wallet!.walletName
+                              : ((widget.event.wallet != null)
+                                  ? widget.event.wallet!.walletName
+                                  : "Không có ví"),
                           textColor: Colors.black,
                           textSize: size.width * 0.06,
-                          textFontWeight: FontWeight.w400,
+                          textFontWeight: FontWeight.bold,
                           decoration: TextDecoration.none,
                         ),
                       ),
@@ -173,12 +228,37 @@ class _EventDetailState extends State<EventDetail> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  widget.event.status
+                  (check == true)
                       ? CustomRoundRectangleButton(
-                    backgroundColor: Colors.blue,
+                          backgroundColor: Color(0xff3a86ff),
                           onTap: () {
                             setState(() {
-                              widget.event.status = false;
+                              if (check != null) {
+                                check = !check;
+                                // EventAPI()
+                                //     .update(
+                                //         widget.event.eventId!,
+                                //         widget.event.eventName,
+                                //         widget.event.eventIcon,
+                                //         widget.event.eventEndDate,
+                                //         int.parse(widget.event.wallet!.walletId
+                                //             .toString()),
+                                //         "Phuc",
+                                //         check)
+                                //     .then((value) {
+                                //   event.eventStatus = check;
+                                // });
+                                EventController().updateEvent(
+                                    widget.event.eventId!,
+                                    widget.event.eventName,
+                                    widget.event.eventIcon,
+                                    widget.event.eventEndDate,
+                                    int.parse(widget.event.wallet!.walletId
+                                        .toString()),
+                                    "Phuc",
+                                    check);
+                                event.eventStatus = check;
+                              }
                             });
                           },
                           buttonWith: size.width * 0.85,
@@ -191,12 +271,46 @@ class _EventDetailState extends State<EventDetail> {
                             textFontWeight: FontWeight.bold,
                             decoration: TextDecoration.none,
                           ),
+                          boxShadow: [
+                            BoxShadow(
+                                offset: Offset(0, 4),
+                                color: Colors.grey.shade400,
+                                blurRadius: size.width * 0.03,
+                                spreadRadius: size.width * 0.005),
+                          ],
                         )
                       : CustomRoundRectangleButton(
-                    backgroundColor: Colors.blue,
+                          backgroundColor: Color(0xff3a86ff),
                           onTap: () {
                             setState(() {
-                              widget.event.status = true;
+                              if (check != null) {
+                                check = !check;
+                                // EventAPI()
+                                //     .update(
+                                //     widget.event.eventId!,
+                                //     widget.event.eventName,
+                                //     widget.event.eventIcon,
+                                //     widget.event.eventEndDate,
+                                //     int.parse(widget.event.wallet!.walletId
+                                //         .toString()),
+                                //     "Phuc",
+                                //     check)
+                                //     .then((value) {
+                                //   event.eventStatus = check;
+                                // });
+                                EventController().updateEvent(
+                                    widget.event.eventId!,
+                                    widget.event.eventName,
+                                    widget.event.eventIcon,
+                                    widget.event.eventEndDate,
+                                    int.parse(widget.event.wallet!.walletId
+                                        .toString()),
+                                    "Phuc",
+                                    check);
+
+                                print("Check = ${check}");
+                                event.eventStatus = check;
+                              }
                             });
                           },
                           buttonWith: size.width * 0.85,
@@ -209,20 +323,27 @@ class _EventDetailState extends State<EventDetail> {
                             textFontWeight: FontWeight.bold,
                             decoration: TextDecoration.none,
                           ),
+                          boxShadow: [
+                            BoxShadow(
+                                offset: Offset(0, 4),
+                                color: Colors.grey.shade400,
+                                blurRadius: size.width * 0.03,
+                                spreadRadius: size.width * 0.005),
+                          ],
                         ),
                   CustomRoundRectangleButton(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Color(0xff3A86FF),
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ListTransaction(
-                            event: widget.event,
-                            listTransaction:
-                                lsTransaction.isEmpty ? [] : lsTransaction,
-                          ),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => ListTransaction(
+                      //       event: ,
+                      //       listTransaction:
+                      //           lsTransaction.isEmpty ? [] : lsTransaction,
+                      //     ),
+                      //   ),
+                      // );
                     },
                     buttonWith: size.width * 0.85,
                     padding: size.width * 0.04,
@@ -234,6 +355,13 @@ class _EventDetailState extends State<EventDetail> {
                       textFontWeight: FontWeight.bold,
                       decoration: TextDecoration.none,
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                          offset: Offset(0, 4),
+                          color: Colors.grey.shade400,
+                          blurRadius: size.width * 0.03,
+                          spreadRadius: size.width * 0.005),
+                    ],
                   ),
                 ],
               ),
@@ -250,6 +378,8 @@ class _EventDetailState extends State<EventDetail> {
         context: context,
         builder: (context) {
           return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(size.width * 0.02)),
             title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -289,69 +419,69 @@ class _EventDetailState extends State<EventDetail> {
                 ],
               ),
             ),
+            actionsAlignment: MainAxisAlignment.spaceAround,
             actions: [
-              InkWell(
+              CustomRoundRectangleButton(
+                border: Border.all(
+                  width: size.width * 0.004,
+                  color: Colors.grey.shade500,
+                ),
+                backgroundColor: Colors.white,
                 onTap: () {
                   Navigator.pop(context);
                 },
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.only(
-                      top: size.width * 0.009, bottom: size.width * 0.009),
-                  width: size.width * 0.3,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(size.width * 0.016),
-                    border: Border.all(
-                      width: size.width * 0.002,
-                      color: Colors.black,
-                    ),
-                    color: Colors.white,
-                  ),
-                  child: Text(
-                    "Hủy",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: size.width * 0.05,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                buttonWith: size.width * 0.25,
+                padding: size.width * 0.035,
+                borderRadius: size.width * 0.015,
+                text: TextContainer(
+                  text: "HỦY",
+                  textColor: Colors.black,
+                  textSize: size.width * 0.05,
+                  textFontWeight: FontWeight.bold,
+                  decoration: TextDecoration.none,
                 ),
               ),
-              InkWell(
+              CustomRoundRectangleButton(
+                border: Border.all(
+                  width: size.width * 0.002,
+                  color: Colors.grey,
+                ),
+                backgroundColor: Color(0xff3a86ff),
                 onTap: () {
                   setState(() {
-                    widget.listEvent.removeWhere(
-                        (element) => element.id == widget.event.id);
-                    Navigator.pop(
-                      context,
-                      EventScreen(
-                        pageController: _pageController,
-                        listEvent: widget.listEvent,
-                        listTransaction: [],
-                      ),
-                    );
-                    Navigator.pop(context, "Delete");
+                    // EventAPI()
+                    //     .delete(widget.event.eventId!, "Phuc")
+                    //     .then((value) {
+                    //   if (value == "Delete") {
+                    //     Navigator.pop(context);
+                    //     Navigator.pop(context, value);
+                    //   } else {
+                    //     Navigator.pop(context);
+                    //     Fluttertoast.showToast(msg: "Delete fail !");
+                    //   }
+                    // });
+                    EventController()
+                        .deleteEvent(widget.event.eventId!, "Phuc")
+                        .then((value) {
+                      if (value == "Delete") {
+                        Navigator.pop(context);
+                        Navigator.pop(context, value);
+                      } else {
+                        Navigator.pop(context);
+                        Fluttertoast.showToast(msg: "Delete fail !");
+                      }
+                    });
                   });
                 },
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.only(
-                      top: size.width * 0.011, bottom: size.width * 0.011),
-                  width: size.width * 0.3,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(size.width * 0.016),
-                    color: Colors.blueAccent,
-                  ),
-                  child: Text(
-                    "Xác nhận",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: size.width * 0.05,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                buttonWith: size.width * 0.25,
+                padding: size.width * 0.035,
+                borderRadius: size.width * 0.015,
+                text: TextContainer(
+                  text: "OK",
+                  textColor: Colors.white,
+                  textSize: size.width * 0.05,
+                  textFontWeight: FontWeight.bold,
+                  decoration: TextDecoration.none,
                 ),
               ),
             ],

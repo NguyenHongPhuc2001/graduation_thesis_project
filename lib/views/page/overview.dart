@@ -3,13 +3,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/wallet.dart';
 import 'package:graduation_thesis_project/services/remote_services.dart';
-import 'package:graduation_thesis_project/ui/wallet_list.dart';
 import 'package:graduation_thesis_project/utils/charts/bar.dart';
 import 'package:graduation_thesis_project/utils/date/date_utils.dart';
 import 'package:charts_flutter_new/flutter.dart' as charts;
 
 import '../../controllers/entites/history_controller.dart';
 import '../../models/history.dart';
+import '../transaction_screen/wallet_screen/wallet_list.dart';
 
 class Overview extends StatefulWidget {
   const Overview({Key? key}) : super(key: key);

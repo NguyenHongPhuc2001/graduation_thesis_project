@@ -7,6 +7,7 @@ class CustomRoundRectangleButton extends StatelessWidget {
   final Widget text;
   final Color backgroundColor;
   final List<BoxShadow>? boxShadow;
+  final Border? border;
 
   const CustomRoundRectangleButton({
     Key? key,
@@ -16,7 +17,7 @@ class CustomRoundRectangleButton extends StatelessWidget {
     required this.borderRadius,
     required this.text,
     required this.backgroundColor,
-    this.boxShadow, this.margin,
+    this.boxShadow, this.margin, this.border,
   }) : super(key: key);
 
   @override
@@ -32,6 +33,7 @@ class CustomRoundRectangleButton extends StatelessWidget {
           color: backgroundColor,
           borderRadius: BorderRadius.circular(borderRadius),
           boxShadow: boxShadow,
+          border: border,
         ),
         child: text,
       ),

@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 
 class SingleRowContainer extends StatelessWidget {
   final double paddingTop, paddingBottom;
-  final double? height;
+  final double? height, width;
   final List<Widget> children;
   final BoxDecoration? boxDecoration;
+  final MainAxisAlignment? mainAxisAlignment;
 
   const SingleRowContainer({
     Key? key,
     required this.paddingTop,
     required this.paddingBottom,
     required this.children,
-    this.boxDecoration, this.height,
+    this.boxDecoration,
+    this.height,
+    this.mainAxisAlignment, this.width,
   }) : super(key: key);
 
   @override
@@ -20,10 +23,12 @@ class SingleRowContainer extends StatelessWidget {
     return Container(
       decoration: boxDecoration,
       padding: EdgeInsets.only(top: paddingTop, bottom: paddingBottom),
-      width: size.width,
+      width: width,
       height: height,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: (mainAxisAlignment != null)
+            ? mainAxisAlignment!
+            : MainAxisAlignment.spaceBetween,
         children: children,
       ),
     );

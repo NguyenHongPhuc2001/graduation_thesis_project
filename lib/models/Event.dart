@@ -1,49 +1,42 @@
+
 import 'package:graduation_thesis_project/models/wallet.dart';
 
 class Event {
-  int id;
+  int? eventId;
   String eventName;
-  DateTime createDate;
-  DateTime endDate;
-  double totalSpending;
-  bool status;
-  Wallet wallet;
-  String urlImage;
-
+  String eventEndDate;
+  bool eventStatus;
+  String eventIcon;
+  List<dynamic>? histories;
+  Wallet? wallet;
 
   Event({
-    required this.totalSpending,
-    required this.id,
-    required this.endDate,
-    required this.createDate,
     required this.eventName,
-    required this.status,
-    required this.wallet,
-    required this.urlImage,
+    required this.eventEndDate,
+    this.eventStatus = false,
+    required this.eventIcon,
+    this.histories,
+     this.wallet,
   });
 
+  Event.fromJson(Map<String, dynamic> data)
+      : this.eventId = data['eventId'],
+        this.eventName = data['eventName'],
+        this.eventEndDate = data['eventEndDate'],
+        this.eventStatus = data['eventStatus'],
+        this.eventIcon = data['eventIcon'],
+        this.wallet = Wallet.fromJson(data['wallet']),
+        this.histories = data['histories'];
 
-
-  Event.fromMap(Map<String, dynamic> data)
-      : id = data["id"],
-        eventName = data["eventName"],
-        createDate = data["createDate"],
-        endDate = data["endDate"],
-        status = data["status"],
-        totalSpending = data["totalSpending"],
-        wallet = data["wallet"],
-        urlImage = data["urlImage"];
-
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'eventName': eventName,
-      'createDate': createDate,
-      'endDate': endDate,
-      'status': status,
-      'totalSpending': totalSpending,
-      'wallet': wallet,
-      'urlImage': urlImage,
+      'eventId': this.eventId,
+      'eventName': this.eventName,
+      'eventEndDate': this.eventEndDate,
+      'eventStatus': this.eventStatus,
+      'eventIcon': this.eventIcon,
+      'wallet': this.wallet,
+      'histories': this.histories,
     };
   }
 }

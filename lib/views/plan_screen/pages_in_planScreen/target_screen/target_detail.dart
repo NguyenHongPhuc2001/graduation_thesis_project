@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:graduation_thesis_project/models/target.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:graduation_thesis_project/remote/controllers/entites/goal_controller.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/appbar_container_2.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/custom_round_rectangle_button.dart';
@@ -14,16 +16,14 @@ import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+import '../../../../models/goal.dart';
+
 class TargetDetail extends StatefulWidget {
-  final Target target;
-  final List<Target> listTarget;
-  final int index;
+  final Goal target;
 
   const TargetDetail({
     Key? key,
     required this.target,
-    required this.listTarget,
-    required this.index,
   }) : super(key: key);
 
   @override
@@ -31,63 +31,42 @@ class TargetDetail extends StatefulWidget {
 }
 
 class _TargetDetailState extends State<TargetDetail> {
-  final _random = Random();
   final DateFormat df = DateFormat("dd-MM-yyyy");
   final NumberFormat nf = NumberFormat("###,###");
   double percentTarget = 0;
-  final TextEditingController _moneyTextController = TextEditingController();
-  final _pageController = PageController();
+  final _moneyTextController = MoneyMaskedTextController(
+      thousandSeparator: ',',
+      decimalSeparator: '',
+      initialValue: 0,
+      precision: 0);
+  var goalName,
+      goalEndDate,
+      goalPresentCost,
+      goalFinalCost,
+      goalIcon,
+      goalColor,
+      target;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    goalName = widget.target.goalName;
+    goalEndDate = widget.target.goalEndDate;
+    goalPresentCost = widget.target.goalPresentCost;
+    goalFinalCost = widget.target.goalFinalCost;
+    target = widget.target;
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    percentTarget =
-        (widget.target.currentMoney / widget.target.targetMoney) * 100;
+    if (goalPresentCost != null && goalFinalCost != null) {
+      percentTarget = (goalPresentCost / goalFinalCost);
+    }
 
     return SafeArea(
       child: Scaffold(
-        // appBar: AppBar(
-        //   backgroundColor: Colors.white,
-        //   leading: IconButton(
-        //     icon: Icon(
-        //       Icons.arrow_back,
-        //       color: Colors.black,
-        //     ),
-        //     onPressed: () {
-        //       Navigator.pop(context);
-        //     },
-        //   ),
-        //   centerTitle: true,
-        //   title: Text(
-        //     "Chi tiết mục tiêu",
-        //     style: TextStyle(
-        //       fontSize: size.width * 0.065,
-        //       fontWeight: FontWeight.bold,
-        //       color: Colors.black,
-        //     ),
-        //   ),
-        //   actions: [
-        //     IconButton(
-        //       splashRadius: size.width * 0.07,
-        //       icon: Icon(
-        //         Icons.edit,
-        //         color: Colors.black,
-        //       ),
-        //       onPressed: () {
-        //         Navigator.push(
-        //           context,
-        //           MaterialPageRoute(
-        //             builder: (context) => UpdateTarget(
-        //               target: widget.target,
-        //               listTarget: widget.listTarget,
-        //               index: widget.index,
-        //             ),
-        //           ),
-        //         );
-        //       },
-        //     ),
-        //   ],
-        // ),
         appBar: PreferredSize(
           preferredSize: Size(size.width, size.width * 0.15),
           child: AppBarContainer2(
@@ -96,7 +75,7 @@ class _TargetDetailState extends State<TargetDetail> {
               prefixIcon1: Icons.edit,
               prefixIcon2: Icons.delete,
               onBackTap: () {
-                Navigator.pop(context);
+                Navigator.pop(context, "Cancle");
               },
               onPrefixIcon1Tap: () {
                 Navigator.push(
@@ -104,11 +83,19 @@ class _TargetDetailState extends State<TargetDetail> {
                   MaterialPageRoute(
                     builder: (context) => UpdateTarget(
                       target: widget.target,
-                      listTarget: widget.listTarget,
-                      index: widget.index,
                     ),
                   ),
-                );
+                ).then((value) {
+                  if (value == "Update") {
+                    Fluttertoast.showToast(msg: "Update success!");
+                    // GoalAPI().getOne(widget.target.goalId).then((value) {
+                    //   setState(() {
+                    //     target = value;
+                    //   });
+                    // });
+                    target = GoalController().getOneGoal(widget.target.goalId);
+                  }
+                });
               },
               onPrefixIcon2Tap: () {
                 _showDeleteDialog(widget.target);
@@ -126,16 +113,19 @@ class _TargetDetailState extends State<TargetDetail> {
                 Row(
                   children: [
                     CircleIconContainer(
-                        urlImage: widget.target.urlImage,
-                        iconSize: size.width * 0.1,
-                        backgroundColor: Colors.blueAccent,padding: size.width*0.045,),
+                      urlImage: target.goalIcon,
+                      iconSize: size.width * 0.1,
+                      backgroundColor:
+                          Color(int.parse(widget.target.goalColor)),
+                      padding: size.width * 0.045,
+                    ),
                     Container(
                       padding: EdgeInsets.only(left: size.width * 0.05),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextContainer(
-                            text: widget.target.targetName,
+                            text: target.goalName,
                             textColor: Colors.black,
                             textSize: size.width * 0.055,
                             textFontWeight: FontWeight.bold,
@@ -154,7 +144,7 @@ class _TargetDetailState extends State<TargetDetail> {
                                   decoration: TextDecoration.none,
                                 ),
                                 TextContainer(
-                                  text: df.format(widget.target.endDate),
+                                  text: target.goalEndDate,
                                   textColor: Colors.black,
                                   textSize: size.width * 0.04,
                                   textFontWeight: FontWeight.w400,
@@ -175,7 +165,7 @@ class _TargetDetailState extends State<TargetDetail> {
                     width: size.width,
                     child: CircularPercentIndicator(
                       radius: size.width * 0.3,
-                      progressColor: Color(0xff70E000),
+                      progressColor: Color(int.parse(widget.target.goalColor)),
                       percent: percentTarget,
                       lineWidth: size.width * 0.06,
                       center: Container(
@@ -190,7 +180,7 @@ class _TargetDetailState extends State<TargetDetail> {
                                   value: "0",
                                   textSize: size.width * 0.055,
                                   textFontWeight: FontWeight.bold,
-                                  color: Colors.lightGreen,
+                                  color: Color(int.parse(widget.target.goalColor)),
                                 ),
                                 Padding(
                                   padding:
@@ -202,7 +192,9 @@ class _TargetDetailState extends State<TargetDetail> {
                                         children: [
                                           TextContainer(
                                             text: nf.format(
-                                                widget.target.currentMoney),
+                                                (goalPresentCost != null)
+                                                    ? goalPresentCost
+                                                    : target.goalPresentCost),
                                             textColor: Colors.grey,
                                             textSize: size.width * 0.045,
                                             textFontWeight: FontWeight.w500,
@@ -216,8 +208,8 @@ class _TargetDetailState extends State<TargetDetail> {
                                             decoration: TextDecoration.none,
                                           ),
                                           TextContainer(
-                                            text: nf.format(
-                                                widget.target.targetMoney),
+                                            text:
+                                                nf.format(target.goalFinalCost),
                                             textColor: Colors.grey,
                                             textSize: size.width * 0.045,
                                             textFontWeight: FontWeight.w500,
@@ -268,8 +260,7 @@ class _TargetDetailState extends State<TargetDetail> {
                                 padding:
                                     EdgeInsets.only(top: size.width * 0.03),
                                 child: MoneyTextContainer(
-                                  value: widget.target.targetMoney -
-                                      widget.target.currentMoney,
+                                  value: target.goalFinalCost - goalPresentCost,
                                   textSize: size.width * 0.04,
                                   textFontWeight: FontWeight.w400,
                                   color: Colors.black,
@@ -310,13 +301,13 @@ class _TargetDetailState extends State<TargetDetail> {
                   height: size.width * 0.1,
                 ),
                 CustomRoundRectangleButton(
-                  backgroundColor: Colors.lightGreen,
+                  backgroundColor: Color(int.parse(widget.target.goalColor)),
                   onTap: () {
                     _showEnterMoneyDialog();
                   },
                   buttonWith: size.width * 0.8,
                   padding: size.width * 0.03,
-                  borderRadius: size.width * 0.01,
+                  borderRadius: size.width * 0.02,
                   text: TextContainer(
                     text: "THÊM SỐ TIỀN VÀO MỤC TIÊU",
                     textColor: Colors.white,
@@ -333,10 +324,10 @@ class _TargetDetailState extends State<TargetDetail> {
                   onTap: () {},
                   buttonWith: size.width * 0.8,
                   padding: size.width * 0.03,
-                  borderRadius: size.width * 0.01,
+                  borderRadius: size.width * 0.02,
                   text: TextContainer(
                     text: "HOÀN THÀNH MỤC TIÊU",
-                    textColor: Colors.lightGreen,
+                    textColor: Color(int.parse(widget.target.goalColor)),
                     textSize: size.width * 0.05,
                     textFontWeight: FontWeight.bold,
                     decoration: TextDecoration.none,
@@ -352,6 +343,7 @@ class _TargetDetailState extends State<TargetDetail> {
 
   _showEnterMoneyDialog() {
     Size size = MediaQuery.of(context).size;
+    _moneyTextController.clear();
     showDialog(
       context: context,
       builder: (context) {
@@ -371,65 +363,80 @@ class _TargetDetailState extends State<TargetDetail> {
             ),
           ),
           content: TextField(
+            keyboardType: TextInputType.number,
             controller: _moneyTextController,
-            // autofocus: true,
             decoration: InputDecoration(
               hintText: "Số tiền",
               isDense: true,
             ),
           ),
-          actionsAlignment: MainAxisAlignment.spaceBetween,
+          actionsAlignment: MainAxisAlignment.spaceAround,
           actions: [
-            InkWell(
+            CustomRoundRectangleButton(
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Container(
-                alignment: Alignment.center,
-                width: size.width * 0.3,
-                padding: EdgeInsets.only(
-                    top: size.width * 0.01,
-                    bottom: size.width * 0.01,
-                    left: size.width * 0.02,
-                    right: size.width * 0.02),
-                decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  border: Border.all(
-                    width: size.width * 0.003,
-                    color: Colors.black,
-                  ),
-                ),
-                child: TextContainer(
-                  text: "Hủy",
-                  textColor: Colors.black,
-                  textSize: size.width * 0.05,
-                  textFontWeight: FontWeight.w500,
-                  decoration: TextDecoration.none,
-                ),
+              buttonWith: size.width * 0.3,
+              padding: size.width * 0.02,
+              borderRadius: size.width * 0.01,
+              text: TextContainer(
+                text: "HỦY",
+                textColor: Colors.black,
+                textSize: size.width * 0.03,
+                textFontWeight: FontWeight.bold,
+                decoration: TextDecoration.none,
+              ),
+              backgroundColor: Colors.white,
+              border: Border.all(
+                width: size.width * 0.005,
+                color: Colors.grey,
               ),
             ),
-            InkWell(
-              onTap: () {},
-              child: Container(
-                alignment: Alignment.center,
-                width: size.width * 0.3,
-                padding: EdgeInsets.only(
-                    top: size.width * 0.01,
-                    bottom: size.width * 0.01,
-                    left: size.width * 0.02,
-                    right: size.width * 0.02),
-                decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  color: Colors.blue,
-                ),
-                child: TextContainer(
-                  text: "Xác nhận",
-                  textColor: Colors.white,
-                  textSize: size.width * 0.05,
-                  textFontWeight: FontWeight.w500,
-                  decoration: TextDecoration.none,
-                ),
+            CustomRoundRectangleButton(
+              onTap: () {
+                setState(() {
+                  if (goalName != null &&
+                      goalPresentCost != null &&
+                      goalFinalCost != null &&
+                      goalEndDate != null) {
+                    GoalController()
+                        .updateGoal(
+                        widget.target.goalId,
+                        widget.target.goalName,
+                        widget.target.goalIcon,
+                        widget.target.goalEndDate,
+                        widget.target.goalFinalCost,
+                        widget.target.goalColor,
+                        goalPresentCost + _moneyTextController.numberValue,
+                        "Phuc")
+                        .then((value) {
+                      GoalController().getOneGoal(widget.target.goalId).then((value) {
+                        setState(() {
+                          goalName = value.goalName;
+                          goalIcon = value.goalIcon;
+                          goalEndDate = value.goalEndDate;
+                          goalFinalCost = value.goalFinalCost;
+                          goalPresentCost = value.goalPresentCost;
+                        });
+                      });
+                    });
+
+                    Navigator.pop(context);
+                    Fluttertoast.showToast(msg: "Add money success!");
+                  }
+                });
+              },
+              buttonWith: size.width * 0.3,
+              padding: size.width * 0.02,
+              borderRadius: size.width * 0.01,
+              text: TextContainer(
+                text: "XÁC NHẬN",
+                textColor: Colors.white,
+                textSize: size.width * 0.03,
+                textFontWeight: FontWeight.bold,
+                decoration: TextDecoration.none,
               ),
+              backgroundColor: Color(0xff2B4BF2),
             ),
           ],
         );
@@ -437,12 +444,15 @@ class _TargetDetailState extends State<TargetDetail> {
     );
   }
 
-  _showDeleteDialog(Target tg) {
+  _showDeleteDialog(Goal tg) {
     Size size = MediaQuery.of(context).size;
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(size.width * 0.02),
+            ),
             title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -474,7 +484,7 @@ class _TargetDetailState extends State<TargetDetail> {
                 children: [
                   TextSpan(text: "Bạn có chắc muốn xóa mục tiêu "),
                   TextSpan(
-                      text: "${tg.targetName}",
+                      text: "${tg.goalName}",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       )),
@@ -482,71 +492,51 @@ class _TargetDetailState extends State<TargetDetail> {
                 ],
               ),
             ),
+            actionsAlignment: MainAxisAlignment.spaceAround,
             actions: [
-              InkWell(
+              CustomRoundRectangleButton(
                 onTap: () {
                   Navigator.pop(context);
                 },
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.only(
-                      top: size.width * 0.009, bottom: size.width * 0.009),
-                  width: size.width * 0.3,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(size.width * 0.016),
-                    border: Border.all(
-                      width: size.width * 0.002,
-                      color: Colors.black,
-                    ),
-                    color: Colors.white,
-                  ),
-                  child: Text(
-                    "Hủy",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: size.width * 0.05,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                buttonWith: size.width * 0.3,
+                padding: size.width * 0.02,
+                borderRadius: size.width * 0.01,
+                text: TextContainer(
+                  text: "HỦY",
+                  textColor: Colors.black,
+                  textSize: size.width * 0.03,
+                  textFontWeight: FontWeight.bold,
+                  decoration: TextDecoration.none,
+                ),
+                backgroundColor: Colors.white,
+                border: Border.all(
+                  width: size.width * 0.005,
+                  color: Colors.grey,
                 ),
               ),
-              InkWell(
+              CustomRoundRectangleButton(
                 onTap: () {
-                  List<Target> lsTarget = [];
                   setState(() {
-                    widget.listTarget.removeAt(widget.index);
-                    lsTarget = widget.listTarget;
-                    Navigator.pop(
-                      context,
-                      TargetScreen(
-                        pageController: _pageController,
-                        listTarget: lsTarget,
-                      ),
-                    );
-                    Navigator.pop(context);
-                    Navigator.pop(context, "Delete");
+                    GoalController()
+                        .deleteGoal(widget.target.goalId, "Phuc")
+                        .then((value) {
+                      Navigator.pop(context);
+                      Navigator.pop(context, value);
+                    });
+
                   });
                 },
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.only(
-                      top: size.width * 0.011, bottom: size.width * 0.011),
-                  width: size.width * 0.3,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(size.width * 0.016),
-                    color: Colors.blueAccent,
-                  ),
-                  child: Text(
-                    "Xác nhận",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: size.width * 0.05,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                buttonWith: size.width * 0.3,
+                padding: size.width * 0.02,
+                borderRadius: size.width * 0.01,
+                text: TextContainer(
+                  text: "XÁC NHẬN",
+                  textColor: Colors.white,
+                  textSize: size.width * 0.03,
+                  textFontWeight: FontWeight.bold,
+                  decoration: TextDecoration.none,
                 ),
+                backgroundColor: Color(0xff2B4BF2),
               ),
             ],
           );
