@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:graduation_thesis_project/models/account.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/wallet_controller.dart';
 
 
+// ignore: must_be_immutable
 class WalletCreate extends StatefulWidget {
-  const WalletCreate({Key? key}) : super(key: key);
+
+  WalletController walletController = Get.put(WalletController());
+
+  WalletCreate({Key? key}) : super(key: key);
 
   @override
   State<WalletCreate> createState() => _WalletCreateState();
@@ -16,7 +19,6 @@ class _WalletCreateState extends State<WalletCreate> {
 
   String? _walletName = "";
   double? _walletBalance = 0.0;
-  Account? _account;
 
   @override
   Widget build(BuildContext context) {
@@ -192,9 +194,7 @@ class _WalletCreateState extends State<WalletCreate> {
               ),
               ElevatedButton(
                 onPressed: (){
-                  _account = Account(accountUsername: "ChuTT");
-                  WalletController().create(_walletName, _walletBalance, _account);
-                  Get.back();
+                  Navigator.of(context).pop(WalletController().create(_walletName, _walletBalance));
                 },
                 style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),

@@ -7,7 +7,6 @@ import 'package:graduation_thesis_project/models/account.dart';
 import 'package:graduation_thesis_project/models/budget.dart';
 import 'package:graduation_thesis_project/models/expense.dart';
 
-
 import 'package:graduation_thesis_project/views/commons/pages/select_icon.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
@@ -17,10 +16,6 @@ import '../../../../../../models/budget.dart';
 import '../../../../../../models/expense.dart';
 import '../../../../../../remote/controllers/entites/budget_controller.dart';
 import '../../../transaction_screen/expense_screen/expense_list.dart';
-
-
-
-
 
 class BudgetCreate extends StatefulWidget {
 

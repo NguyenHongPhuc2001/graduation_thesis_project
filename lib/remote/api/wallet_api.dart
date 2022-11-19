@@ -1,27 +1,30 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:graduation_thesis_project/remote/api/base_api.dart';
 import 'package:graduation_thesis_project/utils/api_paths/uri_container.dart';
 import 'package:http/http.dart' as http;
 
 import '../../models/account.dart';
-import '../../models/response/response_model.dart';
 import '../../models/wallet.dart';
 import '../../utils/api_paths/api_paths.dart';
 
-class WalletAPI {
+class WalletAPI extends BaseAPI{
 
-  Future<List<Wallet>?> getList(String accountUsername) async {
+  Future<List<Wallet>?> getList() async {
 
+    String? username = await manager.getUsername();
     final queryParameters = {
-      "accountUsername" : accountUsername
+      "accountUsername" : username!
     };
 
     final request = http.Request(
         ApiPaths.METHOD_GET,
         UriContainer().uriGetList("wallet"));
 
+    String? token = await manager.getAuthToken();
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
     request.body = jsonEncode(queryParameters);
 
     final streamedRequest = await request.send();
@@ -29,8 +32,9 @@ class WalletAPI {
 
     if(response.statusCode == 200){
 
-      ResponseModel model = responseModelFromJson(response.body);
-      List<Wallet> wallets = walletsFromJson(model.modelList!.toList());
+      Map<String, dynamic> data = jsonDecode(response.body);
+      var map = Map.fromIterable(data['objectList'] as List);
+      List<Wallet> wallets = walletsFromJson(map.keys.toList());
 
       return wallets;
 
@@ -39,7 +43,10 @@ class WalletAPI {
     return null;
   }
 
-  Future<bool?> update(int? walletId, String? walletName, String? walletBalance, Account? account) async{
+  Future<bool?> update(int? walletId, String? walletName, String? walletBalance) async{
+
+    String? username = await manager.getUsername();
+    Account account = Account(accountUsername: username!);
 
     final queryParameters = {
       "walletId" : walletId,
@@ -52,7 +59,9 @@ class WalletAPI {
         ApiPaths.METHOD_PUT,
         UriContainer().uriUpdate("wallet"));
 
+    String? token = await manager.getAuthToken();
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
     request.body = jsonEncode(queryParameters);
 
     final streamedRequest = await request.send();
@@ -75,7 +84,9 @@ class WalletAPI {
         ApiPaths.METHOD_DELETE,
         UriContainer().uriDelete("wallet"));
 
+    String? token = await manager.getAuthToken();
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
     request.body = jsonEncode(queryParameters);
 
     final streamedRequest = await request.send();
@@ -88,7 +99,10 @@ class WalletAPI {
     return false;
   }
 
-  Future<bool?> create(String? walletName, double? walletBalance, Account? account) async{
+  Future<bool?> create(String? walletName, double? walletBalance) async{
+
+    String? username = await manager.getUsername();
+    Account account = Account(accountUsername: username!);
 
     final queryParameters = {
       "walletName" : walletName,
@@ -100,7 +114,9 @@ class WalletAPI {
         ApiPaths.METHOD_POST,
         UriContainer().uriCreate("wallet"));
 
+    String? token = await manager.getAuthToken();
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
     request.body = jsonEncode(queryParameters);
 
     final streamedRequest = await request.send();

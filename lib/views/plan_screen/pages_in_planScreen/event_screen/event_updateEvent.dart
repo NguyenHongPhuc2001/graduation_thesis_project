@@ -50,7 +50,7 @@ class _UpdateEventState extends State<UpdateEvent> {
     linkIcon = widget.event.eventIcon;
     wallet = widget.event.wallet;
 
-    WalletController().getList("Phuc").then((value) {
+    WalletController().getList().then((value) {
       setState(() {
        listWallet = List.from(value!);
       });

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 
 import 'package:graduation_thesis_project/views/page/overview.dart';
-import 'package:graduation_thesis_project/views/page/planning.dart';
 
 import 'package:graduation_thesis_project/views/page/setting.dart';
 import 'package:graduation_thesis_project/views/plan_screen/plan_main_screen.dart';
-import 'package:graduation_thesis_project/views/transaction_screen/expense_screen/expense_create.dart';
+import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen/wallet_create.dart';
 
 import 'views/manage_transactions_screen/manage_transaction_main_screen.dart';
 
@@ -19,10 +20,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  
   int currentTab = 0;
 
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = const Overview();
+  Widget currentScreen = Overview();
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +39,21 @@ class _HomeState extends State<Home> {
         child: FittedBox(
           child: FloatingActionButton(
             onPressed: () async {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ExpenseCreate(
-                    isLoadByBudget: false,
-                  ),
-                ),
-              );
+              Get.to(WalletCreate())?.then((value) {
+                setState(() {
+                  if(value.runtimeType == bool){
+                    Fluttertoast.showToast(
+                        msg: "Created new wallet !!!",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.blue,
+                        textColor: Colors.white,
+                        fontSize: 12.0
+                    );
+                  }
+                });
+              });
             },
             child: const Icon(Icons.add),
           ),
@@ -65,7 +74,7 @@ class _HomeState extends State<Home> {
                 minWidth: 40,
                 onPressed: () {
                   setState(() {
-                    currentScreen = const Overview();
+                    currentScreen = Overview();
                     currentTab = 0;
                   });
                 },
@@ -92,12 +101,6 @@ class _HomeState extends State<Home> {
                 minWidth: 40,
                 onPressed: () {
                   setState(() {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => ManageTransaction(
-                    //               listTransaction: [],
-                    //             )));
                     currentScreen =
                         const ManageTransaction(listTransaction: []);
                     currentTab = 1;
@@ -130,11 +133,6 @@ class _HomeState extends State<Home> {
                 minWidth: 40,
                 onPressed: () {
                   setState(() {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) =>
-                    //             PlanMainScreen(listTransaction: [])));
                     currentScreen = const PlanMainScreen(listTransaction: []);
                     currentTab = 2;
                   });

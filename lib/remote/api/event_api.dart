@@ -8,6 +8,7 @@ import '../../utils/api_paths/api_paths.dart';
 import '../../utils/api_paths/uri_container.dart';
 
 class EventAPI {
+
   Future<Event> getOne(int eventId) async {
     final queryParameters = {"eventId": eventId};
 

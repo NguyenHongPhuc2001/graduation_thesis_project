@@ -6,22 +6,20 @@ import '../../../models/account.dart';
 
 class WalletController extends GetxController {
 
-  Future<List<Wallet>?> getList(String accountUsername)  async {
-    return await WalletAPI().getList(accountUsername);
+  Future<List<Wallet>?> getList()  async {
+    return await WalletAPI().getList();
   }
 
-  Future<bool?> updateWallet(int? walletId, String? walletName,
-      String? walletBalance, Account? account) async {
-    return await WalletAPI()
-        .update(walletId, walletName, walletBalance, account);
+  Future<bool?> updateWallet(int? walletId, String? walletName, String? walletBalance) async {
+    return await WalletAPI().update(walletId, walletName, walletBalance);
   }
 
   Future<bool?> delete(int? walletId) async {
     return await WalletAPI().deleteWallet(walletId);
   }
 
-  Future<bool?> create(
-      String? walletName, double? walletBalance, Account? account) async {
-    return await WalletAPI().create(walletName, walletBalance, account);
+  Future<bool?> create(String? walletName, double? walletBalance) async {
+    return await WalletAPI().create(walletName, walletBalance);
   }
+
 }

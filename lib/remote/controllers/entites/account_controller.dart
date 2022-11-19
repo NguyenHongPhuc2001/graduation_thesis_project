@@ -9,4 +9,8 @@ class AccountController extends GetxController{
     return await AccountAPI().changePassword(username, password, newPassword, rePassword);
   }
 
+  Future<void> signIn(String? username, String password) async {
+    await AccountAPI().signIn(username, password);
+  }
+
 }

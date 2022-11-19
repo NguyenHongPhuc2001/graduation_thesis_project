@@ -1,6 +1,7 @@
 import 'api_paths.dart';
 
 class UriContainer {
+
   Uri uriGetList(String path) {
     Uri uri = Uri.http(
         "10.0.2.2:8989", "/${path}/${ApiPaths.MODEL_GET_LIST_DOMAIN}");
@@ -33,7 +34,13 @@ class UriContainer {
 
   Uri uriChangePassword(String path){
     Uri uri = Uri.http("10.0.2.2:8989","/${path}/${ApiPaths.ACCOUNT_CHANGE_PASSWORD}");
-  return uri;
+    return uri;
   }
+
+  Uri uriSignIn(String path){
+    Uri uri = Uri.http("10.0.2.2:8989", "/${path}/${ApiPaths.ACCOUNT_SIGN_IN_DOMAIN}");
+    return uri;
+  }
+
 }
 

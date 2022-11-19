@@ -1,16 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:graduation_thesis_project/remote/controllers/entites/account_controller.dart';
 
+// ignore: must_be_immutable
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+
+  String username = "";
+  String password  = "";
+
+  Login({Key? key}) : super(key: key);
 
   @override
   State<Login> createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
+
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+
+    Size size = MediaQuery.of(context).size;
+
+    usernameController.text = widget.username;
+    passwordController.text = widget.password;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
@@ -83,8 +100,10 @@ class _LoginState extends State<Login> {
                         alignment: Alignment.center,
                         child: Column(
                           children: [
-                            const TextField(
-                              decoration: InputDecoration(
+                            TextField(
+                              controller: usernameController,
+                              onChanged: (value) => widget.username = value,
+                              decoration: const InputDecoration(
                                   enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(color: Colors.black),
                                   ),
@@ -101,8 +120,11 @@ class _LoginState extends State<Login> {
                             Stack(
                               alignment: Alignment.centerRight,
                               children: [
-                                const TextField(
-                                  decoration: InputDecoration(
+                                TextField(
+                                  controller: passwordController,
+                                  onChanged: (value) => widget.password = value,
+                                  obscureText: true,
+                                  decoration: const InputDecoration(
                                     enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(color: Colors.black),
                                     ),
@@ -158,8 +180,12 @@ class _LoginState extends State<Login> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                            onPressed: (){
-
+                            onPressed: () async{
+                              try{
+                                await AccountController().signIn(widget.username, widget.password);
+                              }catch(e){
+                                e.printError();
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               shape: const StadiumBorder(),

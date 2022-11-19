@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/wallet.dart';
-import 'package:graduation_thesis_project/services/remote_services.dart';
+import 'package:graduation_thesis_project/remote/controllers/entites/wallet_controller.dart';
 import 'package:graduation_thesis_project/utils/charts/bar.dart';
 import 'package:graduation_thesis_project/utils/date/date_utils.dart';
 import 'package:charts_flutter_new/flutter.dart' as charts;
@@ -11,8 +11,12 @@ import '../../controllers/entites/history_controller.dart';
 import '../../models/history.dart';
 import '../transaction_screen/wallet_screen/wallet_list.dart';
 
+// ignore: must_be_immutable
 class Overview extends StatefulWidget {
-  const Overview({Key? key}) : super(key: key);
+
+  WalletController walletController = Get.put(WalletController());
+
+  Overview({Key? key}) : super(key: key);
 
   @override
   State<Overview> createState() => _OverviewState();
@@ -81,7 +85,7 @@ class _OverviewState extends State<Overview> {
                                 width: size.width * 0.07,
                                 child: ElevatedButton(
                                   onPressed: () async{
-                                    List<Wallet> wallets = await RemoteService().getWallets("ChuTT") as List<Wallet>;
+                                    List<Wallet>? wallets = await widget.walletController.getList();
                                     Get.to(WalletList(wallets: wallets));
                                   },
                                   style: ButtonStyle(

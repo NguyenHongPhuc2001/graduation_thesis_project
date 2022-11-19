@@ -47,7 +47,7 @@ class _AddEventState extends State<AddEvent> {
     // TODO: implement initState
     super.initState();
     dateTime = DateTime.now();
-    WalletController().getList("Phuc").then((value) {
+    WalletController().getList().then((value) {
       setState(() {
         listWallet = List.from(value!);
       });

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:graduation_thesis_project/models/account.dart';
-import 'package:graduation_thesis_project/services/remote_services.dart';
+import 'package:graduation_thesis_project/models/wallet.dart';
+import 'package:graduation_thesis_project/remote/controllers/entites/wallet_controller.dart';
 
 // ignore: must_be_immutable
 class WalletSetting extends StatefulWidget {
@@ -11,8 +11,9 @@ class WalletSetting extends StatefulWidget {
   String? walletName;
   String? walletBalance;
 
-  WalletSetting({Key? key,required this.walletId, required this.walletName, required this.walletBalance}) :  super(key: key);
+  WalletController walletController = Get.put(WalletController());
 
+  WalletSetting({Key? key,required this.walletId, required this.walletName, required this.walletBalance}) :  super(key: key);
 
   @override
   State<WalletSetting> createState() => _WalletSettingState();
@@ -68,8 +69,7 @@ class _WalletSettingState extends State<WalletSetting> {
                 ),
                 child: GestureDetector(
                   onTap: () async {
-                    RemoteService().deleteWallet(widget.walletId);
-                    Get.back();
+                    Navigator.of(context).pop(widget.walletController.delete(widget.walletId));
                   },
                   child: Stack(
                     alignment: Alignment.topRight,
@@ -207,9 +207,9 @@ class _WalletSettingState extends State<WalletSetting> {
               ),
               ElevatedButton(
                 onPressed: (){
-                  Account account = Account(accountId: null, accountUsername: "ChuTT", accountPassword: null, newPassword: null, rePassword: null);
-                  RemoteService().updateWallet(widget.walletId, widget.walletName, widget.walletBalance, account);
-                  Get.back();
+                  widget.walletController.updateWallet(widget.walletId, widget.walletName, widget.walletBalance);
+                  Wallet wallet = Wallet(walletId: widget.walletId, walletBalance: double.tryParse(widget.walletBalance.toString()), walletName: widget.walletName);
+                  Navigator.of(context).pop(wallet);
                 },
                 style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),

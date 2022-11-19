@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:graduation_thesis_project/remote/controllers/entites/wallet_controller.dart';
+import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen/wallet_create.dart';
 import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen/wallet_setting.dart';
 import '../../../models/wallet.dart';
 
+// ignore: must_be_immutable
 class WalletList extends StatefulWidget {
+
+  WalletController walletController = Get.put(WalletController());
 
   List<Wallet>? wallets;
 
@@ -43,6 +49,53 @@ class _WalletListState extends State<WalletList> {
               size: 20.0,
             ),
           ),
+          actions: [
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15.0),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(15.0),
+                onTap: () async {
+                  Get.to(WalletCreate())?.then((value) => {
+                    if(value.runtimeType == bool){
+                      Fluttertoast.showToast(
+                      msg: "Created complete !",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.blue,
+                      textColor: Colors.white,
+                      fontSize: 12.0
+                    )
+                  }
+                  });
+                },
+                child: Container(
+                   alignment: Alignment.center,
+                   decoration: BoxDecoration(
+                       borderRadius: BorderRadius.circular(100),
+                       color: Colors.blue,
+                       boxShadow: const [BoxShadow (
+                           spreadRadius: 2,
+                           blurRadius: 2,
+                           color: Colors.black12
+                       )]
+                   ),
+                   child: const Padding(
+                     padding: EdgeInsets.all(5.0),
+                     child: Text(
+                       "Add wallet",
+                       textAlign: TextAlign.center,
+                       style: TextStyle(
+                           fontSize: 10,
+                           fontWeight: FontWeight.bold
+                       ),
+                     ),
+                   ),
+                ),
+              ),
+            ),
+          ],
           elevation: 2,
         ),
         body: SingleChildScrollView(
@@ -63,7 +116,35 @@ class _WalletListState extends State<WalletList> {
       for (var item in wallets) {
         walletItems.add(GestureDetector(
           onTap: () async{
-            await Get.to(WalletSetting(walletId: item.walletId, walletName: item.walletName, walletBalance: item.walletBalance.toString()));
+            await Get.to(WalletSetting(walletId: item.walletId, walletName: item.walletName, walletBalance: item.walletBalance.toString()))
+            ?.then((value) => {
+                setState(() {
+                  if(value != null){
+                    if(value.runtimeType == bool){
+                      Fluttertoast.showToast(
+                          msg: "Deleted complete !",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.blue,
+                          textColor: Colors.white,
+                          fontSize: 12.0
+                      );
+                    }else{
+                      item = value;
+                      Fluttertoast.showToast(
+                          msg: "Updated complete !",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.blue,
+                          textColor: Colors.white,
+                          fontSize: 12.0
+                      );
+                    }
+                  }
+                })
+            });
           },
           child: Container(
             alignment: Alignment.center,
