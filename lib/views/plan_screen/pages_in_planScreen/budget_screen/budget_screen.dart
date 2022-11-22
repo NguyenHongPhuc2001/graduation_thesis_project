@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import 'package:graduation_thesis_project/views/commons/widgets/appbar_container.dart';
 
-import '../../../../controllers/entites/budget_controller.dart';
+import '../../../../remote/controllers/entites/budget_controller.dart';
 import 'budget_create.dart';
 import 'budget_end.dart';
 import 'budget_happening.dart';
@@ -17,6 +17,7 @@ class BudgetScreen extends StatefulWidget {
 
   @override
   State<BudgetScreen> createState() => _BudgetScreenState();
+
 }
 
 class _BudgetScreenState extends State<BudgetScreen> {
@@ -34,7 +35,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
         length: 2,
         child: Scaffold(
           appBar: PreferredSize(
-            preferredSize: Size(size.width, size.width * 0.35),
+            preferredSize: Size.fromHeight(size.width * 0.28),
             child: AppBarContainer(
               text: "Ngân sách",
               screenPageController: _budgetPageController,

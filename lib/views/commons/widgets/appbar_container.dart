@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/text_header_container.dart';
 
 class AppBarContainer extends StatefulWidget {
+
   final PageController pageController;
   final PageController screenPageController;
   final VoidCallback onTap;
@@ -24,82 +25,60 @@ class _AppBarContainerState extends State<AppBarContainer> {
 
   @override
   Widget build(BuildContext context) {
+
     Size size = MediaQuery.of(context).size;
+
     return AppBar(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(size.width * 0.085),
-          bottomRight: Radius.circular(size.width * 0.085),
-        ),
-      ),
-      toolbarHeight: size.width * 0.25,
       flexibleSpace: Column(
         children: [
           Row(
             children: [
               IconButton(
+                iconSize: 18,
                 onPressed: () {
                   setState(() {
                     widget.pageController.jumpToPage(0);
                   });
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.arrow_back,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
               ),
               Container(
                 alignment: Alignment.center,
-                width: size.width * 0.75,
+                width: size.width * 0.70,
                 child: TextHeaderContainer(
                   text: widget.text,
-                  textColor: Colors.white,
+                  textColor: Colors.black
                 ),
               ),
             ],
           ),
-          Padding(
-            padding: EdgeInsets.only(top: size.width * 0.02),
-            child: Container(
-              decoration: BoxDecoration(
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(size.width * 0.1),
+              color: Colors.white,
+            ),
+            child: InkWell(
+              customBorder: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(size.width * 0.1),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white,
-                    blurRadius: size.width * 0.04,
-                    offset: Offset(0, 0),
-                  ),
-                ],
               ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  customBorder: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(size.width * 0.1),
-                  ),
-                  onTap: widget.onTap,
-                  child: Container(
-                    width: size.width * 0.3,
-                    padding: EdgeInsets.only(
-                        top: size.width * 0.02,
-                        bottom: size.width * 0.02,
-                        right: size.width * 0.05,
-                        left: size.width * 0.05),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(size.width * 0.1),
-                    ),
-                    child: Text(
-                      "Thêm",
-                      style: TextStyle(
-                        color: (currentIndex == 0)
-                            ? Color(0xffFB8500)
-                            : Color(0xff90E0EF),
-                        fontSize: size.width * 0.05,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+              onTap: widget.onTap,
+              child: Container(
+                width: size.width * 0.2,
+                padding: const EdgeInsets.all(3.0),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(size.width * 0.1),
+                ),
+                child: Text(
+                  "Thêm",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: size.width * 0.035,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -107,8 +86,7 @@ class _AppBarContainerState extends State<AppBarContainer> {
           ),
         ],
       ),
-      backgroundColor:
-          (currentIndex == 0) ? Color(0xffFB8500) : Color(0xff90E0EF),
+      backgroundColor: Colors.white,
       bottom: TabBar(
         onTap: (indexTab) {
           setState(() {
@@ -116,23 +94,31 @@ class _AppBarContainerState extends State<AppBarContainer> {
             currentIndex = indexTab;
           });
         },
-        labelColor: Colors.white,
-        unselectedLabelColor: Color(0xffEDF6F9).withAlpha(150),
-        labelStyle: TextStyle(
-          fontSize: size.width * 0.045,
-          fontWeight: FontWeight.bold,
-        ),
-        indicatorColor: Colors.white,
-        indicatorWeight: 3,
+        labelColor: Colors.black,
+        unselectedLabelColor: Colors.grey,
+        indicatorColor: Colors.black,
+        indicatorWeight: 1,
         indicatorSize: TabBarIndicatorSize.label,
-        tabs: [
+        tabs: const [
           Padding(
-            padding: EdgeInsets.all(5),
-            child: Text("Đang diễn ra"),
+            padding: EdgeInsets.only(bottom: 2),
+            child: Text(
+                "Đang diễn ra",
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500
+                ),
+            ),
           ),
           Padding(
-            padding: EdgeInsets.all(5),
-            child: Text("Đã kết thúc"),
+            padding: EdgeInsets.only(bottom: 2),
+            child: Text(
+                "Đã kết thúc",
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500
+              ),
+            ),
           ),
         ],
       ),

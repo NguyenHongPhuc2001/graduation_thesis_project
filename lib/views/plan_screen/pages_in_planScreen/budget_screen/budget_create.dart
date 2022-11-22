@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
-import 'package:graduation_thesis_project/models/account.dart';
 import 'package:graduation_thesis_project/models/budget.dart';
 import 'package:graduation_thesis_project/models/expense.dart';
 
@@ -11,7 +10,6 @@ import 'package:graduation_thesis_project/views/commons/pages/select_icon.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
-import '../../../../../../models/account.dart';
 import '../../../../../../models/budget.dart';
 import '../../../../../../models/expense.dart';
 import '../../../../../../remote/controllers/entites/budget_controller.dart';
@@ -43,8 +41,6 @@ class _BudgetCreateState extends State<BudgetCreate> {
   String budgetValue = "";
   final pageController = PageController();
 
-  bool _onTextClick = false;
-
   String? budgetIcon;
   String? budgetName;
   Expense? expense;
@@ -59,393 +55,387 @@ class _BudgetCreateState extends State<BudgetCreate> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: const Icon(
-            CupertinoIcons.xmark,
-            color: Colors.black,
+        resizeToAvoidBottomInset: false,
+        backgroundColor: const Color(0xE9ECEFED),
+        appBar: AppBar(
+          title: Text(
+            "Thêm mới ngân sách",
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: size.width * 0.05
+            ),
           ),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-        centerTitle: true,
-        title: Text(
-          "Thêm ngân sách",
-          style: TextStyle(
-            fontSize: size.width * 0.065,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        actions: [
-          IconButton(
-            splashRadius: size.width * 0.07,
-            icon: Icon(
-              Icons.save,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
               color: Colors.black,
-              size: size.width * 0.08,
+              size: 20,
             ),
             onPressed: () {
-              setState(() {
-                Account account = Account(accountUsername: "ChuTT");
-                BudgetController().createBudget(budgetName, double.parse(_budgetMoneyController.text.toString().replaceAll(",", "")),
-                    budgetIcon, df.format(dateTime), expense, account);
-                Get.back();
-              });
+              Get.back();
             },
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: size.width * 0.05),
-            child: Container(
-              padding: EdgeInsets.only(left: size.width * 0.04),
-              height: size.width * 0.2,
-              width: size.width,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: size.width * 0.001,
-                  color: Colors.black,
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 2,
+        ),
+        body: SizedBox(
+          width: size.width,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: size.width,
+                height: size.height * 0.52,
+                margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15.0),
+                  boxShadow: const [
+                    BoxShadow(
+                        blurRadius: 1,
+                        spreadRadius: 2,
+                        color: Colors.grey
+                    )
+                  ],
                 ),
-              ),
-              child: IntrinsicHeight(
-                child: Row(
+                child: Column(
                   children: [
                     Container(
-                      height: 50,
-                      width: 50,
-                      padding: EdgeInsets.all(size.width * 0.025),
-                      child: SvgPicture.asset("images/logo_money.svg",
-                          width: size.width * 0.1),
-                    ),
-                    VerticalDivider(
-                      thickness: size.width * 0.001,
-                      color: Colors.black,
-                      width: size.width * 0.1,
-                    ),
-                    Expanded(
+                      padding: const EdgeInsets.all(3),
+                      margin: const EdgeInsets.only(top: 20),
+                      width: size.width * 0.8,
+                      height: size.width * 0.1,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(100),
+                          boxShadow: const [
+                            BoxShadow(
+                                color: Colors.grey,
+                                blurRadius: 2
+                            )
+                          ]
+                      ),
                       child: TextField(
                         controller: budgetNameController,
                         onChanged: (value) => budgetName = value,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Nhập tên ngân sách',
-                        ),
-                      ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: size.width * 0.05),
-            child: InkWell(
-              onTap: () async {
-                DateTime? dateValue = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2200),
-                  fieldLabelText: "Ngày",
-                  cancelText: "THOÁT",
-                  confirmText: "XÁC NHẬN",
-                  helpText: "CHỌN NGÀY",
-                );
-
-                setState(() {
-                  dateTime = dateValue as DateTime;
-                  final int year1, year2, month1, month2, day1, day2;
-                  DateTime t = dateTime;
-                  DateTime t2 = DateTime.now();
-                  year1 = t.year;
-                  month1 = t.month;
-                  day1 = t.day;
-                  year2 = t2.year;
-                  month2 = t2.month;
-                  day2 = t2.day;
-
-                  if (year1 < year2) {
-                    setState(() {
-                      dateTime = null;
-                    });
-                    _showCalendarDialog();
-                  } else if (year1 == year2 && month1 < month2) {
-                    setState(() {
-                      dateTime = null;
-                    });
-                    _showCalendarDialog();
-                  } else if (year1 == year2 &&
-                      month1 == month2 &&
-                      day1 < day2) {
-                    setState(() {
-                      dateTime = null;
-                    });
-                    _showCalendarDialog();
-                  }
-                });
-              },
-              child: Container(
-                padding: EdgeInsets.only(left: size.width * 0.04),
-                height: size.width * 0.2,
-                width: size.width,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: size.width * 0.001,
-                    color: Colors.black,
-                  ),
-                ),
-                child: IntrinsicHeight(
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(size.width * 0.025),
-                        child: Image.asset("icons/icons_1/calendar_icon_1.png",
-                            width: size.width * 0.1),
-                      ),
-                      VerticalDivider(
-                        thickness: size.width * 0.001,
-                        color: Colors.black,
-                        width: size.width * 0.1,
-                      ),
-                      Expanded(
-                        child: dateTime == null
-                            ? Text(
-                          df.format(dateTime = DateTime.now()),
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: size.width * 0.07,
-                            decoration: TextDecoration.none,
+                        textAlign: TextAlign.center,
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.only(left: 15, top: 5, bottom: 15),
+                          enabledBorder: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: BorderSide.none
                           ),
-                        )
-                            : Text(
-                          df.format(dateTime),
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: size.width * 0.07,
-                            decoration: TextDecoration.none,
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: BorderSide.none
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Nhập tên ngân sách",
+                          hintStyle: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w300
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: size.width * 0.05),
-            child: Container(
-              padding: EdgeInsets.only(left: size.width * 0.04),
-              height: size.width * 0.2,
-              width: size.width,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: size.width * 0.001,
-                  color: Colors.black,
-                ),
-              ),
-              child: IntrinsicHeight(
-                child: Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(size.width * 0.01),
-                      child: Image.asset(
-                        "icons/icons_1/money_icon_1.png",
-                        width: size.width * 0.13,
-                      ),
                     ),
-                    VerticalDivider(
-                      thickness: size.width * 0.001,
-                      color: Colors.black,
-                      width: size.width * 0.1,
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: size.width * 0.02),
-                            child: _textInTargetDetail(
-                              text: "Số tiền ngân sách",
-                              textColor: Colors.black,
-                              textSize: size.width * 0.03,
-                              textFontWeight: FontWeight.w500,
-                              decoration: TextDecoration.none,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Visibility(
-                                visible: _onTextClick,
-                                child: Padding(
-                                  padding:
-                                  EdgeInsets.only(right: size.width * 0.03),
-                                  child: _textInTargetDetail(
-                                    text: "đ",
-                                    textColor: const Color(0xff8AC926),
-                                    textSize: size.width * 0.07,
-                                    textFontWeight: FontWeight.bold,
-                                    decoration: TextDecoration.none,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: TextField(
-                                  onTap: () {
-                                    setState(() {
-                                      _onTextClick = true;
-                                    });
-                                  },
-                                  keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
-                                  controller: _budgetMoneyController,
-                                  decoration: InputDecoration(
-                                    hintText: "Nhập số tiền ngân sách",
-                                    hintStyle: TextStyle(
-                                      fontSize: size.width * 0.05,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold,
-                                      decoration: TextDecoration.none,
-                                    ),
-                                    isDense: true,
-                                    border: InputBorder.none,
-                                  ),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: const Color(0xff8AC926),
-                                    fontSize: size.width * 0.07,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: size.width * 0.05),
-            child: Container(
-              padding: EdgeInsets.only(left: size.width * 0.04),
-              height: size.width * 0.2,
-              width: size.width,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: size.width * 0.001,
-                  color: Colors.black,
-                ),
-              ),
-              child: IntrinsicHeight(
-                child: InkWell(
-                  onTap: () async {
-                    budgetIcon = await Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const SelectIcons())
-                    );
-                  },
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(size.width * 0.03),
-                        child: SvgPicture.asset(
-                          "images/face_smile.svg",
-                          width: size.width * 0.09,
+                    const SizedBox(height: 20,),
+                    GestureDetector(
+                      onTap: () async {
+                        budgetIcon = await Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => const SelectIcons())
+                        );
+                      },
+                      child: Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                            color: Colors.amberAccent,
+                            borderRadius: BorderRadius.circular(100)
                         ),
+                        padding: const EdgeInsets.all(18),
+                        child: SvgPicture.asset(budgetIcon == null ? "" : budgetIcon!),
                       ),
-                      VerticalDivider(
-                        thickness: size.width * 0.001,
-                        color: Colors.black,
-                        width: size.width * 0.1,
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                    const SizedBox(height: 20,),
+                    Column(
+                      children: [
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                             "",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: size.width * 0.07,
-                                decoration: TextDecoration.none,
+                            SizedBox(
+                              width: size.width * 0.4,
+                              child: const Text(
+                                'Thời gian diễn ra',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(3),
+                              width: size.width * 0.4,
+                              height: size.width * 0.07,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(100),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        color: Colors.grey,
+                                        blurRadius: 2
+                                    )
+                                  ]
+                              ),
+                              child: InkWell(
+                                onTap: () async {
+                                  DateTime? dateValue = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(2000),
+                                    lastDate: DateTime(2200),
+                                    fieldLabelText: "Ngày",
+                                    cancelText: "THOÁT",
+                                    confirmText: "XÁC NHẬN",
+                                    helpText: "CHỌN NGÀY",
+                                  );
+
+                                  setState(() {
+                                    dateTime = dateValue as DateTime;
+                                    final int year1, year2, month1, month2, day1, day2;
+                                    DateTime t = dateTime;
+                                    DateTime t2 = DateTime.now();
+                                    year1 = t.year;
+                                    month1 = t.month;
+                                    day1 = t.day;
+                                    year2 = t2.year;
+                                    month2 = t2.month;
+                                    day2 = t2.day;
+
+                                    if (year1 < year2) {
+                                      setState(() {
+                                        dateTime = null;
+                                      });
+                                      _showCalendarDialog();
+                                    } else if (year1 == year2 && month1 < month2) {
+                                      setState(() {
+                                        dateTime = null;
+                                      });
+                                      _showCalendarDialog();
+                                    } else if (year1 == year2 &&
+                                        month1 == month2 &&
+                                        day1 < day2) {
+                                      setState(() {
+                                        dateTime = null;
+                                      });
+                                      _showCalendarDialog();
+                                    }
+                                  });
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: SizedBox(
+                                    child: dateTime == null
+                                        ? Text(
+                                      "",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: size.width * 0.04,
+                                        decoration: TextDecoration.none,
+                                      ),
+                                    )
+                                        : Text(
+                                      df.format(dateTime),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: size.width * 0.04,
+                                        decoration: TextDecoration.none,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
+                        SizedBox(
+                          height: size.height * 0.03,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: size.width * 0.4,
+                              child: const Text(
+                                'Loại chi tiêu',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(3),
+                              width: size.width * 0.4,
+                              height: size.width * 0.07,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(100),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        color: Colors.grey,
+                                        blurRadius: 2
+                                    )
+                                  ]
+                              ),
+                              child: InkWell(
+                                onTap: () async {
+                                  expense = await Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (context) => ExpenseList(isLoadByBudget: true)));
+                                },
+                                child: Container(
+                                    alignment: Alignment.center,
+                                    child:  Text(
+                                      expense == null ? "" : expense!.expenseName.toString(),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: size.width * 0.04,
+                                        decoration: TextDecoration.none,
+                                      ),
+                                    )
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: size.height * 0.03,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: size.width * 0.4,
+                              child: const Text(
+                                'Giá trị ngân sách',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(3),
+                              width: size.width * 0.4,
+                              height: size.width * 0.07,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(100),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        color: Colors.grey,
+                                        blurRadius: 2
+                                    )
+                                  ]
+                              ),
+                              child: Stack(
+                                alignment: Alignment.centerRight,
+                                children: [
+                                  TextField(
+                                    textAlign: TextAlign.center,
+                                    controller: _budgetMoneyController,
+                                    autofocus: false,
+                                    keyboardType: TextInputType.number,
+                                    style: const TextStyle(
+                                      color: Colors.blue
+                                    ),
+                                    decoration: InputDecoration(
+                                      contentPadding: const EdgeInsets.only(bottom: 13.0),
+                                      enabledBorder: UnderlineInputBorder(
+                                          borderRadius: BorderRadius.circular(30),
+                                          borderSide: BorderSide.none
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(30),
+                                          borderSide: BorderSide.none
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      hintStyle: const TextStyle(
+                                          fontSize: 8,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w300
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.all(3),
+                                    margin: const EdgeInsets.symmetric(horizontal: 1),
+                                    decoration: BoxDecoration(
+                                        color: Colors.redAccent,
+                                        borderRadius: BorderRadius.circular(100)
+                                    ),
+                                    child: const Text(
+                                      "VNĐ",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 8
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: size.width * 0.05),
-            child: InkWell(
-              onTap: () async {
-                 expense = await Navigator.of(context).push(
-                 MaterialPageRoute(builder: (context) => ExpenseList(isLoadByBudget: true,))
-                );
-              },
-              child: Container(
-                padding: EdgeInsets.only(left: size.width * 0.04),
-                height: size.width * 0.2,
-                width: size.width,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: size.width * 0.001,
-                    color: Colors.black,
-                  ),
+              ElevatedButton(
+                onPressed: (){
+
+                  if(budgetName!.isEmpty || _budgetMoneyController.text.toString().isEmpty
+                      || expense == null || budgetIcon!.isEmpty || dateTime == null) {
+
+                    Fluttertoast.showToast(
+                        msg: "Vui lòng điền đầy đủ thông tin",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.blue,
+                        textColor: Colors.white,
+                        fontSize: 13.0
+                    );
+
+                  }else{
+                    BudgetController().createBudget(budgetName, double.parse(_budgetMoneyController.text.toString().replaceAll(",", "")),
+                        budgetIcon, df.format(dateTime), expense);
+                    Get.back();
+                  }
+
+                },
+                style: ElevatedButton.styleFrom(
+                    shape: const StadiumBorder(),
+                    minimumSize: const Size(250, 30)
                 ),
-                child: IntrinsicHeight(
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 50,
-                        width: 50,
-                        padding: EdgeInsets.all(size.width * 0.025),
-                        child: SvgPicture.asset("images/logo_money.svg",
-                            width: size.width * 0.1),
-                      ),
-                      VerticalDivider(
-                        thickness: size.width * 0.001,
-                        color: Colors.black,
-                        width: size.width * 0.1,
-                      ),
-                      const Expanded(
-                        child: Text(
-                          "Chọn loại chi tiêu"
-                        )
-                      ),
-                    ],
-                  ),
+                child: const Text(
+                    "Tạo mới ngân sách"
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        )
     );
   }
 
   _showCalendarDialog() {
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
     showDialog(
         context: context,
         builder: (context) {
@@ -472,7 +462,8 @@ class _BudgetCreateState extends State<BudgetCreate> {
                 child: Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.only(
-                      top: size.width * 0.005, bottom: size.width * 0.005),
+                      top: size.width * 0.005, bottom: size.width * 0.005
+                  ),
                   width: size.width * 0.2,
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
@@ -492,36 +483,5 @@ class _BudgetCreateState extends State<BudgetCreate> {
             ],
           );
         });
-  }
-}
-
-// ignore: camel_case_types
-class _textInTargetDetail extends StatelessWidget {
-  final String text;
-  final Color textColor;
-  final double textSize;
-  final FontWeight textFontWeight;
-  final TextDecoration decoration;
-
-  const _textInTargetDetail({
-    Key? key,
-    required this.text,
-    required this.textColor,
-    required this.textSize,
-    required this.textFontWeight,
-    required this.decoration,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-        fontSize: textSize,
-        color: textColor,
-        fontWeight: textFontWeight,
-        decoration: decoration,
-      ),
-    );
   }
 }

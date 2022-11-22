@@ -43,7 +43,7 @@ class _HomeState extends State<Home> {
                 setState(() {
                   if(value.runtimeType == bool){
                     Fluttertoast.showToast(
-                        msg: "Created new wallet !!!",
+                        msg: "Đã thêm mới ví !",
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.BOTTOM,
                         timeInSecForIosWeb: 1,

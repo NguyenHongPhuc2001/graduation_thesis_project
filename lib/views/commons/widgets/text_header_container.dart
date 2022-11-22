@@ -16,7 +16,7 @@ class TextHeaderContainer extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-        fontSize: size.width * 0.065,
+        fontSize: size.width * 0.05,
         color: textColor,
         fontWeight: FontWeight.bold,
       ),

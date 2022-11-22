@@ -28,7 +28,6 @@ class ExpenseSetting extends StatefulWidget {
 class _ExpenseSettingState extends State<ExpenseSetting> {
 
   final List expenseTypes = ['Thu nhập', 'Chi tiêu'];
-  Account? _account;
 
   @override
   Widget build(BuildContext context) {
@@ -209,8 +208,7 @@ class _ExpenseSettingState extends State<ExpenseSetting> {
                     ),
                     ElevatedButton(
                       onPressed: (){
-                        _account = Account(accountUsername: 'ChuTT');
-                        widget.expenseController.deleteExpense(widget.expenseId, _account);
+                        widget.expenseController.deleteExpense(widget.expenseId);
                         Get.back();
                       },
                       style: ElevatedButton.styleFrom(
@@ -229,11 +227,9 @@ class _ExpenseSettingState extends State<ExpenseSetting> {
               ),
               ElevatedButton(
                 onPressed: (){
-                  _account = Account(accountUsername: 'ChuTT');
                   widget.expenseController.updateExpense(widget.expenseId, widget.expenseName,
                       widget.expenseType == 'Chi tiêu' ? ExpenseType.DISBURSE.name : ExpenseType.INCOME.name,
-                      widget.expenseIcon,
-                      _account);
+                      widget.expenseIcon);
                   Get.back();
                 },
                 style: ElevatedButton.styleFrom(

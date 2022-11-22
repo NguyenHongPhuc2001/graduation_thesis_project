@@ -13,20 +13,20 @@ class ExpenseController extends GetxController{
   List<Expense> expenseList = <Expense>[].obs;
 
   void getExpenses() async {
-    List<Expense>? eList = await ExpenseAPI().getList("ChuTT");
+    List<Expense>? eList = await ExpenseAPI().getList();
     expenseList.assignAll(eList!);
   }
 
-  Future<bool?> createExpense(String? expenseName, String? expenseType, String? expenseIcon, Account? account) async {
-    return await ExpenseAPI().create(expenseName, expenseType, expenseIcon, account);
+  Future<bool?> createExpense(String? expenseName, String? expenseType, String? expenseIcon) async {
+    return await ExpenseAPI().create(expenseName, expenseType, expenseIcon);
   }
 
-  Future<bool?> updateExpense(int? expenseId, String? expenseName, String? expenseType, String? expenseIcon, Account? account) async {
-    return await ExpenseAPI().update(expenseId, expenseName, expenseType, expenseIcon, account);
+  Future<bool?> updateExpense(int? expenseId, String? expenseName, String? expenseType, String? expenseIcon) async {
+    return await ExpenseAPI().update(expenseId, expenseName, expenseType, expenseIcon);
   }
 
-  Future<bool?> deleteExpense(int? expenseId, Account? account) async {
-    return await ExpenseAPI().delete(expenseId, account);
+  Future<bool?> deleteExpense(int? expenseId) async {
+    return await ExpenseAPI().delete(expenseId);
   }
 
   Future<Expense?> getExpense(int expenseId) async {

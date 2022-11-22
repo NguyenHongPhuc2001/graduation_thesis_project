@@ -59,7 +59,7 @@ class _WalletListState extends State<WalletList> {
                   Get.to(WalletCreate())?.then((value) => {
                     if(value.runtimeType == bool){
                       Fluttertoast.showToast(
-                      msg: "Created complete !",
+                      msg: "Thêm ví complete !",
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
                       timeInSecForIosWeb: 1,
@@ -84,7 +84,7 @@ class _WalletListState extends State<WalletList> {
                    child: const Padding(
                      padding: EdgeInsets.all(5.0),
                      child: Text(
-                       "Add wallet",
+                       "Thêm ví",
                        textAlign: TextAlign.center,
                        style: TextStyle(
                            fontSize: 10,
@@ -122,7 +122,7 @@ class _WalletListState extends State<WalletList> {
                   if(value != null){
                     if(value.runtimeType == bool){
                       Fluttertoast.showToast(
-                          msg: "Deleted complete !",
+                          msg: "Xóa ví thành công !",
                           toastLength: Toast.LENGTH_SHORT,
                           gravity: ToastGravity.BOTTOM,
                           timeInSecForIosWeb: 1,
@@ -133,7 +133,7 @@ class _WalletListState extends State<WalletList> {
                     }else{
                       item = value;
                       Fluttertoast.showToast(
-                          msg: "Updated complete !",
+                          msg: "Cập nhật ví thành công !",
                           toastLength: Toast.LENGTH_SHORT,
                           gravity: ToastGravity.BOTTOM,
                           timeInSecForIosWeb: 1,

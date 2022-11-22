@@ -4,8 +4,6 @@ import 'package:get/get.dart';
 import 'package:graduation_thesis_project/utils/enums/expense_type.dart';
 import 'package:graduation_thesis_project/views/commons/pages/select_icon.dart';
 
-
-import '../../../models/account.dart';
 import '../../../remote/controllers/entites/expense_controller.dart';
 
 
@@ -26,7 +24,6 @@ class _ExpenseCreateState extends State<ExpenseCreate> {
 
   String? valueChoose;
   String? _expenseName = "";
-  Account? _account;
   String? _expenseIcon = "images/palm_tree.svg";
 
   @override
@@ -205,11 +202,9 @@ class _ExpenseCreateState extends State<ExpenseCreate> {
               ),
               ElevatedButton(
                 onPressed: (){
-                  _account = Account(accountUsername: 'ChuTT');
                   widget.expenseController.createExpense(_expenseName,
                       valueChoose == 'Chi tiêu' ? ExpenseType.DISBURSE.name : ExpenseType.INCOME.name,
-                      _expenseIcon,
-                      _account);
+                      _expenseIcon);
                   Get.back();
                 },
                 style: ElevatedButton.styleFrom(

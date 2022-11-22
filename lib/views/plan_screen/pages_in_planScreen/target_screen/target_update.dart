@@ -452,7 +452,7 @@ class _UpdateTargetState extends State<UpdateTarget> {
 
                 GoalController()
                     .updateGoal(
-                  widget.target.goalId!,
+                  widget.target.goalId,
                   _targetNameController.text,
                   goalIcon,
                   df.format(goalEndDate),

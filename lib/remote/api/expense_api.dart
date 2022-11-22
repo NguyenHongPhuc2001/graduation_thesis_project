@@ -8,9 +8,10 @@ import '../../models/account.dart';
 import '../../models/expense.dart';
 import '../../models/response/response_model.dart';
 import '../../utils/api_paths/api_paths.dart';
+import 'base_api.dart';
 
 
-class ExpenseAPI {
+class ExpenseAPI extends BaseAPI{
 
   Future<Expense?> getOne(int expenseId) async {
 
@@ -22,7 +23,9 @@ class ExpenseAPI {
         ApiPaths.METHOD_GET,
         UriContainer().uriGetOne("expense"));
 
+    String? token = await manager.getAuthToken();
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
     request.body = jsonEncode(queryParameters);
 
     final streamedRequest = await request.send();
@@ -38,18 +41,22 @@ class ExpenseAPI {
     return null;
   }
 
-  Future<List<Expense>?> getList(String accountUsername) async {
+  Future<List<Expense>?> getList() async {
+
+    String? username = await manager.getUsername();
 
     final queryParameters = {
-      "accountUsername" : accountUsername
+      "accountUsername" : username
     };
 
     final request = http.Request(
         ApiPaths.METHOD_GET,
-        UriContainer().uriGetOne("expense")
+        UriContainer().uriGetList("expense")
     );
 
+    String? token = await manager.getAuthToken();
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
     request.body = jsonEncode(queryParameters);
 
     final streamedRequest = await request.send();
@@ -67,7 +74,10 @@ class ExpenseAPI {
     return null;
   }
 
-  Future<bool?> create(String? expenseName, String? expenseType, String? expenseIcon, Account? account) async{
+  Future<bool?> create(String? expenseName, String? expenseType, String? expenseIcon) async{
+
+    String? username = await manager.getUsername();
+    Account account = Account(accountUsername: username!);
 
     final queryParameters = {
       "expenseName" : expenseName,
@@ -82,7 +92,9 @@ class ExpenseAPI {
         UriContainer().uriCreate("expense")
     );
 
+    String? token = await manager.getAuthToken();
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
     request.body = jsonEncode(queryParameters);
 
     final streamedRequest = await request.send();
@@ -95,7 +107,10 @@ class ExpenseAPI {
     return false;
   }
 
-  Future<bool?> update(int? expenseId, String? expenseName, String? expenseType, String? expenseIcon, Account? account) async{
+  Future<bool?> update(int? expenseId, String? expenseName, String? expenseType, String? expenseIcon) async{
+
+    String? username = await manager.getUsername();
+    Account account = Account(accountUsername: username!);
 
     final queryParameters = {
       "expenseId" : expenseId,
@@ -111,7 +126,9 @@ class ExpenseAPI {
         UriContainer().uriUpdate("expense")
     );
 
+    String? token = await manager.getAuthToken();
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
     request.body = jsonEncode(queryParameters);
 
     final streamedRequest = await request.send();
@@ -124,7 +141,10 @@ class ExpenseAPI {
     return false;
   }
 
-  Future<bool?> delete(int? expenseId, Account? account) async{
+  Future<bool?> delete(int? expenseId) async{
+
+    String? username = await manager.getUsername();
+    Account account = Account(accountUsername: username!);
 
     final queryParameters = {
       "expenseId" : expenseId,
@@ -135,7 +155,9 @@ class ExpenseAPI {
         ApiPaths.METHOD_DELETE,
         UriContainer().uriDelete("expense"));
 
+    String? token = await manager.getAuthToken();
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
     request.body = jsonEncode(queryParameters);
 
     final streamedRequest = await request.send();

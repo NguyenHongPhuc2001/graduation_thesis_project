@@ -800,7 +800,7 @@ class _UpdateEventState extends State<UpdateEvent> {
                             df.format(dateTime),
                             wallet.walletId,
                             "Phuc",
-                            widget.event.eventStatus!)
+                            widget.event.eventStatus)
                         .then((value) {
                       setState(() {
                         Navigator.pop(context, value);
@@ -816,7 +816,7 @@ class _UpdateEventState extends State<UpdateEvent> {
                         correctDate,
                         wallet.walletId,
                         "Phuc",
-                        widget.event.eventStatus!)
+                        widget.event.eventStatus)
                         .then((value) {
                       setState(() {
                         Navigator.pop(context, value);
