@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/expense.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/event_controller.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/custom_round_rectangle_button.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/money_text_container.dart';
-import 'package:graduation_thesis_project/views/commons/widgets/single_row_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_detail.dart';
 import 'package:intl/intl.dart';
@@ -15,19 +13,17 @@ import 'package:intl/intl.dart';
 import '../../../../models/event.dart';
 import '../../../commons/widgets/single_row_container_2.dart';
 
+// ignore: must_be_immutable
 class EventHappening extends StatefulWidget {
 
-    List<Event> listEvent;
+  List<Event> listEvent;
   final List<Expense> listTransaction;
 
-    EventHappening({
-    Key? key,
-    required this.listEvent,
-    required this.listTransaction,
-  }) : super(key: key);
+  EventHappening({ Key? key, required this.listEvent, required this.listTransaction,}) : super(key: key);
 
   @override
   State<EventHappening> createState() => _EventHappeningState();
+
 }
 
 class _EventHappeningState extends State<EventHappening> {
@@ -35,32 +31,22 @@ class _EventHappeningState extends State<EventHappening> {
 
   final NumberFormat nf = NumberFormat("###,###");
 
-  final List<Event> lsEventHappenning = [];
+  final List<Event> lsEventHappening = [];
   var val;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // EventAPI().getList("Phuc").then((value) {
-    //   setState(() {
-    //     value.forEach((element) {
-    //       if (element.eventStatus == false) {
-    //         lsEventHappenning.add(element);
-    //       }
-    //     });
-    //   });
-    // }, onError: (e) {
-    //   print(e);
-    // });
-    EventController().getListEvent("Phuc").then((value) {
-      value.forEach((element) {
+
+    EventController().getListEvent().then((value) {
+      for (var element in value) {
         if(element.eventStatus==false){
           setState(() {
-            lsEventHappenning.add(element);
+            lsEventHappening.add(element);
           });
         }
-      });
+      }
     }, onError: (e){
       e.printError();
     });
@@ -70,19 +56,19 @@ class _EventHappeningState extends State<EventHappening> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    lsEventHappenning.clear();
-    widget.listEvent.forEach((item) {
+    lsEventHappening.clear();
+    for (var item in widget.listEvent) {
       if (item.eventStatus == false) {
         setState(() {
-          lsEventHappenning.add(item);
+          lsEventHappening.add(item);
         });
       }
-    });
+    }
 
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: lsEventHappenning.isEmpty
+        body: lsEventHappening.isEmpty
             ? Container(
                 alignment: Alignment.center,
                 child: Column(
@@ -101,20 +87,19 @@ class _EventHappeningState extends State<EventHappening> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 20),
+                      padding: const EdgeInsets.only(top: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Chọn nút "),
+                          const Text("Chọn nút "),
                           Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10),
+                            padding: const EdgeInsets.only(left: 10, right: 10),
                             child: CustomRoundRectangleButton(
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
-                                  offset: Offset(0, 0),
                                   color: Colors.grey,
-                                  blurRadius: size.width * 0.02,
-                                  spreadRadius: size.width*0.001,
+                                  blurRadius: 0.2,
+                                  spreadRadius: 0.2,
                                 ),
                               ],
                               onTap: () {},
@@ -123,27 +108,27 @@ class _EventHappeningState extends State<EventHappening> {
                               borderRadius: size.width * 0.02,
                               text: TextContainer(
                                 text: "Thêm",
-                                textColor: Color(0xffFB8500),
+                                textColor: Colors.white,
                                 textSize: size.width * 0.02,
                                 textFontWeight: FontWeight.bold,
                                 decoration: TextDecoration.none,
                               ),
-                              backgroundColor: Colors.white,
+                              backgroundColor: Colors.blue,
                             ),
                           ),
-                          Text("để thêm sự kiện"),
+                          const Text("để thêm sự kiện"),
                         ],
                       ),
                     ),
                   ],
                 ),
               )
-            : Container(
+            : SizedBox(
                 width: size.width,
                 child: ListView.builder(
-                    itemCount: lsEventHappenning.length,
+                    itemCount: lsEventHappening.length,
                     itemBuilder: (context, index) {
-                      return lsEventHappenning.elementAt(index).eventStatus
+                      return lsEventHappening.elementAt(index).eventStatus
                           ? Container()
                           : Padding(
                               padding: EdgeInsets.only(top: size.width * 0.07),
@@ -154,47 +139,27 @@ class _EventHappeningState extends State<EventHappening> {
                                     MaterialPageRoute(
                                       builder: (context) => EventDetail(
                                         event:
-                                            lsEventHappenning.elementAt(index),
+                                            lsEventHappening.elementAt(index),
                                       ),
                                     ),
                                   ).then((value) => setState(() {
                                         if (value == "Delete") {
                                           widget.listEvent.clear();
-                                          // EventAPI().getList("Phuc").then(
-                                          //     (value) =>
-                                          //         value.forEach((element) {
-                                          //           setState(() {
-                                          //             widget.listEvent
-                                          //                 .add(element);
-                                          //           });
-                                          //         }));
-
-
-                                          EventController().getListEvent("Phuc").then((value) {
+                                          EventController().getListEvent().then((value) {
                                             setState(() {
-                                              value.forEach((element) {
+                                              for (var element in value) {
                                                 widget.listEvent.add(element);
-                                              });
+                                              }
                                             });
                                           });
-
-                                          Fluttertoast.showToast(
-                                              msg: "Xóa sự kiện thành công !");
-                                        } else if (value == "Cancle") {
+                                          Fluttertoast.showToast(msg: "Xóa sự kiện thành công !");
+                                        } else if (value == "Cancel") {
                                           widget.listEvent.clear();
-                                          // EventAPI().getList("Phuc").then(
-                                          //     (value) =>
-                                          //         value.forEach((element) {
-                                          //           setState(() {
-                                          //             widget.listEvent
-                                          //                 .add(element);
-                                          //           });
-                                          //         }));
-                                          EventController().getListEvent("Phuc").then((value) {
+                                          EventController().getListEvent().then((value) {
                                             setState(() {
-                                              value.forEach((element) {
+                                              for (var element in value) {
                                                 widget.listEvent.add(element);
-                                              });
+                                              }
                                             });
                                           });
                                         }
@@ -205,65 +170,79 @@ class _EventHappeningState extends State<EventHappening> {
                                   paddingRight: size.width * 0.01,
                                   paddingTop: size.width * 0.02,
                                   paddingBottom: size.width * 0.02,
+                                  height: size.height * 0.13,
                                   background: Colors.white,
                                   children: [
-                                    Container(
+                                    SizedBox(
                                       width: size.width * 0.2,
                                       child: CircleIconContainer(
-                                        urlImage: lsEventHappenning
-                                            .elementAt(index)
-                                            .eventIcon,
+                                        urlImage: lsEventHappening.elementAt(index).eventIcon,
                                         iconSize: size.width * 0.045,
-                                        backgroundColor: Color(0xffFB8500),
+                                        backgroundColor: const Color(0xffFB8500),
                                         padding: size.width * 0.045,
                                       ),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       width: size.width * 0.7,
                                       child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    bottom: size.width * 0.03),
-                                                child: TextContainer(
-                                                  text: lsEventHappenning
-                                                      .elementAt(index)
-                                                      .eventName,
-                                                  textColor: Colors.black,
-                                                  textSize: size.width * 0.045,
-                                                  textFontWeight:
-                                                      FontWeight.w500,
-                                                  decoration:
-                                                      TextDecoration.none,
-                                                ),
-                                              ),
-                                              Text(
-                                                "Đã chi",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ],
+                                          TextContainer(
+                                            text: lsEventHappening.elementAt(index).eventName,
+                                            textColor: Colors.black,
+                                            textSize: size.width * 0.045,
+                                            textFontWeight:FontWeight.w500,
+                                            decoration:
+                                                TextDecoration.none,
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.only(
-                                                right: size.width * 0.01),
-                                            child: MoneyTextContainer(
-                                              value: 0,
-                                              textSize: size.width * 0.035,
-                                              textFontWeight: FontWeight.w500,
-                                              color: Colors.black,
+                                            padding: EdgeInsets.only(right: size.width * 0.01),
+                                            child: Container(
+                                              width: size.width * 0.4,
+                                              height: size.height * 0.04,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.red,
+                                                  borderRadius: BorderRadius.circular(100),
+                                                  boxShadow: const [BoxShadow(
+                                                  color: Colors.grey,
+                                                  blurRadius: 0.2
+                                                )]
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                children: [
+                                                  const Text(
+                                                    "Đã chi",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 11
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(vertical: 3.0),
+                                                    child: Container(
+                                                      alignment: Alignment.center,
+                                                      width: size.width * 0.23,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius: BorderRadius.circular(100),
+                                                          boxShadow: const [BoxShadow(
+                                                              color: Colors.grey,
+                                                              blurRadius: 0.2
+                                                          )]
+                                                      ),
+                                                      child: MoneyTextContainer(
+                                                        value: 10,
+                                                        textSize: size.width * 0.035,
+                                                        textFontWeight: FontWeight.w500,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ],

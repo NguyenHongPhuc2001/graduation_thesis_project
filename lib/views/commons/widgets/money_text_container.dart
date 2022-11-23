@@ -33,11 +33,11 @@ class MoneyTextContainer extends StatelessWidget {
           width: size.width * 0.01,
         ),
         TextContainer(
-          text: "đ",
+          text: "VNĐ",
           textColor: color,
           textSize: textSize,
           textFontWeight: textFontWeight,
-          decoration: TextDecoration.underline,
+          decoration: TextDecoration.none,
         ),
       ],
     );

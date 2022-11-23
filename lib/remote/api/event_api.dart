@@ -2,42 +2,49 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 
+import 'package:graduation_thesis_project/remote/api/base_api.dart';
 import 'package:http/http.dart' as http;
 import '../../models/event.dart';
 import '../../utils/api_paths/api_paths.dart';
 import '../../utils/api_paths/uri_container.dart';
 
-class EventAPI {
+class EventAPI extends BaseAPI{
 
   Future<Event> getOne(int eventId) async {
+
     final queryParameters = {"eventId": eventId};
 
-    final request =
-        http.Request(ApiPaths.METHOD_GET, UriContainer().uriGetOne("event"));
+    final request = http.Request(ApiPaths.METHOD_GET, UriContainer().uriGetOne("event"));
 
+    String? token = await manager.getAuthToken();
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
     request.body = jsonEncode(queryParameters);
 
-    final responeStream = await request.send();
-    final respone = await http.Response.fromStream(responeStream);
+    final responseStream = await request.send();
+    final response = await http.Response.fromStream(responseStream);
 
-    Map<String, dynamic> dataFromAPI = jsonDecode(respone.body);
+    Map<String, dynamic> dataFromAPI = jsonDecode(response.body);
 
     var completer = Completer<Event>();
-    final Event event =
-        Event.fromJson(dataFromAPI.entries.elementAt(2).value);
+    final Event event = Event.fromJson(dataFromAPI.entries.elementAt(2).value);
     completer.complete(event);
 
     return completer.future;
   }
 
-  Future<List<Event>> getList(String accountUsername) async {
-    final queryParameters = {"accountUsername": accountUsername};
+  Future<List<Event>> getList() async {
+
+    String? username = await manager.getUsername();
+
+    final queryParameters = {"accountUsername": username};
 
     final request =
         http.Request(ApiPaths.METHOD_GET, UriContainer().uriGetList("event"));
 
+    String? token = await manager.getAuthToken();
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
     request.body = jsonEncode(queryParameters);
 
     final responeStream = await request.send();
@@ -56,89 +63,101 @@ class EventAPI {
     return completer.future;
   }
 
-  Future<String> create(String eventName, String linkIcon, String eventEndDate,
-      int walletId, String accountUsername) async {
+  Future<String> create(String eventName, String linkIcon, String eventEndDate, int walletId) async {
+
+    String? username = await manager.getUsername();
+
     final queryParameters = {
       "eventName": eventName,
       "eventEndDate": eventEndDate,
       "eventIcon": linkIcon,
-      "account": {"accountUsername": accountUsername},
-      "wallet": {"walletId": walletId}
+      "account": {
+        "accountUsername": username
+      },
+      "wallet": {
+        "walletId": walletId
+      }
     };
 
-    final request =
-        http.Request(ApiPaths.METHOD_POST, UriContainer().uriCreate("event"));
+    final request = http.Request(ApiPaths.METHOD_POST, UriContainer().uriCreate("event"));
 
-    request.body = jsonEncode(queryParameters);
+    String? token = await manager.getAuthToken();
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
+    request.body = jsonEncode(queryParameters);
 
-    final responeStream = await request.send();
-    final respone = await http.Response.fromStream(responeStream);
+    final responseStream = await request.send();
+    final response = await http.Response.fromStream(responseStream);
 
-    final dataFromAPI = jsonDecode(respone.body);
+    final dataFromAPI = jsonDecode(response.body);
 
-    if (dataFromAPI.entries.elementAt(1).value == 201)
+    if (dataFromAPI.entries.elementAt(1).value == 201) {
       return "Create";
-    else
+    } else {
       return "None";
+    }
   }
 
-  Future<String> update(
-      int eventId,
-      String eventName,
-      String linkIcon,
-      String eventEndDate,
-      int walletId,
-      String accountUsername,
-      bool status) async {
+  Future<String> update( int eventId, String eventName, String linkIcon, String eventEndDate, int walletId, bool status) async {
+
     final queryParameters = {
       "eventId": eventId,
       "eventName": eventName,
       "eventEndDate": eventEndDate,
       "eventIcon": linkIcon,
       "eventStatus": (status != null) ? status : false,
-      "wallet": {"walletId": walletId}
+      "wallet": {
+        "walletId": walletId
+      }
     };
 
-    final request =
-        http.Request(ApiPaths.METHOD_PUT, UriContainer().uriUpdate("event"));
+    final request = http.Request(ApiPaths.METHOD_PUT, UriContainer().uriUpdate("event"));
 
-    request.body = jsonEncode(queryParameters);
+    String? token = await manager.getAuthToken();
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
+    request.headers['content-type'] = 'application/json';
+    request.body = jsonEncode(queryParameters);
 
-    final responeStream = await request.send();
-    final respone = await http.Response.fromStream(responeStream);
+    final responseStream = await request.send();
+    final response = await http.Response.fromStream(responseStream);
 
-    final dataFromAPI = jsonDecode(respone.body);
+    final dataFromAPI = jsonDecode(response.body);
 
-    print(queryParameters.toString());
     if (dataFromAPI.entries.elementAt(1).value == 200) {
       return "Update";
-    } else
+    } else {
       return "None";
+    }
   }
 
-  Future<String> delete(int eventId, String accountUsername) async {
+  Future<String> delete(int eventId) async {
+
+    String? username = await manager.getUsername();
 
     final queryParameters = {
       "eventId": eventId,
-      "account": {"accountUsername": accountUsername}
+      "account": {
+        "accountUsername": username
+      }
     };
 
-    final request =
-        http.Request(ApiPaths.METHOD_DELETE, UriContainer().uriDelete("event"));
+    final request = http.Request(ApiPaths.METHOD_DELETE, UriContainer().uriDelete("event"));
 
     request.body = jsonEncode(queryParameters);
+    String? token = await manager.getAuthToken();
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
 
-    final responeStream = await request.send();
-    final respone = await http.Response.fromStream(responeStream);
+    final responseStream = await request.send();
+    final response = await http.Response.fromStream(responseStream);
 
-    final dataFromAPI = jsonDecode(respone.body);
+    final dataFromAPI = jsonDecode(response.body);
 
     if (dataFromAPI.entries.elementAt(1).value == 200) {
       return "Delete";
-    } else
+    } else {
       return "None";
+    }
   }
 }

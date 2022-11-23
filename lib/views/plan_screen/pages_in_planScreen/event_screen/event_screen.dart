@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/event_controller.dart';
@@ -11,21 +10,17 @@ import '../../../../models/event.dart';
 import '../../../../models/expense.dart';
 
 class EventScreen extends StatefulWidget {
+
   final PageController pageController;
   final List<Event> listEvent;
   final Event? event;
   final List<Expense> listTransaction;
 
-  const EventScreen({
-    Key? key,
-    required this.pageController,
-    required this.listEvent,
-    this.event,
-    required this.listTransaction,
-  }) : super(key: key);
+  const EventScreen({ Key? key, required this.pageController, required this.listEvent, this.event, required this.listTransaction, }) : super(key: key);
 
   @override
   State<EventScreen> createState() => _EventScreenState();
+
 }
 
 class _EventScreenState extends State<EventScreen> {
@@ -38,7 +33,7 @@ class _EventScreenState extends State<EventScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    EventController().getListEvent("Phuc").then((value) {
+    EventController().getListEvent().then((value) {
       setState((){
         ls = List.from(value);
       });
@@ -54,7 +49,7 @@ class _EventScreenState extends State<EventScreen> {
         length: 2,
         child: Scaffold(
           appBar: PreferredSize(
-            preferredSize: Size(size.width, size.width * 0.35),
+            preferredSize: Size(size.width, size.width * 0.3),
             child: AppBarContainer(
               text: "Sự kiện",
               screenPageController: _eventPageController,
@@ -63,20 +58,13 @@ class _EventScreenState extends State<EventScreen> {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddEvent(listEvent: ls, status: true),
+                    builder: (context) => AddEvent(),
                   ),
                 ).then((value) {
                   setState(() {
                     if (value == "Create") {
                       ls.clear();
-                      // EventAPI()
-                      //     .getList("Phuc")
-                      //     .then((value) => value.forEach((element) {
-                      //       setState(() {
-                      //         ls.add(element);
-                      //       });
-                      // }));
-                      EventController().getListEvent("Phuc").then((value) {
+                      EventController().getListEvent().then((value) {
                         setState(() {
                           ls = List.from(value);
                         });
@@ -90,11 +78,11 @@ class _EventScreenState extends State<EventScreen> {
             ),
           ),
           body: PageView(
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             controller: _eventPageController,
             children: [
-              EventHappening(listEvent: ls, listTransaction: []),
-              EventEnd(listEvent: ls, listTransaction: []),
+              EventHappening(listEvent: ls, listTransaction: const []),
+              EventEnd(listEvent: ls, listTransaction: const []),
             ],
           ),
         ),

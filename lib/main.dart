@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:graduation_thesis_project/un_used/WalletNew.dart';
 import 'package:graduation_thesis_project/views/root.dart';
 
 void main() {
@@ -24,7 +25,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: const RootPage()
+      home: RootPage()
     );
   }
 }

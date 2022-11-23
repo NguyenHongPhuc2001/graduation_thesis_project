@@ -32,12 +32,11 @@ class _PlanMainScreenState extends State<PlanMainScreen> {
     // TODO: implement initState
     super.initState();
 
-    EventController()
-        .getListEvent("Phuc")
+    EventController().getListEvent()
         .then((value) {
           setState(() {
             listEvent = List.from(value);
-          });
+        });
     });
 
     GoalController()

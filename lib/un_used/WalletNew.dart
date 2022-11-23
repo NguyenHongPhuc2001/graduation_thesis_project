@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-
-import '../models/budget.dart';
-import '../models/expense.dart';
-import '../remote/controllers/entites/budget_controller.dart';
+import '../models/Event.dart';
+import '../models/wallet.dart';
+import '../remote/controllers/entites/event_controller.dart';
+import '../remote/controllers/entites/wallet_controller.dart';
 import '../views/commons/pages/select_icon.dart';
-import '../views/transaction_screen/expense_screen/expense_list.dart';
+import '../views/commons/pages/select_wallet.dart';
+import '../views/commons/widgets/text_container.dart';
 
+// ignore: must_be_immutable
 class UiTest extends StatefulWidget {
 
-  final List<Budget>? listBudget;
+  final Event event;
+  WalletController walletController = Get.put(WalletController());
+  EventController eventController = Get.put(EventController());
 
-  const UiTest({Key? key, this.listBudget,}) : super(key: key);
+  UiTest({Key? key, required this.event,}) : super(key: key);
 
   @override
   State<UiTest> createState() => _UiTestState();
@@ -23,35 +26,38 @@ class UiTest extends StatefulWidget {
 
 class _UiTestState extends State<UiTest> {
 
-  final _budgetMoneyController = MoneyMaskedTextController(
-      thousandSeparator: ',',
-      initialValue: 0,
-      precision: 0,
-      decimalSeparator: '');
-  final DateFormat df = DateFormat("yyyy-MM");
-  // ignore: prefer_typing_uninitialized_variables
-  var dateTime, linkIcon;
-  String budgetValue = "";
-  final pageController = PageController();
+  final TextEditingController _eventNameController = TextEditingController();
+  final DateFormat df = DateFormat("yyyy-MM-dd");
+  var dateTime, linkIcon, wallet, eventNew;
+  List<Wallet> listWallet = [];
 
-  String? budgetIcon;
-  String? budgetName;
-  Expense? expense;
-
-  final budgetNameController = TextEditingController();
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    dateTime = DateTime.now();
+    widget.walletController.getList().then((value) {
+      setState(() {
+        listWallet = List.from(value!);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
 
     Size size = MediaQuery.of(context).size;
 
+    DateTime date = DateTime.parse(widget.event.eventEndDate);
+    String correctDate = "${date.year}-${date.month}-${date.day + 1}";
+
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: const Color(0xE9ECEFED),
         appBar: AppBar(
           title: Text(
-            "Thêm mới ngân sách",
+            "Điều chỉnh sự kiện",
             style: TextStyle(
               color: Colors.black,
               fontSize: size.width * 0.05
@@ -78,7 +84,7 @@ class _UiTestState extends State<UiTest> {
             children: [
               Container(
                 width: size.width,
-                height: size.height * 0.52,
+                height: size.height * 0.65,
                 margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -93,9 +99,29 @@ class _UiTestState extends State<UiTest> {
                 ),
                 child: Column(
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () async {
+                          widget.event.eventIcon = await Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => const SelectIcons())
+                          );
+                        },
+                        child: Container(
+                          height: size.width * 0.2,
+                          width: size.width * 0.2,
+                          decoration: BoxDecoration(
+                              color: Colors.amberAccent,
+                              borderRadius: BorderRadius.circular(100)
+                          ),
+                          padding: const EdgeInsets.all(18),
+                          child: SvgPicture.asset(widget.event.eventIcon,),
+                        ),
+                      ),
+                    ),
                     Container(
                       padding: const EdgeInsets.all(3),
-                      margin: const EdgeInsets.only(top: 20),
+                      margin: const EdgeInsets.only(top: 10),
                       width: size.width * 0.8,
                       height: size.width * 0.1,
                       decoration: BoxDecoration(
@@ -109,8 +135,8 @@ class _UiTestState extends State<UiTest> {
                           ]
                       ),
                       child: TextField(
-                        controller: budgetNameController,
-                        onChanged: (value) => budgetName = value,
+                        controller: _eventNameController,
+                        onChanged: (value) => widget.event.eventName = value,
                         textAlign: TextAlign.center,
                         autofocus: false,
                         decoration: InputDecoration(
@@ -125,7 +151,7 @@ class _UiTestState extends State<UiTest> {
                           ),
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: "Nhập tên ngân sách",
+                          hintText: "Nhập tên sự kiện",
                           hintStyle: const TextStyle(
                               fontSize: 13,
                               color: Colors.black,
@@ -134,25 +160,15 @@ class _UiTestState extends State<UiTest> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20,),
-                    GestureDetector(
-                      onTap: () async {
-                        budgetIcon = await Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => const SelectIcons())
-                        );
-                      },
-                      child: Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.amberAccent,
-                            borderRadius: BorderRadius.circular(100)
-                        ),
-                        padding: const EdgeInsets.all(18),
-                        child: SvgPicture.asset(budgetIcon == null ? "" : budgetIcon!),
+                    const SizedBox(height: 15,),
+                    SizedBox(
+                      height: size.height * 0.05,
+                      child: const VerticalDivider(
+                        color: Colors.black,
+                        thickness: 0.2,
                       ),
                     ),
-                    const SizedBox(height: 20,),
+                    const SizedBox(height: 15,),
                     Column(
                       children: [
                         Row(
@@ -161,7 +177,7 @@ class _UiTestState extends State<UiTest> {
                             SizedBox(
                               width: size.width * 0.4,
                               child: const Text(
-                                'Thời gian diễn ra',
+                                'Ngày kết thúc',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold
                                 ),
@@ -212,12 +228,106 @@ class _UiTestState extends State<UiTest> {
                                         setState(() {
                                           dateTime = null;
                                         });
-                                        _showCalendarDialog();
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                  "Chờ chút",
+                                                  style: TextStyle(
+                                                    fontSize: size.width * 0.07,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                content: Text(
+                                                  "Ngày không hợp lệ ! Vui lòng chọn lại !",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: size.width * 0.04,
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  InkWell(
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Container(
+                                                      alignment: Alignment.center,
+                                                      padding: EdgeInsets.only(
+                                                          top: size.width * 0.005,
+                                                          bottom: size.width * 0.005),
+                                                      width: size.width * 0.2,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.rectangle,
+                                                        borderRadius: BorderRadius.circular(
+                                                            size.width * 0.016),
+                                                        color: Colors.blueAccent,
+                                                      ),
+                                                      child: Text(
+                                                        "OK",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: size.width * 0.05,
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            });
                                       } else if (year1 == year2 && month1 < month2) {
                                         setState(() {
                                           dateTime = null;
                                         });
-                                        _showCalendarDialog();
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                  "Chờ chút",
+                                                  style: TextStyle(
+                                                    fontSize: size.width * 0.07,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                content: Text(
+                                                  "Ngày không hợp lệ ! Vui lòng chọn lại !",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: size.width * 0.04,
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  InkWell(
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Container(
+                                                      alignment: Alignment.center,
+                                                      padding: EdgeInsets.only(
+                                                          top: size.width * 0.005,
+                                                          bottom: size.width * 0.005),
+                                                      width: size.width * 0.2,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.rectangle,
+                                                        borderRadius: BorderRadius.circular(
+                                                            size.width * 0.016),
+                                                        color: Colors.blueAccent,
+                                                      ),
+                                                      child: Text(
+                                                        "OK",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: size.width * 0.05,
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            });
                                       } else if (year1 == year2 &&
                                           month1 == month2 &&
                                           day1 < day2) {
@@ -228,24 +338,12 @@ class _UiTestState extends State<UiTest> {
                                       }
                                     });
                                   },
-                                  child: SizedBox(
-                                    child: dateTime == null
-                                        ? Text(
-                                      "test",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: size.width * 0.04,
-                                        decoration: TextDecoration.none,
-                                      ),
-                                    )
-                                        : Text(
-                                      df.format(dateTime),
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: size.width * 0.04,
-                                        decoration: TextDecoration.none,
-                                      ),
-                                    ),
+                                  child: TextContainer(
+                                    text: dateTime == null ? widget.event.eventEndDate : df.format(dateTime),
+                                    textColor: Colors.black,
+                                    textSize: size.width * 0.03,
+                                    textFontWeight: FontWeight.normal,
+                                    decoration: TextDecoration.none,
                                   ),
                                 ),
                               ),
@@ -261,7 +359,7 @@ class _UiTestState extends State<UiTest> {
                             SizedBox(
                               width: size.width * 0.4,
                               child: const Text(
-                                'Loại chi tiêu',
+                                'Chọn ví',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold
                                 ),
@@ -281,116 +379,74 @@ class _UiTestState extends State<UiTest> {
                                     )
                                   ]
                               ),
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: InkWell(
-                                  onTap: () async {
-                                    expense = await Navigator.of(context).push(
-                                        MaterialPageRoute(builder: (context) => ExpenseList(isLoadByBudget: true)));
-                                  },
-                                  child: SizedBox(
-                                    child:  Text(
-                                      "",
+                              child: InkWell(
+                                onTap: () async {
+                                  Navigator.push( context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SelectWallet( listWallet: listWallet, walletId: (wallet!=null) ? wallet.walletId:null,
+                                      ),
+                                    ),
+                                  ).then((value) {
+                                    setState(() {
+                                      widget.event.wallet = value;
+                                    });
+                                  });
+                                },
+                                child: SizedBox(
+                                  child:  Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      widget.event.wallet!.walletName!,
                                       style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: size.width * 0.04,
+                                        fontSize: size.width * 0.03,
                                         decoration: TextDecoration.none,
                                       ),
-                                    )
                                     ),
+                                  )
                                   ),
                                 ),
                               ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: size.height * 0.03,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: size.width * 0.4,
-                              child: const Text(
-                                'Giá trị ngân sách',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(3),
-                              width: size.width * 0.4,
-                              height: size.width * 0.07,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(100),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        color: Colors.grey,
-                                        blurRadius: 2
-                                    )
-                                  ]
-                              ),
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: Stack(
-                                  alignment: Alignment.centerRight,
-                                  children: [
-                                    TextField(
-                                      controller: _budgetMoneyController,
-                                      autofocus: false,
-                                      keyboardType: TextInputType.number,
-                                      decoration: InputDecoration(
-                                        contentPadding: const EdgeInsets.only(left: 15),
-                                        enabledBorder: UnderlineInputBorder(
-                                            borderRadius: BorderRadius.circular(30),
-                                            borderSide: BorderSide.none
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(30),
-                                            borderSide: BorderSide.none
-                                        ),
-                                        filled: true,
-                                        fillColor: Colors.white,
-                                        hintStyle: const TextStyle(
-                                            fontSize: 8,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w300
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.all(3),
-                                      margin: const EdgeInsets.symmetric(horizontal: 1),
-                                      decoration: BoxDecoration(
-                                          color: Colors.redAccent,
-                                          borderRadius: BorderRadius.circular(100)
-                                      ),
-                                      child: const Text(
-                                        "VNĐ",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 8
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
                           ],
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 15,),
+                    SizedBox(
+                      height: size.height * 0.05,
+                      child: const VerticalDivider(
+                        color: Colors.black,
+                        thickness: 0.2,
+                      ),
+                    ),
+                    const SizedBox(height: 10,),
+                    ElevatedButton(
+                      onPressed: (){
+                        Get.back();
+                      },
+                      style: ElevatedButton.styleFrom(
+                          shape: const StadiumBorder(),
+                          minimumSize: const Size(55, 30),
+                          primary: Colors.red
+                      ),
+                      child: const Icon(
+                        Icons.delete_sharp,
+                        color: Colors.white,
+                        size: 20,
+                      ),
                     ),
                   ],
                 ),
               ),
               ElevatedButton(
-                onPressed: (){
-                  BudgetController().createBudget(budgetName, double.parse(_budgetMoneyController.text.toString().replaceAll(",", "")),
-                      budgetIcon, df.format(dateTime), expense);
+                onPressed: () async {
+                  if (dateTime != null) {
+                    await EventController().updateEvent( widget.event.eventId!, _eventNameController.text, linkIcon,
+                      df.format(dateTime), widget.event.wallet!.walletId!, widget.event.eventStatus);
+                  }else{
+                    await EventController().updateEvent( widget.event.eventId!, _eventNameController.text, linkIcon,
+                        correctDate , wallet.walletId, widget.event.eventStatus);
+                  };
                   Get.back();
                 },
                 style: ElevatedButton.styleFrom(
@@ -398,7 +454,7 @@ class _UiTestState extends State<UiTest> {
                     minimumSize: const Size(250, 30)
                 ),
                 child: const Text(
-                    "Tạo mới ngân sách"
+                    "Cập nhật sự kiện"
                 ),
               ),
             ],

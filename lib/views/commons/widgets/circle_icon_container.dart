@@ -24,6 +24,10 @@ class CircleIconContainer extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: backgroundColor,
+        boxShadow: const [BoxShadow(
+          color: Colors.grey,
+          blurRadius: 2
+        )]
       ),
       child: SvgPicture.asset(
         urlImage,

@@ -14,6 +14,7 @@ import '../../../commons/widgets/custom_round_rectangle_button.dart';
 import '../../../commons/widgets/money_text_container.dart';
 import '../../../commons/widgets/single_row_container_2.dart';
 
+// ignore: must_be_immutable
 class EventEnd extends StatefulWidget {
    List<Event> listEvent;
   final List<Expense> listTransaction;
@@ -40,14 +41,14 @@ class _EventEndState extends State<EventEnd> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    EventController().getListEvent("Phuc").then((value) {
-      value.forEach((element) {
+    EventController().getListEvent().then((value) {
+      for (var element in value) {
         if(element.eventStatus == true){
           setState(() {
             lsEnd.add(element);
           });
         }
-      });
+      }
     }, onError: (e){
       e.printError();
     });
@@ -58,195 +59,203 @@ class _EventEndState extends State<EventEnd> {
     Size size = MediaQuery.of(context).size;
 
     lsEnd.clear();
-    widget.listEvent.forEach((item) {
+    for (var item in widget.listEvent) {
       if (item.eventStatus == true) {
         setState(() {
           lsEnd.add(item);
         });
       }
-    });
+    }
 
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
         body: lsEnd.isEmpty
             ? Container(
-                alignment: Alignment.center,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(
+                "images/CalendarIcon_2.svg",
+                width: size.width * 0.5,
+              ),
+              Text(
+                "Không có sự kiện",
+                style: TextStyle(
+                  fontSize: size.width * 0.09,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset(
-                      "images/CalendarIcon_2.svg",
-                      width: size.width * 0.5,
-                    ),
-                    Text(
-                      "Không có sự kiện",
-                      style: TextStyle(
-                        fontSize: size.width * 0.09,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
+                    const Text("Chọn nút "),
                     Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Chọn nút "),
-                          Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10),
-                            child: CustomRoundRectangleButton(
-                              boxShadow: [
-                                BoxShadow(
-                                  offset: Offset(0, 0),
-                                  color: Colors.grey,
-                                  blurRadius: size.width * 0.02,
-                                  spreadRadius: size.width*0.001,
-                                ),
-                              ],
-                              onTap: () {},
-                              buttonWith: size.width * 0.13,
-                              padding: size.width * 0.01,
-                              borderRadius: size.width * 0.02,
-                              text: TextContainer(
-                                text: "Thêm",
-                                textColor: Color(0xff90E0EF),
-                                textSize: size.width * 0.02,
-                                textFontWeight: FontWeight.bold,
-                                decoration: TextDecoration.none,
-                              ),
-                              backgroundColor: Colors.white,
-                            ),
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      child: CustomRoundRectangleButton(
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.grey,
+                            blurRadius: 0.2,
+                            spreadRadius: 0.2,
                           ),
-                          Text("để thêm sự kiện"),
                         ],
+                        onTap: () {},
+                        buttonWith: size.width * 0.13,
+                        padding: size.width * 0.01,
+                        borderRadius: size.width * 0.02,
+                        text: TextContainer(
+                          text: "Thêm",
+                          textColor: Colors.white,
+                          textSize: size.width * 0.02,
+                          textFontWeight: FontWeight.bold,
+                          decoration: TextDecoration.none,
+                        ),
+                        backgroundColor: Colors.blue,
                       ),
                     ),
+                    const Text("để thêm sự kiện"),
                   ],
                 ),
-              )
-            : Container(
-                width: size.width,
-                child: ListView.builder(
-                    itemCount: lsEnd.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(top: size.width * 0.07),
-                        child: InkWell(
-                          onTap: () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EventDetail(
-                                  event: lsEnd.elementAt(index),
-                                ),
-                              ),
-                            ).then((value) => setState(() {
-                                  if (value == "Delete") {
-                                    widget.listEvent.clear();
-                                    // EventAPI().getList("Phuc").then(
-                                    //     (value) => value.forEach((element) {
-                                    //           setState(() {
-                                    //             widget.listEvent.add(element);
-                                    //           });
-                                    //         }));
-                                    EventController().getListEvent("Phuc").then((value) {
-                                      setState(() {
-                                        value.forEach((element) {
-                                          widget.listEvent.add(element);
-                                        });
-                                      });
-                                    });
-                                    Fluttertoast.showToast(
-                                        msg: "Xóa sự kiện thành công !");
-                                  } else if (value == "Cancle") {
-                                    widget.listEvent.clear();
-                                    // EventAPI().getList("Phuc").then(
-                                    //     (value) => value.forEach((element) {
-                                    //           setState(() {
-                                    //             widget.listEvent.add(element);
-                                    //           });
-                                    //         }));
-                                    EventController().getListEvent("Phuc").then((value) {
-                                      setState(() {
-                                        value.forEach((element) {
-                                          widget.listEvent.add(element);
-                                        });
-                                      });
-                                    });
-                                  }
-                                }));
-                          },
-                          child: SingleRowContainer2(
-                            paddingLeft: size.width * 0.01,
-                            paddingRight: size.width * 0.01,
-                            paddingTop: size.width * 0.02,
-                            paddingBottom: size.width * 0.02,
-                            background: Colors.white,
+              ),
+            ],
+          ),
+        )
+            : SizedBox(
+          width: size.width,
+          child: ListView.builder(
+              itemCount: lsEnd.length,
+              itemBuilder: (context, index) {
+                return lsEnd.elementAt(index).eventStatus
+                    ? Container()
+                    : Padding(
+                  padding: EdgeInsets.only(top: size.width * 0.07),
+                  child: InkWell(
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EventDetail(
+                            event:
+                            lsEnd.elementAt(index),
+                          ),
+                        ),
+                      ).then((value) => setState(() {
+                        if (value == "Delete") {
+                          widget.listEvent.clear();
+                          EventController().getListEvent().then((value) {
+                            setState(() {
+                              for (var element in value) {
+                                widget.listEvent.add(element);
+                              }
+                            });
+                          });
+                          Fluttertoast.showToast(msg: "Xóa sự kiện thành công !");
+                        } else if (value == "Cancel") {
+                          widget.listEvent.clear();
+                          EventController().getListEvent().then((value) {
+                            setState(() {
+                              for (var element in value) {
+                                widget.listEvent.add(element);
+                              }
+                            });
+                          });
+                        }
+                      }));
+                    },
+                    child: SingleRowContainer2(
+                      paddingLeft: size.width * 0.01,
+                      paddingRight: size.width * 0.01,
+                      paddingTop: size.width * 0.02,
+                      paddingBottom: size.width * 0.02,
+                      height: size.height * 0.13,
+                      background: Colors.white,
+                      children: [
+                        SizedBox(
+                          width: size.width * 0.2,
+                          child: CircleIconContainer(
+                            urlImage: lsEnd.elementAt(index).eventIcon,
+                            iconSize: size.width * 0.045,
+                            backgroundColor: const Color(0xffFB8500),
+                            padding: size.width * 0.045,
+                          ),
+                        ),
+                        SizedBox(
+                          width: size.width * 0.7,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                width: size.width * 0.2,
-                                child: CircleIconContainer(
-                                  urlImage: lsEnd.elementAt(index).eventIcon,
-                                  iconSize: size.width * 0.045,
-                                  backgroundColor: Color(0xff90E0EF),
-                                  padding: size.width * 0.045,
-                                ),
+                              TextContainer(
+                                text: lsEnd.elementAt(index).eventName,
+                                textColor: Colors.black,
+                                textSize: size.width * 0.045,
+                                textFontWeight:FontWeight.w500,
+                                decoration:
+                                TextDecoration.none,
                               ),
-                              Container(
-                                width: size.width * 0.7,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              bottom: size.width * 0.03),
-                                          child: TextContainer(
-                                            text: lsEnd
-                                                .elementAt(index)
-                                                .eventName,
-                                            textColor: Colors.black,
-                                            textSize: size.width * 0.045,
-                                            textFontWeight: FontWeight.w500,
-                                            decoration: TextDecoration.none,
-                                          ),
-                                        ),
-                                        Text(
-                                          "Đã chi",
-                                          style: TextStyle(
-                                            color: Colors.black,
+                              Padding(
+                                padding: EdgeInsets.only(right: size.width * 0.01),
+                                child: Container(
+                                  width: size.width * 0.4,
+                                  height: size.height * 0.04,
+                                  decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(100),
+                                      boxShadow: const [BoxShadow(
+                                          color: Colors.grey,
+                                          blurRadius: 0.2
+                                      )]
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      const Text(
+                                        "Đã chi",
+                                        style: TextStyle(
+                                            color: Colors.white,
                                             fontWeight: FontWeight.bold,
+                                            fontSize: 11
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 3.0),
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          width: size.width * 0.23,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.circular(100),
+                                              boxShadow: const [BoxShadow(
+                                                  color: Colors.grey,
+                                                  blurRadius: 0.2
+                                              )]
+                                          ),
+                                          child: MoneyTextContainer(
+                                            value: 10,
+                                            textSize: size.width * 0.035,
+                                            textFontWeight: FontWeight.w500,
+                                            color: Colors.black,
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          right: size.width * 0.01),
-                                      child: MoneyTextContainer(
-                                        value: 0,
-                                        textSize: size.width * 0.035,
-                                        textFontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ],
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      );
-                    }),
-              ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+        ),
       ),
     );
   }

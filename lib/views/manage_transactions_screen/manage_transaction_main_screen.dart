@@ -149,7 +149,6 @@ class _ManageTransactionState extends State<ManageTransaction> {
                         "images/QuestionIcon.svg",
                         "2022-11-17",
                         1,
-                        "Phuc",
                         false).then((value) => print("value : ${value}"));
                     },
                   splashColor: Colors.white,

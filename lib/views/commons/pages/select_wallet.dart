@@ -2,10 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/wallet.dart';
 
 import 'package:graduation_thesis_project/views/commons/widgets/custom_round_rectangle_button.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/money_text_container.dart';
+import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen/wallet_create.dart';
 import 'package:intl/intl.dart';
 
 import '../../../un_used/WalletNew.dart';
@@ -28,6 +30,7 @@ class SelectWallet extends StatefulWidget {
 }
 
 class _SelectWalletState extends State<SelectWallet> {
+
   final NumberFormat nf = NumberFormat("###,###");
   final List<Wallet> listWallet = [];
   var walletSelected, indexSelected;
@@ -57,9 +60,10 @@ class _SelectWalletState extends State<SelectWallet> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: Colors.black,
+            size: 20,
           ),
           onPressed: () {
             if (walletSelected != null) {
@@ -73,7 +77,7 @@ class _SelectWalletState extends State<SelectWallet> {
         title: Text(
           "Chọn ví",
           style: TextStyle(
-            fontSize: size.width * 0.065,
+            fontSize: size.width * 0.05,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
@@ -81,11 +85,12 @@ class _SelectWalletState extends State<SelectWallet> {
         actions: [
           IconButton(
             onPressed: () {
-              print("Index value ${widget.walletId}");
+              Get.to(WalletCreate());
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.add,
               color: Colors.black,
+              size: 20,
             ),
           ),
         ],
@@ -110,16 +115,16 @@ class _SelectWalletState extends State<SelectWallet> {
                       paddingBottom: size.width * 0.02,
                       background: Colors.white,
                       children: [
-                        Container(
+                        SizedBox(
                           width: size.width * 0.2,
                           child: CircleIconContainer(
                             urlImage: "images/WalletIcon_1.svg",
                             iconSize: size.width * 0.045,
-                            backgroundColor: Color(0xffFB8500),
+                            backgroundColor: const Color(0xffFB8500),
                             padding: size.width * 0.045,
                           ),
                         ),
-                        Container(
+                        SizedBox(
                           width: size.width * 0.5,
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.end,
@@ -143,8 +148,7 @@ class _SelectWalletState extends State<SelectWallet> {
                                   ),
                                   MoneyTextContainer(
                                     value: widget.listWallet
-                                        .elementAt(index)
-                                        .walletBalance!,
+                                        .elementAt(index).walletBalance!,
                                     textSize: size.width * 0.04,
                                     textFontWeight: FontWeight.bold,
                                     color: Colors.grey,
@@ -158,22 +162,21 @@ class _SelectWalletState extends State<SelectWallet> {
                           alignment: Alignment.center,
                           height: size.width * 0.05,
                           width: size.width * 0.15,
-                          child: (indexSelected != null &&
-                                  indexSelected == index)
+                          child: (indexSelected != null && indexSelected == index)
                               ? Container(
                                   margin: EdgeInsets.all(size.width * 0),
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
                                       width: size.width * 0.005,
-                                      color: Color(0xffFB8500),
+                                      color: Colors.blue,
                                     ),
                                   ),
                                   child: Container(
                                     margin: EdgeInsets.all(size.width * 0.013),
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Color(0xffFB8500),
+                                      color: Colors.blue,
                                     ),
                                   ),
                                 )
@@ -201,14 +204,13 @@ class _SelectWalletState extends State<SelectWallet> {
           left: size.width * 0.022,
           right: size.width * 0.022,
         ),
-        width: size.width,
-        height: size.width * 0.2,
+        width: size.width * 0.95,
+        height: size.width * 0.18,
         child: CustomRoundRectangleButton(
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
-              offset: Offset(0, 3),
               color: Colors.grey,
-              blurRadius: size.width * 0.04,
+              blurRadius: 3,
             ),
           ],
           onTap: () {
@@ -218,16 +220,16 @@ class _SelectWalletState extends State<SelectWallet> {
           },
           buttonWith: size.width * 0.95,
           padding: size.width * 0.02,
-          borderRadius: size.width * 0.02,
+          borderRadius: 100,
           text: Text(
             "Chọn ví",
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: size.width * 0.07,
+              fontSize: size.width * 0.045,
             ),
           ),
-          backgroundColor: Color(0xffFB8500),
+          backgroundColor: Colors.blue,
         ),
       ),
     );
