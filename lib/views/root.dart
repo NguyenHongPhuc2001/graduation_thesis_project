@@ -26,14 +26,15 @@ class _RootPageState extends State<RootPage> {
 
     SessionManager().getAuthToken().then((value){
       print(value);
-      value == null ? _authStatus = AuthStatus.notSignIn : _authStatus = AuthStatus.signIn;
+      setState(() {
+        value == null ? _authStatus = AuthStatus.notSignIn : _authStatus = AuthStatus.signIn;
+      });
     });
 
   }
 
   @override
   Widget build(BuildContext context) {
-
     switch(_authStatus){
       case AuthStatus.signIn :
         return const Home();

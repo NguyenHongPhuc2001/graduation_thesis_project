@@ -12,6 +12,8 @@ class ApiPaths {
   static const String MODEL_DELETE_DOMAIN = "delete";
   static const String MODEL_GET_ONE_DOMAIN = "get";
   static const String MODEL_GET_LIST_DOMAIN = "get_list";
+  static const String MODEL_GET_LIST_BY_STATUS = "get_list_by_status";
+
 
   static const String METHOD_GET = "GET";
   static const String METHOD_POST = "POST";
@@ -20,6 +22,8 @@ class ApiPaths {
 
   static const String ACCOUNT_SIGN_IN_DOMAIN = "sign_in";
   static const String ACCOUNT_CHANGE_PASSWORD = "change_password";
+  static const String ACCOUNT_SIGN_UP_DOMAIN = "create";
+
 
   static String GOAL_DEPOSIT_DOMAIN = "goal_deposit";
 

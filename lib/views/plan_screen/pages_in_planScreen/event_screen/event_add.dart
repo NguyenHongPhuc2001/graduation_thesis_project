@@ -8,32 +8,31 @@ import 'package:intl/intl.dart';
 import '../../../../remote/controllers/entites/wallet_controller.dart';
 import '../../../commons/pages/select_icon.dart';
 import '../../../commons/pages/select_wallet.dart';
+import '../../../commons/widgets/circle_icon_container.dart';
 import '../../../commons/widgets/text_container.dart';
 
 // ignore: must_be_immutable
 class AddEvent extends StatefulWidget {
-
   WalletController walletController = Get.put(WalletController());
   EventController eventController = Get.put(EventController());
 
-  AddEvent({ Key? key }) : super(key: key);
+  AddEvent({Key? key}) : super(key: key);
 
   @override
   State<AddEvent> createState() => _AddEventState();
 }
 
 class _AddEventState extends State<AddEvent> {
-
   final _eventNameController = TextEditingController();
   final DateFormat df = DateFormat("yyyy-MM-dd");
   List<Wallet> listWallet = [];
-  var dateTime, linkIcon, wallet;
+  var eventEndate, eventIcon, wallet;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    dateTime = DateTime.now();
+    eventEndate = DateTime.now();
     widget.walletController.getList().then((value) {
       setState(() {
         listWallet = List.from(value!);
@@ -43,7 +42,6 @@ class _AddEventState extends State<AddEvent> {
 
   @override
   Widget build(BuildContext context) {
-
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -52,10 +50,7 @@ class _AddEventState extends State<AddEvent> {
         appBar: AppBar(
           title: Text(
             "Thêm mới sự kiện",
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: size.width * 0.05
-            ),
+            style: TextStyle(color: Colors.black, fontSize: size.width * 0.05),
           ),
           leading: IconButton(
             icon: const Icon(
@@ -85,10 +80,7 @@ class _AddEventState extends State<AddEvent> {
                   borderRadius: BorderRadius.circular(15.0),
                   boxShadow: const [
                     BoxShadow(
-                        blurRadius: 1,
-                        spreadRadius: 2,
-                        color: Colors.grey
-                    )
+                        blurRadius: 1, spreadRadius: 2, color: Colors.grey)
                   ],
                 ),
                 child: Column(
@@ -97,63 +89,55 @@ class _AddEventState extends State<AddEvent> {
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
                         onTap: () async {
-                          linkIcon = await Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => const SelectIcons())
-                          );
+                          Get.to(SelectIcons())!.then((value) {
+                            setState(() {
+                              eventIcon = value;
+                            });
+                          });
                         },
-                        child: Container(
-                          height: size.width * 0.2,
-                          width: size.width * 0.2,
-                          decoration: BoxDecoration(
-                              color: Colors.amberAccent,
-                              borderRadius: BorderRadius.circular(100)
-                          ),
-                          padding: const EdgeInsets.all(18),
-                          child: SvgPicture.asset(linkIcon == null ? "" : linkIcon!),
+                        child: CircleIconContainer(
+                          urlImage: (eventIcon == null)
+                              ? "images/QuestionIcon.svg"
+                              : eventIcon,
+                          iconSize: size.width * 0.13,
+                          backgroundColor: Colors.yellow,
+                          padding: size.width * 0.06,
                         ),
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.all(3),
                       margin: const EdgeInsets.only(top: 10),
                       width: size.width * 0.8,
                       height: size.width * 0.1,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(100),
-                          boxShadow: const [
-                            BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 2
-                            )
-                          ]
-                      ),
                       child: TextField(
                         controller: _eventNameController,
                         textAlign: TextAlign.center,
                         autofocus: false,
                         decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.only(left: 15, top: 5, bottom: 15),
-                          enabledBorder: UnderlineInputBorder(
+                          contentPadding: EdgeInsets.symmetric(),
+                          enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide.none
-                          ),
+                              borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                  width: size.width * 0.005)),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide.none
-                          ),
-                          filled: true,
+                              borderSide: BorderSide(
+                                  color: Colors.grey.shade600,
+                                  width: size.width * 0.005)),
+                          // filled: true,
                           fillColor: Colors.white,
                           hintText: "Nhập tên sự kiện",
-                          hintStyle: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w300
-                          ),
+                          hintStyle: TextStyle(
+                              fontSize: size.width * 0.04,
+                              color: Colors.grey.shade600,
+                              fontWeight: FontWeight.w400),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 15,),
+                    const SizedBox(
+                      height: 15,
+                    ),
                     SizedBox(
                       height: size.height * 0.05,
                       child: const VerticalDivider(
@@ -161,7 +145,9 @@ class _AddEventState extends State<AddEvent> {
                         thickness: 0.2,
                       ),
                     ),
-                    const SizedBox(height: 15,),
+                    const SizedBox(
+                      height: 15,
+                    ),
                     Column(
                       children: [
                         Row(
@@ -171,9 +157,7 @@ class _AddEventState extends State<AddEvent> {
                               width: size.width * 0.4,
                               child: const Text(
                                 'Ngày kết thúc',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold
-                                ),
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
                             Container(
@@ -184,12 +168,8 @@ class _AddEventState extends State<AddEvent> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(100),
                                   boxShadow: const [
-                                    BoxShadow(
-                                        color: Colors.grey,
-                                        blurRadius: 2
-                                    )
-                                  ]
-                              ),
+                                    BoxShadow(color: Colors.grey, blurRadius: 2)
+                                  ]),
                               child: Container(
                                 alignment: Alignment.center,
                                 child: InkWell(
@@ -206,9 +186,14 @@ class _AddEventState extends State<AddEvent> {
                                     );
 
                                     setState(() {
-                                      dateTime = dateValue as DateTime;
-                                      final int year1, year2, month1, month2, day1, day2;
-                                      DateTime t = dateTime;
+                                      eventEndate = dateValue as DateTime;
+                                      final int year1,
+                                          year2,
+                                          month1,
+                                          month2,
+                                          day1,
+                                          day2;
+                                      DateTime t = eventEndate;
                                       DateTime t2 = DateTime.now();
                                       year1 = t.year;
                                       month1 = t.month;
@@ -219,123 +204,30 @@ class _AddEventState extends State<AddEvent> {
 
                                       if (year1 < year2) {
                                         setState(() {
-                                          dateTime = null;
+                                          eventEndate = null;
                                         });
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title: Text(
-                                                  "Chờ chút",
-                                                  style: TextStyle(
-                                                    fontSize: size.width * 0.07,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                content: Text(
-                                                  "Ngày không hợp lệ ! Vui lòng chọn lại !",
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: size.width * 0.04,
-                                                  ),
-                                                ),
-                                                actions: [
-                                                  InkWell(
-                                                    onTap: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: Container(
-                                                      alignment: Alignment.center,
-                                                      padding: EdgeInsets.only(
-                                                          top: size.width * 0.005,
-                                                          bottom: size.width * 0.005),
-                                                      width: size.width * 0.2,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.rectangle,
-                                                        borderRadius: BorderRadius.circular(
-                                                            size.width * 0.016),
-                                                        color: Colors.blueAccent,
-                                                      ),
-                                                      child: Text(
-                                                        "OK",
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: size.width * 0.05,
-                                                          fontWeight: FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              );
-                                            });
-                                      } else if (year1 == year2 && month1 < month2) {
+                                        _showCalendarDialog();
+                                      } else if (year1 == year2 &&
+                                          month1 < month2) {
                                         setState(() {
-                                          dateTime = null;
+                                          eventEndate = null;
                                         });
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title: Text(
-                                                  "Chờ chút",
-                                                  style: TextStyle(
-                                                    fontSize: size.width * 0.07,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                content: Text(
-                                                  "Ngày không hợp lệ ! Vui lòng chọn lại !",
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: size.width * 0.04,
-                                                  ),
-                                                ),
-                                                actions: [
-                                                  InkWell(
-                                                    onTap: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: Container(
-                                                      alignment: Alignment.center,
-                                                      padding: EdgeInsets.only(
-                                                          top: size.width * 0.005,
-                                                          bottom: size.width * 0.005),
-                                                      width: size.width * 0.2,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.rectangle,
-                                                        borderRadius: BorderRadius.circular(
-                                                            size.width * 0.016),
-                                                        color: Colors.blueAccent,
-                                                      ),
-                                                      child: Text(
-                                                        "OK",
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: size.width * 0.05,
-                                                          fontWeight: FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              );
-                                            });
+                                        _showCalendarDialog();
                                       } else if (year1 == year2 &&
                                           month1 == month2 &&
                                           day1 < day2) {
                                         setState(() {
-                                          dateTime = null;
+                                          eventEndate = null;
                                         });
                                         _showCalendarDialog();
                                       }
                                     });
                                   },
                                   child: TextContainer(
-                                    text: df.format(dateTime),
+                                    text: df.format(eventEndate),
                                     textColor: Colors.black,
-                                    textSize: size.width * 0.03,
-                                    textFontWeight: FontWeight.normal,
+                                    textSize: size.width * 0.035,
+                                    textFontWeight: FontWeight.w400,
                                     decoration: TextDecoration.none,
                                   ),
                                 ),
@@ -352,10 +244,8 @@ class _AddEventState extends State<AddEvent> {
                             SizedBox(
                               width: size.width * 0.4,
                               child: const Text(
-                                'Chọn ví',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold
-                                ),
+                                'Ví',
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
                             Container(
@@ -366,17 +256,18 @@ class _AddEventState extends State<AddEvent> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(100),
                                   boxShadow: const [
-                                    BoxShadow(
-                                        color: Colors.grey,
-                                        blurRadius: 2
-                                    )
-                                  ]
-                              ),
+                                    BoxShadow(color: Colors.grey, blurRadius: 2)
+                                  ]),
                               child: InkWell(
                                 onTap: () async {
-                                  Navigator.push( context,
+                                  Navigator.push(
+                                    context,
                                     MaterialPageRoute(
-                                      builder: (context) => SelectWallet( listWallet: listWallet, walletId: (wallet!=null) ? wallet.walletId:null,
+                                      builder: (context) => SelectWallet(
+                                        listWallet: listWallet,
+                                        walletId: (wallet != null)
+                                            ? wallet.walletId
+                                            : null,
                                       ),
                                     ),
                                   ).then((value) {
@@ -386,18 +277,22 @@ class _AddEventState extends State<AddEvent> {
                                   });
                                 },
                                 child: SizedBox(
-                                    child:  Container(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        wallet == null ? "" : wallet.walletName,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: size.width * 0.03,
-                                          decoration: TextDecoration.none,
-                                        ),
-                                      ),
-                                    )
-                                ),
+                                    child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    wallet == null
+                                        ? "Chọn ví"
+                                        : wallet.walletName,
+                                    style: TextStyle(
+                                      color: (wallet == null)
+                                          ? Colors.grey
+                                          : Colors.black,
+                                      fontSize: size.width * 0.035,
+                                      fontWeight: FontWeight.w400,
+                                      decoration: TextDecoration.none,
+                                    ),
+                                  ),
+                                )),
                               ),
                             ),
                           ],
@@ -408,22 +303,22 @@ class _AddEventState extends State<AddEvent> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () async{
-                  await widget.eventController.createEvent(_eventNameController.text, linkIcon, df.format(dateTime), wallet.walletId);
-                  Get.back();
+                onPressed: () async {
+                  await widget.eventController.createEvent(
+                      _eventNameController.text,
+                      eventIcon,
+                      df.format(eventEndate),
+                      wallet.walletId);
+                  Get.back(result: "Create");
                 },
                 style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
-                    minimumSize: const Size(250, 30)
-                ),
-                child: const Text(
-                    "Tạo mới sự kiện"
-                ),
+                    minimumSize: const Size(250, 30)),
+                child: const Text("Tạo mới sự kiện"),
               ),
             ],
           ),
-        )
-    );
+        ));
   }
 
   _showCalendarDialog() {

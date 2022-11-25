@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/event_controller.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/wallet_controller.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
 import 'package:intl/intl.dart';
 
@@ -31,14 +32,16 @@ class _UpdateEventState extends State<UpdateEvent> {
 
   final TextEditingController _eventNameController = TextEditingController();
   final DateFormat df = DateFormat("yyyy-MM-dd");
-  var dateTime, linkIcon, wallet, eventNew;
+  var eventEndDate, eventIcon, wallet;
   List<Wallet> listWallet = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    dateTime = DateTime.now();
+    wallet = widget.event.wallet;
+    eventIcon = widget.event.eventIcon;
+    // eventEndDate = widget.event.eventEndDate;
     widget.walletController.getList().then((value) {
       setState(() {
         listWallet = List.from(value!);
@@ -48,8 +51,9 @@ class _UpdateEventState extends State<UpdateEvent> {
 
   @override
   Widget build(BuildContext context) {
-
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery
+        .of(context)
+        .size;
 
     DateTime date = DateTime.parse(widget.event.eventEndDate);
     String correctDate = "${date.year}-${date.month}-${date.day + 1}";
@@ -106,61 +110,52 @@ class _UpdateEventState extends State<UpdateEvent> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
-                        onTap: () async {
-                          widget.event.eventIcon = await Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => const SelectIcons())
-                          );
-                        },
-                        child: Container(
-                          height: size.width * 0.2,
-                          width: size.width * 0.2,
-                          decoration: BoxDecoration(
-                              color: Colors.amberAccent,
-                              borderRadius: BorderRadius.circular(100)
-                          ),
-                          padding: const EdgeInsets.all(18),
-                          child: SvgPicture.asset(widget.event.eventIcon,),
-                        ),
+                          onTap: () async {
+                             await Navigator.of(context)
+                                .push(
+                                MaterialPageRoute(
+                                    builder: (context) => const SelectIcons())
+                            ).then((value) {
+                              setState(() {
+                                eventIcon = value;
+                              });
+                            });
+                          },
+                          child: CircleIconContainer(
+                              urlImage: (eventIcon == null) ? widget.event
+                                  .eventIcon :eventIcon,
+                              iconSize: size.width*0.1,
+                              backgroundColor: Colors.amberAccent,
+                              padding: size.width*0.06),
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.all(3),
                       margin: const EdgeInsets.only(top: 10),
                       width: size.width * 0.8,
                       height: size.width * 0.1,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(100),
-                          boxShadow: const [
-                            BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 2
-                            )
-                          ]
-                      ),
                       child: TextField(
                         controller: _eventNameController,
-                        onChanged: (value) => widget.event.eventName = value,
                         textAlign: TextAlign.center,
                         autofocus: false,
                         decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.only(left: 15, top: 5, bottom: 15),
-                          enabledBorder: UnderlineInputBorder(
+                          contentPadding: const EdgeInsets.only(),
+                          enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide.none
-                          ),
+                              borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                  width: size.width * 0.005)),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide.none
-                          ),
-                          filled: true,
+                              borderSide: BorderSide(
+                                  color: Colors.grey.shade600,
+                                  width: size.width * 0.005)),
+                          // filled: true,
                           fillColor: Colors.white,
                           hintText: "Nhập tên sự kiện",
-                          hintStyle: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w300
-                          ),
+                          hintStyle: TextStyle(
+                              fontSize: size.width * 0.04,
+                              color: Colors.grey.shade600,
+                              fontWeight: FontWeight.w400),
                         ),
                       ),
                     ),
@@ -217,9 +212,10 @@ class _UpdateEventState extends State<UpdateEvent> {
                                     );
 
                                     setState(() {
-                                      dateTime = dateValue as DateTime;
-                                      final int year1, year2, month1, month2, day1, day2;
-                                      DateTime t = dateTime;
+                                      eventEndDate = dateValue as DateTime;
+                                      final int year1, year2, month1, month2,
+                                          day1, day2;
+                                      DateTime t = eventEndDate;
                                       DateTime t2 = DateTime.now();
                                       year1 = t.year;
                                       month1 = t.month;
@@ -230,120 +226,28 @@ class _UpdateEventState extends State<UpdateEvent> {
 
                                       if (year1 < year2) {
                                         setState(() {
-                                          dateTime = null;
+                                          eventEndDate = null;
                                         });
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title: Text(
-                                                  "Chờ chút",
-                                                  style: TextStyle(
-                                                    fontSize: size.width * 0.07,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                content: Text(
-                                                  "Ngày không hợp lệ ! Vui lòng chọn lại !",
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: size.width * 0.04,
-                                                  ),
-                                                ),
-                                                actions: [
-                                                  InkWell(
-                                                    onTap: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: Container(
-                                                      alignment: Alignment.center,
-                                                      padding: EdgeInsets.only(
-                                                          top: size.width * 0.005,
-                                                          bottom: size.width * 0.005),
-                                                      width: size.width * 0.2,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.rectangle,
-                                                        borderRadius: BorderRadius.circular(
-                                                            size.width * 0.016),
-                                                        color: Colors.blueAccent,
-                                                      ),
-                                                      child: Text(
-                                                        "OK",
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: size.width * 0.05,
-                                                          fontWeight: FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              );
-                                            });
-                                      } else if (year1 == year2 && month1 < month2) {
+                                        _showCalendarDialog();
+                                      } else
+                                      if (year1 == year2 && month1 < month2) {
                                         setState(() {
-                                          dateTime = null;
+                                          eventEndDate = null;
                                         });
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title: Text(
-                                                  "Chờ chút",
-                                                  style: TextStyle(
-                                                    fontSize: size.width * 0.07,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                content: Text(
-                                                  "Ngày không hợp lệ ! Vui lòng chọn lại !",
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: size.width * 0.04,
-                                                  ),
-                                                ),
-                                                actions: [
-                                                  InkWell(
-                                                    onTap: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: Container(
-                                                      alignment: Alignment.center,
-                                                      padding: EdgeInsets.only(
-                                                          top: size.width * 0.005,
-                                                          bottom: size.width * 0.005),
-                                                      width: size.width * 0.2,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.rectangle,
-                                                        borderRadius: BorderRadius.circular(
-                                                            size.width * 0.016),
-                                                        color: Colors.blueAccent,
-                                                      ),
-                                                      child: Text(
-                                                        "OK",
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: size.width * 0.05,
-                                                          fontWeight: FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              );
-                                            });
+                                        _showCalendarDialog();
                                       } else if (year1 == year2 &&
                                           month1 == month2 &&
                                           day1 < day2) {
                                         setState(() {
-                                          dateTime = null;
+                                          eventEndDate = null;
                                         });
                                         _showCalendarDialog();
                                       }
                                     });
                                   },
                                   child: TextContainer(
-                                    text: dateTime == null ? widget.event.eventEndDate : df.format(dateTime),
+                                    text: eventEndDate == null ? widget.event
+                                        .eventEndDate : df.format(eventEndDate),
                                     textColor: Colors.black,
                                     textSize: size.width * 0.03,
                                     textFontWeight: FontWeight.normal,
@@ -385,22 +289,25 @@ class _UpdateEventState extends State<UpdateEvent> {
                               ),
                               child: InkWell(
                                 onTap: () async {
-                                  Navigator.push( context,
+                                  Navigator.push(context,
                                     MaterialPageRoute(
-                                      builder: (context) => SelectWallet( listWallet: listWallet, walletId: (wallet!=null) ? wallet.walletId:null,
-                                      ),
+                                      builder: (context) =>
+                                          SelectWallet(listWallet: listWallet,
+                                            walletId: (wallet != null) ? wallet
+                                                .walletId : null,
+                                          ),
                                     ),
                                   ).then((value) {
                                     setState(() {
-                                      widget.event.wallet = value;
+                                      wallet = value;
                                     });
                                   });
                                 },
                                 child: SizedBox(
-                                    child:  Container(
+                                    child: Container(
                                       alignment: Alignment.center,
                                       child: Text(
-                                        widget.event.wallet!.walletName!,
+                                        wallet.walletName,
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontSize: size.width * 0.03,
@@ -425,9 +332,10 @@ class _UpdateEventState extends State<UpdateEvent> {
                     ),
                     const SizedBox(height: 10,),
                     ElevatedButton(
-                      onPressed: (){
-                        widget.eventController.deleteEvent(widget.event.eventId!);
-                        Get.back();
+                      onPressed: () {
+                        widget.eventController.deleteEvent(
+                            widget.event.eventId!);
+                        Get.back(result: "Delete");
                       },
                       style: ElevatedButton.styleFrom(
                           shape: const StadiumBorder(),
@@ -445,14 +353,19 @@ class _UpdateEventState extends State<UpdateEvent> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  if (dateTime != null) {
-                    await EventController().updateEvent( widget.event.eventId!, _eventNameController.text, widget.event.eventIcon,
-                        df.format(dateTime), widget.event.wallet!.walletId!, widget.event.eventStatus);
-                  }else{
-                    await EventController().updateEvent( widget.event.eventId!, _eventNameController.text, widget.event.eventIcon,
-                        correctDate , wallet.walletId, widget.event.eventStatus);
+                  if (eventEndDate != null) {
+                    await EventController().updateEvent(
+                        widget.event.eventId!, _eventNameController.text,
+                        eventIcon,
+                        df.format(eventEndDate), wallet.walletId,
+                        widget.event.eventStatus);
+                  } else {
+                    await EventController().updateEvent(
+                        widget.event.eventId!, _eventNameController.text,
+                        widget.event.eventIcon,
+                        correctDate, wallet.walletId, widget.event.eventStatus);
                   };
-                  Get.back();
+                  Get.back(result: "Update");
                 },
                 style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),

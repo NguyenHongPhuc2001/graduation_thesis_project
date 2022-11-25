@@ -35,7 +35,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
         length: 2,
         child: Scaffold(
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(size.width * 0.28),
+            preferredSize: Size(size.width, size.width * 0.33),
             child: AppBarContainer(
               text: "Ngân sách",
               screenPageController: _budgetPageController,

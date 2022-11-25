@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:graduation_thesis_project/views/commons/pages/select_wallet.dart';
 import 'package:graduation_thesis_project/views/setting_screen/about_us.dart';
+import 'package:graduation_thesis_project/views/setting_screen/change_password.dart';
+import 'package:graduation_thesis_project/views/setting_screen/login.dart';
+import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen/wallet_create.dart';
+import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen/wallet_list.dart';
+import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen/wallet_setting.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountManagement extends StatefulWidget {
   const AccountManagement({Key? key}) : super(key: key);
@@ -10,8 +18,14 @@ class AccountManagement extends StatefulWidget {
 }
 
 class _AccountManagementState extends State<AccountManagement> {
+
+
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery
+        .of(context)
+        .size;
+
     return Scaffold(
       backgroundColor: const Color(0xE9ECEFED),
       appBar: AppBar(
@@ -25,14 +39,14 @@ class _AccountManagementState extends State<AccountManagement> {
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-            size: 20.0,
-          ),
-        ),
+        // leading: IconButton(
+        //   onPressed: () {},
+        //   icon: const Icon(
+        //     Icons.arrow_back,
+        //     color: Colors.black,
+        //     size: 20.0,
+        //   ),
+        // ),
         elevation: 2,
       ),
       body: Scrollbar(
@@ -100,7 +114,9 @@ class _AccountManagementState extends State<AccountManagement> {
                         child: Column(
                           children: [
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>WalletList()));
+                              },
                               style: ElevatedButton.styleFrom(
                                 shape: const StadiumBorder(),
                                 minimumSize: const Size(230.0, 30.0),
@@ -155,19 +171,40 @@ class _AccountManagementState extends State<AccountManagement> {
                     ],
                   ),
                 )),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  shape: const StadiumBorder(),
-                  minimumSize: const Size(230.0, 30.0),
+            Column(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Get.to(ChangePassword());
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: const StadiumBorder(),
+                    minimumSize: const Size(230.0, 30.0),
+                  ),
+                  child: const Text(
+                    "Thay đổi mật khẩu",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
+                  ),
                 ),
-                child: const Text(
-                  "Thay đổi mật khẩu",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
+                ElevatedButton(
+                  onPressed: ()async {
+                    SharedPreferences pref = await SharedPreferences.getInstance();
+                    pref.clear();
+                    Navigator.pushAndRemoveUntil(context,
+                        MaterialPageRoute(builder: (context) => Login()), (
+                            route) => false);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: const StadiumBorder(),
+                    minimumSize: const Size(230.0, 30.0),
+                  ),
+                  child: const Text(
+                    "Đăng xuất",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
+                  ),
                 ),
-              ),
+                SizedBox(height: size.width * 0.1)
+              ],
             ),
           ],
         ),

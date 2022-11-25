@@ -1,5 +1,6 @@
-
 import 'package:graduation_thesis_project/models/wallet.dart';
+
+List<Event> eventsFromJson(List<dynamic> json) => List<Event>.from(json.map((w) => Event.fromJson(w))).toList();
 
 class Event {
   int? eventId;

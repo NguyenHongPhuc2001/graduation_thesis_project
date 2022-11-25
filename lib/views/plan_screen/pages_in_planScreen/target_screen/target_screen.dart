@@ -10,12 +10,10 @@ import '../../../../models/goal.dart';
 
 class TargetScreen extends StatefulWidget {
   final PageController pageController;
-  final List<Goal> listTarget;
 
   const TargetScreen({
     Key? key,
     required this.pageController,
-    required this.listTarget,
   }) : super(key: key);
 
   @override
@@ -24,17 +22,19 @@ class TargetScreen extends StatefulWidget {
 
 class _TargetScreenState extends State<TargetScreen> {
   final PageController _targetPageController = PageController();
-  List<Goal> listGoal = [];
+  List<Goal> listGoalHappenning = [];
+  List<Goal> listGoalEnd = [];
 
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
-    GoalController().getListGoal("Phuc").then((value) {
+    GoalController().getByStatus(false).then((value) {
       setState(() {
-        listGoal = List.from(value);
+        listGoalHappenning = List.from(value);
       });
     });
+
+    super.initState();
   }
 
   @override
@@ -46,7 +46,7 @@ class _TargetScreenState extends State<TargetScreen> {
         length: 2,
         child: Scaffold(
           appBar: PreferredSize(
-            preferredSize: Size(size.width, size.width * 0.35),
+            preferredSize: Size(size.width, size.width * 0.33),
             child: AppBarContainer(
               text: "Mục tiêu",
               screenPageController: _targetPageController,
@@ -59,14 +59,11 @@ class _TargetScreenState extends State<TargetScreen> {
                   ),
                 ).then((value) => setState(() {
                       if (value == "Create") {
-                        listGoal.clear();
-                          GoalController().getListGoal("Phuc").then((value) {
-                            value.forEach((element) {
-                              setState(() {
-                                listGoal.add(element);
-                              });
-                            });
+                        GoalController().getByStatus(false).then((value) {
+                          setState(() {
+                            listGoalHappenning = List.from(value);
                           });
+                        });
                         Fluttertoast.showToast(
                             msg: "Thêm mục tiêu thành công !");
                       }
@@ -77,15 +74,11 @@ class _TargetScreenState extends State<TargetScreen> {
           body: PageView.builder(
               controller: _targetPageController,
               itemCount: 2,
-              itemBuilder: (context, pagePosition) {
-                if (pagePosition == 0)
-                  return TargetHappening(
-                    listTarget: listGoal,
-                  );
-                else
-                  return TargetEnd(
-                    listTarget: listGoal,
-                  );
+              itemBuilder: (context, pagePosition){
+                if (pagePosition == 0) {
+                  return TargetHappening(listGoal: listGoalHappenning);
+                } else
+                  return TargetEnd();
               }),
         ),
       ),

@@ -18,20 +18,25 @@ class CircleIconContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Container(
       alignment: Alignment.center,
       padding: EdgeInsets.all(padding),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: backgroundColor,
-        boxShadow: const [BoxShadow(
-          color: Colors.grey,
-          blurRadius: 2
-        )]
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: size.width * 0.01,
+            spreadRadius: size.width*0.001,
+          ),
+        ],
       ),
       child: SvgPicture.asset(
         urlImage,
         width: iconSize,
+        fit: BoxFit.cover,
       ),
     );
   }

@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:core';
 
-import 'package:get_storage/get_storage.dart';
+import 'package:graduation_thesis_project/remote/api/base_api.dart';
 
 import '../../models/goal.dart';
 import 'package:http/http.dart' as http;
@@ -9,14 +10,21 @@ import 'package:http/http.dart' as http;
 import '../../utils/api_paths/api_paths.dart';
 import '../../utils/api_paths/uri_container.dart';
 
-class GoalAPI {
+class GoalAPI extends BaseAPI {
+
   Future<Goal> getOne(int goalId) async {
+
+    String? token = await manager.getAuthToken();
+    String? userName = await manager.getUsername();
+
     final queryParameters = {"goalId": goalId};
+
 
     final request =
         http.Request(ApiPaths.METHOD_GET, UriContainer().uriGetOne("goal"));
 
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
     request.body = jsonEncode(queryParameters);
 
     final responeStream = await request.send();
@@ -36,14 +44,17 @@ class GoalAPI {
     return completer.future;
   }
 
-  Future<List<Goal>> getList(
-      String accountUsername) async {
-    final queryParameters = {"accountUsername": accountUsername};
+  Future<List<Goal>> getList() async {
+
+    String? token = await manager.getAuthToken();
+    String? userName = await manager.getUsername();
+    final queryParameters = {"accountUsername": userName!};
 
     final request =
         http.Request(ApiPaths.METHOD_GET, UriContainer().uriGetList("goal"));
 
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
     request.body = jsonEncode(queryParameters);
 
     final responeStream = await request.send();
@@ -52,34 +63,40 @@ class GoalAPI {
     Map<String, dynamic> dataFromAPI = jsonDecode(respone.body);
 
     var completer = Completer<List<Goal>>();
-    final List<Goal> listGoal = [];
+
+    var map = Map.fromIterable(dataFromAPI['objectList'] as List);
+    List<Goal> wallets = goalsFromJson(map.keys.toList());
+
+
 
     if (dataFromAPI.entries.elementAt(1).value == 200) {
-      dataFromAPI.entries.elementAt(2).value.forEach((item) {
-        listGoal.add(Goal.fromJson(item));
-      });
-      completer.complete(listGoal);
-    } else {
+      completer.complete(wallets);
+    }else{
       completer.completeError("Could not get the data !");
     }
 
-    return completer.future as List<Goal>;
+    return completer.future;
   }
 
-  Future<String> create(
+  Future<bool> create(
       String goalName,
       double goalFinalCost,
       String goalEndDate,
       String goalColor,
-      String goalIcon,
-      String accountUsername) async {
+      String goalIcon) async {
+
+
+    String? userName = await manager.getUsername();
+    String? token = await manager.getAuthToken();
+
+
     final queryParameters = {
       "goalName": goalName,
       "goalFinalCost": goalFinalCost,
       "goalEndDate": goalEndDate,
       "goalColor": goalColor,
       "goalIcon": goalIcon,
-      "account": {"accountUsername": accountUsername}
+      "account": {"accountUsername": userName!}
     };
 
     final request =
@@ -87,6 +104,7 @@ class GoalAPI {
 
     request.body = jsonEncode(queryParameters);
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
 
     final responeStream = await request.send();
     final respone = await http.Response.fromStream(responeStream);
@@ -94,20 +112,25 @@ class GoalAPI {
     final dataFromAPI = jsonDecode(respone.body);
 
     if (dataFromAPI.entries.elementAt(1).value == 201)
-      return "Create";
+      return true;
     else
-      return "None";
+      return false;
   }
 
-  Future<String> update(
+  Future<bool> update(
       int goalId,
       String goalName,
       String goalIcon,
       String goalEndDate,
       double goalFinalCost,
       String goalColor,
-      double goalPresentCost,
-      String accountUsername) async {
+      double? goalPresentCost,
+      bool? goalStatus) async {
+
+
+    String? userName = await manager.getUsername();
+    String? token = await manager.getAuthToken();
+
     final queryParameters = {
       "goalId": goalId,
       "goalName": goalName,
@@ -116,7 +139,8 @@ class GoalAPI {
       "goalEndDate": goalEndDate,
       "goalColor": goalColor,
       "goalIcon": goalIcon,
-      "account": {"accountUsername": accountUsername}
+      "goalStatus":goalStatus,
+      "account": {"accountUsername": userName!}
     };
 
     final request =
@@ -124,6 +148,7 @@ class GoalAPI {
 
     request.body = jsonEncode(queryParameters);
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
 
     final responeStream = await request.send();
     final respone = await http.Response.fromStream(responeStream);
@@ -131,15 +156,19 @@ class GoalAPI {
     final dataFromAPI = jsonDecode(respone.body);
 
     if (dataFromAPI.entries.elementAt(1).value == 200) {
-      return "Update";
+      return true;
     } else
-      return "None";
+      return false;
   }
 
-  Future<String> delete(int goalId, String accountUsername) async {
+  Future<bool> delete(int goalId) async {
+
+    String? userName = await manager.getUsername();
+    String? token = await manager.getAuthToken();
+
     final queryParameters = {
       "goalId": goalId,
-      "account": {"accountUsername": accountUsername}
+      "account": {"accountUsername": userName!}
     };
 
     final request =
@@ -147,6 +176,7 @@ class GoalAPI {
 
     request.body = jsonEncode(queryParameters);
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
 
     final responeStream = await request.send();
     final respone = await http.Response.fromStream(responeStream);
@@ -154,8 +184,48 @@ class GoalAPI {
     final dataFromAPI = jsonDecode(respone.body);
 
     if (dataFromAPI.entries.elementAt(1).value == 200) {
-      return "Delete";
+      return true;
     } else
-      return "None";
+      return false;
+  }
+
+
+  Future<List<Goal>> getGoalsByStatus(bool goalStatus)async{
+
+    String? token = await manager.getAuthToken();
+    String? userName = await manager.getUsername();
+
+    final queryParameters = {
+      "goalStatus":goalStatus,
+      "account": {
+        "accountUsername":userName!
+      }
+    };
+
+    final request =
+    http.Request(ApiPaths.METHOD_GET, UriContainer().uriGetListByStatus("goal"));
+
+    request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
+    request.body = jsonEncode(queryParameters);
+
+    final responeStream = await request.send();
+    final respone = await http.Response.fromStream(responeStream);
+
+    Map<String, dynamic> dataFromAPI = jsonDecode(respone.body);
+
+    
+    var completer = Completer<List<Goal>>();
+
+    var map = Map.fromIterable(dataFromAPI['objectList'] as List);
+    List<Goal> goals = goalsFromJson(map.keys.toList());
+
+    if (dataFromAPI.entries.elementAt(1).value == 200) {
+      completer.complete(goals);
+    }else{
+      completer.completeError("Could not get the data !");
+    }
+
+    return completer.future;
   }
 }

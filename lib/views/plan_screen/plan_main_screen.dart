@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/event.dart';
 import 'package:graduation_thesis_project/models/expense.dart';
 import 'package:graduation_thesis_project/models/goal.dart';
@@ -40,7 +41,7 @@ class _PlanMainScreenState extends State<PlanMainScreen> {
     });
 
     GoalController()
-        .getListGoal("Phuc")
+        .getListGoal()
         .then((value) {
           setState(() {
             listTarget = List.from(value);
@@ -126,8 +127,7 @@ class _PlanMainScreenState extends State<PlanMainScreen> {
               );
             } else {
               return TargetScreen(
-                pageController: _pageController,
-                listTarget: listTarget,
+                pageController: _pageController
               );
             }
           },

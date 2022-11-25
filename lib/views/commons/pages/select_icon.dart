@@ -48,7 +48,7 @@ class _SelectIconsState extends State<SelectIcons> {
             color: Colors.black,
           ),
           onPressed: () {
-            Get.back();
+            Navigator.pop(context,"Cancle");
           },
         ),
         centerTitle: true,
@@ -73,7 +73,7 @@ class _SelectIconsState extends State<SelectIcons> {
               onTap: () {
                 setState(() {
                   data = iconList.elementAt(index);
-                  Navigator.of(context).pop(data);
+                  Navigator.pop(context,data);
                 });
               },
               customBorder: const CircleBorder(),

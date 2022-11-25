@@ -16,10 +16,7 @@ import '../../../commons/widgets/single_row_container_2.dart';
 // ignore: must_be_immutable
 class EventHappening extends StatefulWidget {
 
-  List<Event> listEvent;
-  final List<Expense> listTransaction;
-
-  EventHappening({ Key? key, required this.listEvent, required this.listTransaction,}) : super(key: key);
+  EventHappening({ Key? key,  }) : super(key: key);
 
   @override
   State<EventHappening> createState() => _EventHappeningState();
@@ -31,7 +28,7 @@ class _EventHappeningState extends State<EventHappening> {
 
   final NumberFormat nf = NumberFormat("###,###");
 
-  final List<Event> lsEventHappening = [];
+  List<Event> lsEventHappening = [];
   var val;
 
   @override
@@ -39,14 +36,10 @@ class _EventHappeningState extends State<EventHappening> {
     // TODO: implement initState
     super.initState();
 
-    EventController().getListEvent().then((value) {
-      for (var element in value) {
-        if(element.eventStatus==false){
-          setState(() {
-            lsEventHappening.add(element);
-          });
-        }
-      }
+    EventController().getByStatus(false).then((value) {
+      setState((){
+        lsEventHappening = List.from(value);
+      });
     }, onError: (e){
       e.printError();
     });
@@ -56,14 +49,9 @@ class _EventHappeningState extends State<EventHappening> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    lsEventHappening.clear();
-    for (var item in widget.listEvent) {
-      if (item.eventStatus == false) {
-        setState(() {
-          lsEventHappening.add(item);
-        });
-      }
-    }
+    EventController().getByStatus(false).then((value) {
+        lsEventHappening = List.from(value);
+    });
 
     return SafeArea(
       child: Scaffold(
@@ -128,9 +116,7 @@ class _EventHappeningState extends State<EventHappening> {
                 child: ListView.builder(
                     itemCount: lsEventHappening.length,
                     itemBuilder: (context, index) {
-                      return lsEventHappening.elementAt(index).eventStatus
-                          ? Container()
-                          : Padding(
+                      return Padding(
                               padding: EdgeInsets.only(top: size.width * 0.07),
                               child: InkWell(
                                 onTap: () async {
@@ -144,22 +130,16 @@ class _EventHappeningState extends State<EventHappening> {
                                     ),
                                   ).then((value) => setState(() {
                                         if (value == "Delete") {
-                                          widget.listEvent.clear();
-                                          EventController().getListEvent().then((value) {
+                                          EventController().getByStatus(false).then((value) {
                                             setState(() {
-                                              for (var element in value) {
-                                                widget.listEvent.add(element);
-                                              }
+                                              lsEventHappening  =List.from(value);
                                             });
                                           });
                                           Fluttertoast.showToast(msg: "Xóa sự kiện thành công !");
                                         } else if (value == "Cancel") {
-                                          widget.listEvent.clear();
-                                          EventController().getListEvent().then((value) {
+                                          EventController().getByStatus(false).then((value) {
                                             setState(() {
-                                              for (var element in value) {
-                                                widget.listEvent.add(element);
-                                              }
+                                              lsEventHappening  =List.from(value);
                                             });
                                           });
                                         }
@@ -173,14 +153,11 @@ class _EventHappeningState extends State<EventHappening> {
                                   height: size.height * 0.13,
                                   background: Colors.white,
                                   children: [
-                                    SizedBox(
-                                      width: size.width * 0.2,
-                                      child: CircleIconContainer(
-                                        urlImage: lsEventHappening.elementAt(index).eventIcon,
-                                        iconSize: size.width * 0.045,
-                                        backgroundColor: const Color(0xffFB8500),
-                                        padding: size.width * 0.045,
-                                      ),
+                                    CircleIconContainer(
+                                      urlImage: lsEventHappening.elementAt(index).eventIcon,
+                                      iconSize: size.width * 0.07,
+                                      backgroundColor: const Color(0xffFB8500),
+                                      padding: size.width * 0.045,
                                     ),
                                     SizedBox(
                                       width: size.width * 0.7,

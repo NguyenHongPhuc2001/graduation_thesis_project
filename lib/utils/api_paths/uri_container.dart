@@ -42,5 +42,15 @@ class UriContainer {
     return uri;
   }
 
+  Uri uriSignUp(String path){
+    Uri uri = Uri.http("10.0.2.2:8989", "/${path}/${ApiPaths.ACCOUNT_SIGN_UP_DOMAIN}");
+    return uri;
+  }
+
+  Uri uriGetListByStatus(String path){
+    Uri uri = Uri.http("10.0.2.2:8989", "/${path}/${ApiPaths.MODEL_GET_LIST_BY_STATUS}");
+    return uri;
+  }
+
 }
 

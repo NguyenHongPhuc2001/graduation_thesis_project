@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:graduation_thesis_project/models/expense.dart';
+import 'package:graduation_thesis_project/remote/controllers/entites/goal_controller.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/money_text_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
 
-
 import '../../remote/controllers/entites/event_controller.dart';
 import 'overview_manage_transaction.dart';
-
-
 
 class ManageTransaction extends StatefulWidget {
   final List<Expense> listTransaction;
@@ -143,14 +142,11 @@ class _ManageTransactionState extends State<ManageTransaction> {
                 child: InkWell(
                   customBorder: CircleBorder(),
                   onTap: () async {
-                    EventController().updateEvent(
-                        2,
-                        "Event 5 update",
-                        "images/QuestionIcon.svg",
-                        "2022-11-17",
-                        1,
-                        false).then((value) => print("value : ${value}"));
-                    },
+                    final checkl = await EventController().getOneEvent(
+                        1);
+
+                    print(checkl.toJson());
+                  },
                   splashColor: Colors.white,
                   highlightColor: Colors.white,
                   child: Icon(
@@ -509,7 +505,6 @@ class _ManageTransactionState extends State<ManageTransaction> {
   DateTime findFirstDateOfTheWeek(DateTime dateTime) {
     return dateTime.subtract(Duration(days: dateTime.weekday - 1));
   }
-
 
   String getNameOfDays(int month) {
     String date = "";

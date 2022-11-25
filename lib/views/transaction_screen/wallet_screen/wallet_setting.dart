@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/wallet.dart';
@@ -6,30 +7,39 @@ import 'package:graduation_thesis_project/remote/controllers/entites/wallet_cont
 
 // ignore: must_be_immutable
 class WalletSetting extends StatefulWidget {
-
-  int? walletId;
-  String? walletName;
-  String? walletBalance;
+  // int? walletId;
+  // String? walletName;
+  // String? walletBalance;
+  Wallet wallet;
 
   WalletController walletController = Get.put(WalletController());
 
-  WalletSetting({Key? key,required this.walletId, required this.walletName, required this.walletBalance}) :  super(key: key);
+  WalletSetting({Key? key, required this.wallet}) : super(key: key);
 
   @override
   State<WalletSetting> createState() => _WalletSettingState();
 }
 
 class _WalletSettingState extends State<WalletSetting> {
+  final controllerWalletName = TextEditingController();
+  final controllerWalletBalance = MoneyMaskedTextController(
+      thousandSeparator: '.',
+      decimalSeparator: '',
+      initialValue: 0.0,
+      precision: 0);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controllerWalletName.text = widget.wallet.walletName!;
+    controllerWalletBalance.text =
+        (widget.wallet.walletBalance! / 10).toString();
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
-    final controllerWalletName = TextEditingController();
-    final controllerWalletBalance = TextEditingController();
-
-    controllerWalletName.text = widget.walletName!;
-    controllerWalletBalance.text = widget.walletBalance.toString();
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -40,8 +50,7 @@ class _WalletSettingState extends State<WalletSetting> {
             style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
-                fontSize: 15.0
-            ),
+                fontSize: 15.0),
           ),
           centerTitle: true,
           backgroundColor: Colors.white,
@@ -55,21 +64,23 @@ class _WalletSettingState extends State<WalletSetting> {
               Container(
                 width: size.width,
                 height: size.height * 0.4,
-                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15.0),
                   boxShadow: const [
                     BoxShadow(
-                      blurRadius: 1,
-                      spreadRadius: 2,
-                      color: Colors.grey
-                    )
+                        blurRadius: 1, spreadRadius: 2, color: Colors.grey)
                   ],
                 ),
                 child: GestureDetector(
                   onTap: () async {
-                    Navigator.of(context).pop(widget.walletController.delete(widget.walletId));
+                    await WalletController()
+                        .delete(widget.wallet.walletId)
+                        .then((value) {
+                      Navigator.pop(context, "Delete");
+                    });
                   },
                   child: Stack(
                     alignment: Alignment.topRight,
@@ -81,15 +92,11 @@ class _WalletSettingState extends State<WalletSetting> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(100),
                             boxShadow: const [
-                              BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 2
-                              )
-                            ]
-                        ),
+                              BoxShadow(color: Colors.grey, blurRadius: 2)
+                            ]),
                         child: const Icon(
                           Icons.delete,
-                          size: 15,
+                          size: 30,
                         ),
                       ),
                       Center(
@@ -100,25 +107,24 @@ class _WalletSettingState extends State<WalletSetting> {
                             Container(
                               decoration: BoxDecoration(
                                   color: Colors.pinkAccent,
-                                  borderRadius: BorderRadius.circular(100)
-                              ),
+                                  borderRadius: BorderRadius.circular(100)),
                               padding: const EdgeInsets.all(18),
-                              child: SvgPicture.asset("images/simple_wallet.svg"),
+                              child:
+                                  SvgPicture.asset("images/simple_wallet.svg"),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 60),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 60),
                               child: TextField(
                                 controller: controllerWalletName,
-                                onChanged: (value) => widget.walletName = value,
+                                // onChanged: (value) => widget.walletName = value,
                                 decoration: const InputDecoration(
                                   enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(color: Colors.black),
                                   ),
                                   hintText: "Tên ví",
                                   hintStyle: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.black
-                                  ),
+                                      fontSize: 13, color: Colors.black),
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -128,10 +134,9 @@ class _WalletSettingState extends State<WalletSetting> {
                               child: Text(
                                 "Số dư",
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey,
-                                  fontSize: 16
-                                ),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey,
+                                    fontSize: 16),
                               ),
                             ),
                             Container(
@@ -142,56 +147,53 @@ class _WalletSettingState extends State<WalletSetting> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(100),
                                   boxShadow: const [
-                                    BoxShadow(
-                                        color: Colors.grey,
-                                        blurRadius: 2
-                                    )
-                                  ]
-                              ),
+                                    BoxShadow(color: Colors.grey, blurRadius: 2)
+                                  ]),
                               child: Stack(
                                 alignment: Alignment.centerRight,
                                 children: [
                                   SizedBox(
-                                    height : 40,
+                                    height: 40,
                                     child: TextField(
                                       controller: controllerWalletBalance,
-                                      onChanged: (value) => widget.walletBalance = value,
+                                      keyboardType: TextInputType.number,
+                                      // onChanged: (value) => widget.walletBalance = value,
                                       autofocus: false,
                                       decoration: InputDecoration(
-                                        contentPadding: const EdgeInsets.only(left: 15, top: 5, bottom: 15),
+                                        contentPadding: const EdgeInsets.only(
+                                            left: 15, top: 5, bottom: 15),
                                         enabledBorder: UnderlineInputBorder(
-                                            borderRadius: BorderRadius.circular(30),
-                                            borderSide: BorderSide.none
-                                        ),
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: BorderSide.none),
                                         focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(30),
-                                            borderSide: BorderSide.none
-                                        ),
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: BorderSide.none),
                                         filled: true,
                                         fillColor: Colors.white,
                                         hintText: "Giá trị ví",
                                         hintStyle: const TextStyle(
                                             fontSize: 13,
                                             color: Colors.black,
-                                            fontWeight: FontWeight.w300
-                                        ),
+                                            fontWeight: FontWeight.w300),
                                       ),
                                     ),
                                   ),
                                   Container(
                                     padding: const EdgeInsets.all(3),
-                                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10),
                                     decoration: BoxDecoration(
                                         color: Colors.redAccent,
-                                        borderRadius: BorderRadius.circular(100)
-                                    ),
+                                        borderRadius:
+                                            BorderRadius.circular(100)),
                                     child: const Text(
                                       "VNĐ",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 8
-                                      ),
+                                          fontSize: 8),
                                     ),
                                   )
                                 ],
@@ -200,41 +202,35 @@ class _WalletSettingState extends State<WalletSetting> {
                           ],
                         ),
                       ),
-
                     ],
                   ),
                 ),
               ),
               ElevatedButton(
-                onPressed: (){
-                  widget.walletController.updateWallet(widget.walletId, widget.walletName, widget.walletBalance);
-                  Wallet wallet = Wallet(walletId: widget.walletId, walletBalance: double.tryParse(widget.walletBalance.toString()), walletName: widget.walletName);
-                  Navigator.of(context).pop(wallet);
+                onPressed: () async {
+                  await widget.walletController.updateWallet(
+                      widget.wallet.walletId,
+                      controllerWalletName.text,
+                      controllerWalletBalance.numberValue.toString());
+                  Navigator.pop(context, "Update");
                 },
                 style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
                     minimumSize: const Size(250, 30),
-                    primary: const Color(0xFFEE1D1D)
-                ),
-                child: const Text(
-                    "Lưu thông tin ví"
-                ),
+                    primary: const Color(0xFFEE1D1D)),
+                child: const Text("Lưu thông tin ví"),
               ),
               ElevatedButton(
-                onPressed: (){
+                onPressed: () {
                   Get.back();
                 },
                 style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
-                    minimumSize: const Size(250, 30)
-                ),
-                child: const Text(
-                    "Trở về"
-                ),
+                    minimumSize: const Size(250, 30)),
+                child: const Text("Trở về"),
               ),
             ],
           ),
-        )
-    );
+        ));
   }
 }

@@ -16,13 +16,9 @@ import '../../../commons/widgets/single_row_container_2.dart';
 
 // ignore: must_be_immutable
 class EventEnd extends StatefulWidget {
-   List<Event> listEvent;
-  final List<Expense> listTransaction;
 
    EventEnd({
     Key? key,
-    required this.listEvent,
-    required this.listTransaction,
   }) : super(key: key);
 
   @override
@@ -34,21 +30,17 @@ class _EventEndState extends State<EventEnd> {
 
   final NumberFormat nf = NumberFormat("###,###");
 
-  final List<Event> lsEnd = [];
+  List<Event> lsEnd = [];
   var val;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    EventController().getListEvent().then((value) {
-      for (var element in value) {
-        if(element.eventStatus == true){
-          setState(() {
-            lsEnd.add(element);
-          });
-        }
-      }
+    EventController().getByStatus(true).then((value) {
+      setState(() {
+        lsEnd  =List.from(value);
+      });
     }, onError: (e){
       e.printError();
     });
@@ -58,14 +50,9 @@ class _EventEndState extends State<EventEnd> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    lsEnd.clear();
-    for (var item in widget.listEvent) {
-      if (item.eventStatus == true) {
-        setState(() {
-          lsEnd.add(item);
-        });
-      }
-    }
+    EventController().getByStatus(true).then((value) {
+      lsEnd = List.from(value);
+    });
 
     return SafeArea(
       child: Scaffold(
@@ -130,9 +117,7 @@ class _EventEndState extends State<EventEnd> {
           child: ListView.builder(
               itemCount: lsEnd.length,
               itemBuilder: (context, index) {
-                return lsEnd.elementAt(index).eventStatus
-                    ? Container()
-                    : Padding(
+                return Padding(
                   padding: EdgeInsets.only(top: size.width * 0.07),
                   child: InkWell(
                     onTap: () async {
@@ -146,22 +131,16 @@ class _EventEndState extends State<EventEnd> {
                         ),
                       ).then((value) => setState(() {
                         if (value == "Delete") {
-                          widget.listEvent.clear();
-                          EventController().getListEvent().then((value) {
+                          EventController().getByStatus(true).then((value) {
                             setState(() {
-                              for (var element in value) {
-                                widget.listEvent.add(element);
-                              }
+                              lsEnd = List.from(value);
                             });
                           });
                           Fluttertoast.showToast(msg: "Xóa sự kiện thành công !");
                         } else if (value == "Cancel") {
-                          widget.listEvent.clear();
-                          EventController().getListEvent().then((value) {
+                          EventController().getByStatus(true).then((value) {
                             setState(() {
-                              for (var element in value) {
-                                widget.listEvent.add(element);
-                              }
+                              lsEnd = List.from(value);
                             });
                           });
                         }
@@ -175,14 +154,11 @@ class _EventEndState extends State<EventEnd> {
                       height: size.height * 0.13,
                       background: Colors.white,
                       children: [
-                        SizedBox(
-                          width: size.width * 0.2,
-                          child: CircleIconContainer(
-                            urlImage: lsEnd.elementAt(index).eventIcon,
-                            iconSize: size.width * 0.045,
-                            backgroundColor: const Color(0xffFB8500),
-                            padding: size.width * 0.045,
-                          ),
+                        CircleIconContainer(
+                          urlImage: lsEnd.elementAt(index).eventIcon,
+                          iconSize: size.width * 0.07,
+                          backgroundColor: const Color(0xffFB8500),
+                          padding: size.width * 0.045,
                         ),
                         SizedBox(
                           width: size.width * 0.7,

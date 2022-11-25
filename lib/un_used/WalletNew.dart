@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../models/Event.dart';
+import '../models/event.dart';
 import '../models/wallet.dart';
 import '../remote/controllers/entites/event_controller.dart';
 import '../remote/controllers/entites/wallet_controller.dart';

@@ -8,28 +8,27 @@ import 'package:graduation_thesis_project/views/commons/widgets/text_container.d
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-
 import 'budget_update.dart';
 
 class BudgetHappening extends StatefulWidget {
   final List<Budget>? listBudget;
 
-  const BudgetHappening({ Key? key, this.listBudget, }) : super(key: key);
+  const BudgetHappening({
+    Key? key,
+    this.listBudget,
+  }) : super(key: key);
 
   @override
   State<BudgetHappening> createState() => _BudgetHappeningState();
-
 }
 
 class _BudgetHappeningState extends State<BudgetHappening> {
-
   bool isEmpty = false;
   final nf = NumberFormat("###,###");
   final df = DateFormat("dd-MM-yyyy");
 
   @override
   Widget build(BuildContext context) {
-
     Size size = MediaQuery.of(context).size;
 
     double totalSpending = 0, percentSpending = 0, percentOver = 0;
@@ -38,8 +37,8 @@ class _BudgetHappeningState extends State<BudgetHappening> {
     return Scaffold(
       body: widget.listBudget!.isEmpty
           ? Container(
-            margin: EdgeInsets.only(top: size.width * 0.2) ,
-            child: SizedBox(
+              margin: EdgeInsets.only(top: size.width * 0.2),
+              child: SizedBox(
                 width: size.width,
                 child: Column(
                   children: [
@@ -93,36 +92,42 @@ class _BudgetHappeningState extends State<BudgetHappening> {
                   ],
                 ),
               ),
-          )
+            )
           : SizedBox(
               width: size.width,
               child: ListView.builder(
                   itemCount: widget.listBudget!.length,
                   itemBuilder: (context, index) {
+                    percentSpending = (widget.listBudget!
+                                .elementAt(index)
+                                .budgetPresentValue! /
+                            widget.listBudget!.elementAt(index).budgetValue) *
+                        100;
 
-                    percentSpending = (widget.listBudget!.elementAt(index).budgetPresentValue! /  widget.listBudget!.elementAt(index).budgetValue) * 100;
                     if (widget.listBudget!.elementAt(index).budgetStatus!) {
                       isOverSpending = true;
                       percentOver = percentSpending - 100;
                     }
+
                     return Padding(
                       padding: EdgeInsets.only(
                           top: size.width * 0.06,
-                          left: size.width * 0.01,
-                          right: size.width * 0.01
-                      ),
+                          left: size.width * 0.02,
+                          right: size.width * 0.02),
                       child: InkWell(
-                        onTap: () {
-                          Get.to(BudgetUpdate(budget: widget.listBudget!.elementAt(index)));
-                        },
+                          onTap: () {
+                            Get.to(BudgetUpdate(
+                                budget: widget.listBudget!.elementAt(index)));
+                          },
                           child: SingleRowContainer(
                             boxDecoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: const [BoxShadow(
-                                    blurRadius: 2,
-                                    color: Colors.black38
-                                )]
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: size.width * 0.01,
+                                    color: Colors.black38),
+                              ],
                             ),
                             paddingTop: size.width * 0.02,
                             paddingBottom: size.width * 0.02,
@@ -130,7 +135,9 @@ class _BudgetHappeningState extends State<BudgetHappening> {
                               SizedBox(
                                 width: size.width * 0.20,
                                 child: CircleIconContainer(
-                                  urlImage: widget.listBudget!.elementAt(index).budgetIcon,
+                                  urlImage: widget.listBudget!
+                                      .elementAt(index)
+                                      .budgetIcon,
                                   iconSize: size.width * 0.05,
                                   backgroundColor: Colors.orange,
                                   padding: size.width * 0.040,
@@ -140,49 +147,52 @@ class _BudgetHappeningState extends State<BudgetHappening> {
                                 width: size.width * 0.76,
                                 padding: EdgeInsets.only(
                                     right: size.width * 0.01,
-                                    top: size.width * 0.02
-                                ),
+                                    top: size.width * 0.02),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Row(
                                               mainAxisAlignment:
-                                              MainAxisAlignment.start,
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  widget.listBudget!.elementAt(index).budgetName,
+                                                  widget.listBudget!
+                                                      .elementAt(index)
+                                                      .budgetName,
                                                   style: TextStyle(
                                                     color: Colors.black,
-                                                    fontWeight:
-                                                    FontWeight.bold,
+                                                    fontWeight: FontWeight.bold,
                                                     fontSize:
-                                                    size.width * 0.045,
+                                                        size.width * 0.045,
                                                   ),
                                                 ),
                                                 Padding(
                                                   padding: EdgeInsets.only(
-                                                      left: size.width * 0.015,
+                                                    left: size.width * 0.015,
                                                   ),
                                                   child: Visibility(
-                                                    visible: isOverSpending ? true : false,
+                                                    visible: isOverSpending
+                                                        ? true
+                                                        : false,
                                                     child: SvgPicture.asset(
                                                       "images/WarningIcon.svg",
-                                                      width:
-                                                      size.width * 0.03,
+                                                      width: size.width * 0.03,
                                                     ),
                                                   ),
                                                 ),
                                               ],
                                             ),
-                                            const SizedBox(height: 3,),
+                                            const SizedBox(
+                                              height: 3,
+                                            ),
                                             Text(
                                               "Kỳ hạn: ${widget.listBudget!.elementAt(index).budgetMothYear}",
                                               style: TextStyle(
@@ -197,71 +207,108 @@ class _BudgetHappeningState extends State<BudgetHappening> {
                                     Padding(
                                       padding: EdgeInsets.only(
                                           top: size.width * 0.025,
-                                          bottom: size.width * 0.01
-                                      ),
+                                          bottom: size.width * 0.01),
                                       child: Row(
-                                        mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Row(
                                             children: [
                                               Row(
                                                 children: [
                                                   TextContainer(
-                                                    text: nf.format(widget.listBudget!.elementAt(index).budgetPresentValue),
+                                                    text: nf.format(widget
+                                                        .listBudget!
+                                                        .elementAt(index)
+                                                        .budgetPresentValue),
                                                     textColor: Colors.black,
                                                     textSize: size.width * 0.03,
-                                                    textFontWeight: FontWeight.bold,
-                                                    decoration: TextDecoration.none,
+                                                    textFontWeight:
+                                                        FontWeight.bold,
+                                                    decoration:
+                                                        TextDecoration.none,
                                                   ),
                                                   TextContainer(
                                                     text: "VNĐ",
                                                     textColor: Colors.black,
                                                     textSize: size.width * 0.03,
-                                                    textFontWeight: FontWeight.bold,
-                                                    decoration: TextDecoration.none,
+                                                    textFontWeight:
+                                                        FontWeight.bold,
+                                                    decoration:
+                                                        TextDecoration.none,
                                                   ),
                                                 ],
                                               )
                                             ],
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.only(right: size.width * 0.02),
+                                            padding: EdgeInsets.only(
+                                                right: size.width * 0.02),
                                             child: Row(
                                               children: [
                                                 Row(
                                                   children: [
                                                     TextContainer(
-                                                      text: nf.format( widget.listBudget!.elementAt(index).budgetValue - totalSpending),
+                                                      text: nf.format(widget
+                                                              .listBudget!
+                                                              .elementAt(index)
+                                                              .budgetValue -
+                                                          totalSpending),
                                                       textColor: Colors.black,
-                                                      textSize: size.width * 0.03,
-                                                      textFontWeight: FontWeight.bold,
-                                                      decoration: TextDecoration.none,
+                                                      textSize:
+                                                          size.width * 0.03,
+                                                      textFontWeight:
+                                                          FontWeight.bold,
+                                                      decoration:
+                                                          TextDecoration.none,
                                                     ),
                                                     TextContainer(
                                                       text: "VNĐ  ",
                                                       textColor: Colors.black,
-                                                      textSize: size.width * 0.03,
-                                                      textFontWeight: FontWeight.bold,
-                                                      decoration: TextDecoration.none,
+                                                      textSize:
+                                                          size.width * 0.03,
+                                                      textFontWeight:
+                                                          FontWeight.bold,
+                                                      decoration:
+                                                          TextDecoration.none,
                                                     ),
                                                   ],
                                                 ),
                                                 Row(
                                                   children: [
                                                     TextContainer(
-                                                      text: (((100 - percentSpending) - (100 - percentSpending.toInt()) == 0) == true)
-                                                            ? (100 - (percentSpending.toInt())).toStringAsFixed(1) : (100 - percentSpending).toStringAsFixed(1),
+                                                      text: (((100 - percentSpending) -
+                                                                      (100 -
+                                                                          percentSpending
+                                                                              .toInt()) ==
+                                                                  0) ==
+                                                              true)
+                                                          ? (100 -
+                                                                  (percentSpending
+                                                                      .toInt()))
+                                                              .toStringAsFixed(
+                                                                  1)
+                                                          : (100 -
+                                                                  percentSpending)
+                                                              .toStringAsFixed(
+                                                                  1),
                                                       textColor: Colors.black,
-                                                      textSize: size.width * 0.03,
-                                                      textFontWeight: FontWeight.w400,
-                                                      decoration: TextDecoration.none,
+                                                      textSize:
+                                                          size.width * 0.03,
+                                                      textFontWeight:
+                                                          FontWeight.w400,
+                                                      decoration:
+                                                          TextDecoration.none,
                                                     ),
                                                     TextContainer(
                                                       text: "%",
                                                       textColor: Colors.black,
-                                                      textSize: size.width * 0.03,
-                                                      textFontWeight: FontWeight.w400,
-                                                      decoration: TextDecoration.none,
+                                                      textSize:
+                                                          size.width * 0.03,
+                                                      textFontWeight:
+                                                          FontWeight.w400,
+                                                      decoration:
+                                                          TextDecoration.none,
                                                     ),
                                                   ],
                                                 ),
@@ -272,84 +319,120 @@ class _BudgetHappeningState extends State<BudgetHappening> {
                                       ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(top: size.width * 0.01),
+                                      padding: EdgeInsets.only(
+                                          top: size.width * 0.01),
                                       child: LinearPercentIndicator(
-                                        barRadius: Radius.circular(size.width * 0.5),
+                                        barRadius:
+                                            Radius.circular(size.width * 0.5),
                                         lineHeight: size.width * 0.02,
-                                        percent: widget.listBudget!.elementAt(index).budgetStatus! ? 1.0
-                                            : ((widget.listBudget!.elementAt(index).budgetPresentValue!) / (widget.listBudget!.elementAt(index).budgetValue)),
-                                        progressColor: widget.listBudget!.elementAt(index).budgetStatus! ? Colors.red : Colors.green,
+                                        percent: widget.listBudget!
+                                                .elementAt(index)
+                                                .budgetStatus!
+                                            ? 1.0
+                                            : ((widget.listBudget!
+                                                    .elementAt(index)
+                                                    .budgetPresentValue!) /
+                                                (widget.listBudget!
+                                                    .elementAt(index)
+                                                    .budgetValue)),
+                                        progressColor: widget.listBudget!
+                                                .elementAt(index)
+                                                .budgetStatus!
+                                            ? Colors.red
+                                            : Colors.green,
                                         width: size.width * 0.75,
                                       ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(top: size.width * 0.03),
+                                      padding: EdgeInsets.only(
+                                          top: size.width * 0.03),
                                       child: Row(
                                         children: [
                                           Row(
                                             children: [
                                               Container(
-                                                padding: EdgeInsets.all(size.width * 0.01),
-                                                 decoration: const BoxDecoration(
+                                                padding: EdgeInsets.all(
+                                                    size.width * 0.01),
+                                                decoration: const BoxDecoration(
                                                   shape: BoxShape.circle,
                                                   color: Colors.green,
                                                 ),
                                               ),
                                               Padding(
-                                                padding: EdgeInsets.only(left: size.width * 0.01),
+                                                padding: EdgeInsets.only(
+                                                    left: size.width * 0.01),
                                                 child: TextContainer(
                                                   text: "Đã chi",
                                                   textColor: Colors.black,
                                                   textSize: size.width * 0.025,
-                                                  textFontWeight: FontWeight.w300,
-                                                  decoration: TextDecoration.none,
+                                                  textFontWeight:
+                                                      FontWeight.w300,
+                                                  decoration:
+                                                      TextDecoration.none,
                                                 ),
                                               ),
                                             ],
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.only(left: size.width * 0.028),
+                                            padding: EdgeInsets.only(
+                                                left: size.width * 0.028),
                                             child: Row(
                                               children: [
                                                 Container(
-                                                  padding: EdgeInsets.all(size.width * 0.01),
-                                                  decoration: const BoxDecoration(
+                                                  padding: EdgeInsets.all(
+                                                      size.width * 0.01),
+                                                  decoration:
+                                                      const BoxDecoration(
                                                     shape: BoxShape.circle,
                                                     color: Colors.grey,
                                                   ),
                                                 ),
                                                 Padding(
-                                                  padding: EdgeInsets.only(left: size.width * 0.01),
+                                                  padding: EdgeInsets.only(
+                                                      left: size.width * 0.01),
                                                   child: TextContainer(
                                                     text: "Còn lại",
                                                     textColor: Colors.black,
-                                                    textSize: size.width * 0.025,
-                                                    textFontWeight: FontWeight.w300,
-                                                    decoration: TextDecoration.none,
+                                                    textSize:
+                                                        size.width * 0.025,
+                                                    textFontWeight:
+                                                        FontWeight.w300,
+                                                    decoration:
+                                                        TextDecoration.none,
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
                                           Visibility(
-                                            visible: widget.listBudget!.elementAt(index).budgetStatus! ? true : false,
+                                            visible: widget.listBudget!
+                                                    .elementAt(index)
+                                                    .budgetStatus!
+                                                ? true
+                                                : false,
                                             child: Padding(
-                                              padding: EdgeInsets.only(left: size.width * 0.028),
+                                              padding: EdgeInsets.only(
+                                                  left: size.width * 0.028),
                                               child: Row(
                                                 children: [
                                                   Container(
-                                                    padding: EdgeInsets.all(size.width * 0.01),
-                                                    decoration: const BoxDecoration(
+                                                    padding: EdgeInsets.all(
+                                                        size.width * 0.01),
+                                                    decoration:
+                                                        const BoxDecoration(
                                                       shape: BoxShape.circle,
                                                       color: Colors.red,
                                                     ),
                                                   ),
                                                   Padding(
-                                                    padding: EdgeInsets.only(left: size.width * 0.01),
+                                                    padding: EdgeInsets.only(
+                                                        left:
+                                                            size.width * 0.01),
                                                     child: Text(
                                                       "Vượt ngưỡng",
                                                       style: TextStyle(
-                                                        fontSize: size.width * 0.025,
+                                                        fontSize:
+                                                            size.width * 0.025,
                                                         color: Colors.black,
                                                       ),
                                                     ),
@@ -365,8 +448,7 @@ class _BudgetHappeningState extends State<BudgetHappening> {
                                 ),
                               ),
                             ],
-                          )
-                        ),
+                          )),
                     );
                   }),
             ),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 
+import 'package:graduation_thesis_project/models/event.dart';
 import 'package:graduation_thesis_project/remote/api/base_api.dart';
 import 'package:http/http.dart' as http;
 import '../../models/event.dart';
@@ -27,7 +28,11 @@ class EventAPI extends BaseAPI{
     Map<String, dynamic> dataFromAPI = jsonDecode(response.body);
 
     var completer = Completer<Event>();
+
+    print(dataFromAPI.entries.elementAt(3).toString());
+
     final Event event = Event.fromJson(dataFromAPI.entries.elementAt(2).value);
+
     completer.complete(event);
 
     return completer.future;
@@ -63,14 +68,14 @@ class EventAPI extends BaseAPI{
     return completer.future;
   }
 
-  Future<String> create(String eventName, String linkIcon, String eventEndDate, int walletId) async {
+  Future<String> create(String eventName, String eventIcon, String eventEndDate, int walletId) async {
 
     String? username = await manager.getUsername();
 
     final queryParameters = {
       "eventName": eventName,
       "eventEndDate": eventEndDate,
-      "eventIcon": linkIcon,
+      "eventIcon": eventIcon,
       "account": {
         "accountUsername": username
       },
@@ -160,4 +165,41 @@ class EventAPI extends BaseAPI{
       return "None";
     }
   }
+
+  Future<List<Event>> getByStatus(bool eventStatus)async{
+
+    String? userName = await manager.getUsername();
+    String? token = await manager.getAuthToken();
+    final queryParameters = {
+      "eventStatus":eventStatus,
+      "account": {
+        "accountUsername":userName!
+      }
+    };
+
+    final request =
+    http.Request(ApiPaths.METHOD_GET, UriContainer().uriGetListByStatus("event"));
+
+    request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
+    request.body = jsonEncode(queryParameters);
+
+    final responeStream = await request.send();
+    final respone = await http.Response.fromStream(responeStream);
+
+    Map<String, dynamic> dataFromAPI = jsonDecode(respone.body);
+
+    var completer = Completer<List<Event>>();
+    var map = Map.fromIterable(dataFromAPI['objectList'] as List);
+    List<Event> listEvents = eventsFromJson(map.keys.toList());
+
+    if(dataFromAPI.entries.elementAt(1).value == 200) {
+      completer.complete(listEvents);
+    }else{
+      completer.completeError("Could not get the data !");
+    }
+
+    return completer.future;
+  }
+
 }

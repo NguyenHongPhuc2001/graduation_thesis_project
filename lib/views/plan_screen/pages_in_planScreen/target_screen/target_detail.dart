@@ -77,28 +77,29 @@ class _TargetDetailState extends State<TargetDetail> {
               onBackTap: () {
                 Navigator.pop(context, "Cancle");
               },
-              onPrefixIcon1Tap: () {
-                Navigator.push(
+              onPrefixIcon1Tap: () async {
+                await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => UpdateTarget(
-                      target: widget.target,
+                      target: target,
                     ),
                   ),
                 ).then((value) {
                   if (value == "Update") {
                     Fluttertoast.showToast(msg: "Update success!");
-                    // GoalAPI().getOne(widget.target.goalId).then((value) {
-                    //   setState(() {
-                    //     target = value;
-                    //   });
-                    // });
-                    target = GoalController().getOneGoal(widget.target.goalId);
+                    GoalController()
+                        .getOneGoal(widget.target.goalId)
+                        .then((value) {
+                      setState(() {
+                        target = value;
+                      });
+                    });
                   }
                 });
               },
               onPrefixIcon2Tap: () {
-                _showDeleteDialog(widget.target);
+                _showDeleteDialog(target);
               }),
         ),
         body: SingleChildScrollView(
@@ -165,7 +166,7 @@ class _TargetDetailState extends State<TargetDetail> {
                     width: size.width,
                     child: CircularPercentIndicator(
                       radius: size.width * 0.3,
-                      progressColor: Color(int.parse(widget.target.goalColor)),
+                      progressColor: Color(int.parse(target.goalColor)),
                       percent: percentTarget,
                       lineWidth: size.width * 0.06,
                       center: Container(
@@ -177,10 +178,11 @@ class _TargetDetailState extends State<TargetDetail> {
                             Column(
                               children: [
                                 PercentTextContainer(
-                                  value: "0",
+                                  value:
+                                      (percentTarget * 100).toStringAsFixed(1),
                                   textSize: size.width * 0.055,
                                   textFontWeight: FontWeight.bold,
-                                  color: Color(int.parse(widget.target.goalColor)),
+                                  color: Color(int.parse(target.goalColor)),
                                 ),
                                 Padding(
                                   padding:
@@ -319,20 +321,32 @@ class _TargetDetailState extends State<TargetDetail> {
                 SizedBox(
                   height: size.width * 0.01,
                 ),
-                CustomRoundRectangleButton(
-                  backgroundColor: Colors.transparent,
-                  onTap: () {},
-                  buttonWith: size.width * 0.8,
-                  padding: size.width * 0.03,
-                  borderRadius: size.width * 0.02,
-                  text: TextContainer(
-                    text: "HOÀN THÀNH MỤC TIÊU",
-                    textColor: Color(int.parse(widget.target.goalColor)),
-                    textSize: size.width * 0.05,
-                    textFontWeight: FontWeight.bold,
-                    decoration: TextDecoration.none,
-                  ),
-                ),
+                // CustomRoundRectangleButton(
+                //   backgroundColor: Colors.transparent,
+                //   onTap: () async {
+                //     await GoalController().updateGoal(
+                //         target.goalId,
+                //         target.goalName,
+                //         target.goalIcon,
+                //         target.goalEndDate,
+                //         target.goalFinalCost,
+                //         target.goalColor,
+                //         target.goalPresentCost,
+                //         true).then((value) {
+                //           Navigator.pop(context,"Finish");
+                //     });
+                //   },
+                //   buttonWith: size.width * 0.8,
+                //   padding: size.width * 0.03,
+                //   borderRadius: size.width * 0.02,
+                //   text: TextContainer(
+                //     text: "HOÀN THÀNH MỤC TIÊU",
+                //     textColor: Color(int.parse(widget.target.goalColor)),
+                //     textSize: size.width * 0.05,
+                //     textFontWeight: FontWeight.bold,
+                //     decoration: TextDecoration.none,
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -401,28 +415,29 @@ class _TargetDetailState extends State<TargetDetail> {
                       goalEndDate != null) {
                     GoalController()
                         .updateGoal(
-                        widget.target.goalId,
-                        widget.target.goalName,
-                        widget.target.goalIcon,
-                        widget.target.goalEndDate,
-                        widget.target.goalFinalCost,
-                        widget.target.goalColor,
-                        goalPresentCost + _moneyTextController.numberValue,
-                        "Phuc")
+                            widget.target.goalId,
+                            widget.target.goalName,
+                            widget.target.goalIcon,
+                            widget.target.goalEndDate,
+                            widget.target.goalFinalCost,
+                            widget.target.goalColor,
+                            goalPresentCost + _moneyTextController.numberValue,
+                    target.goalStatus)
                         .then((value) {
-                      GoalController().getOneGoal(widget.target.goalId).then((value) {
+                      GoalController()
+                          .getOneGoal(widget.target.goalId)
+                          .then((value) {
                         setState(() {
                           goalName = value.goalName;
                           goalIcon = value.goalIcon;
                           goalEndDate = value.goalEndDate;
                           goalFinalCost = value.goalFinalCost;
                           goalPresentCost = value.goalPresentCost;
+                          Navigator.pop(context);
+                          Fluttertoast.showToast(msg: "Add money success!");
                         });
                       });
                     });
-
-                    Navigator.pop(context);
-                    Fluttertoast.showToast(msg: "Add money success!");
                   }
                 });
               },
@@ -516,14 +531,13 @@ class _TargetDetailState extends State<TargetDetail> {
               ),
               CustomRoundRectangleButton(
                 onTap: () {
-                  setState(() {
-                    GoalController()
-                        .deleteGoal(widget.target.goalId, "Phuc")
+                  setState(() async{
+                    await GoalController()
+                        .deleteGoal(target.goalId)
                         .then((value) {
                       Navigator.pop(context);
-                      Navigator.pop(context, value);
+                      Navigator.pop(context, "Delete");
                     });
-
                   });
                 },
                 buttonWith: size.width * 0.3,

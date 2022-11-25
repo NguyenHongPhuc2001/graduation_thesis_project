@@ -18,11 +18,10 @@ import '../../../commons/widgets/percent_text_container.dart';
 import '../../../commons/widgets/single_row_container_2.dart';
 
 class TargetEnd extends StatefulWidget {
-   List<Goal> listTarget;
+
 
    TargetEnd({
     Key? key,
-    required this.listTarget,
   }) : super(key: key);
 
   @override
@@ -33,16 +32,15 @@ class _TargetEndState extends State<TargetEnd> {
   bool isEmpty = false;
   final nf = NumberFormat("###,###");
   double targetPercent = 0;
-  final List<Goal> listTargetEnd = [];
+  List<Goal> listTargetEnd = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    GoalController().getListGoal("Phuc").then((value) {
-      value.forEach((item){
-        if(item.goalStatus== true)
-        listTargetEnd.add(item);
+    GoalController().getByStatus(true).then((value) {
+      setState((){
+        listTargetEnd = List.from(value);
       });
     });
 
@@ -51,15 +49,6 @@ class _TargetEndState extends State<TargetEnd> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
-
-    listTargetEnd.clear();
-    widget.listTarget.forEach((element) {
-      setState(() {
-        if(element.goalStatus==true)
-        listTargetEnd.add(element);
-      });
-    });
 
     return Scaffold(
       body: listTargetEnd.isEmpty
@@ -142,28 +131,22 @@ class _TargetEndState extends State<TargetEnd> {
                       ),
                     ).then((value) => setState(() {
                       if (value == "Delete") {
-                        widget.listTarget.clear();
                         GoalController()
-                            .getListGoal("Phuc")
+                            .getByStatus(true)
                             .then((value) {
-                          value.forEach((element) {
-                            setState(() {
-                              widget.listTarget.add(element);
-                            });
+                          setState(() {
+                            listTargetEnd = List.from(value);
                           });
                         });
 
                         Fluttertoast.showToast(
                             msg: "Xóa mục tiêu thành công !");
                       } else if (value == "Cancle") {
-                        widget.listTarget.clear();
                         GoalController()
-                            .getListGoal("Phuc")
+                            .getByStatus(true)
                             .then((value) {
-                          value.forEach((element) {
-                            setState(() {
-                              widget.listTarget.add(element);
-                            });
+                          setState(() {
+                            listTargetEnd = List.from(value);
                           });
                         });
                       }
@@ -187,7 +170,7 @@ class _TargetEndState extends State<TargetEnd> {
                                   .elementAt(index)
                                   .goalIcon,
                               iconSize: size.width * 0.08,
-                              backgroundColor: Colors.yellow,
+                              backgroundColor: Color(int.parse(listTargetEnd.elementAt(index).goalColor)),
                               padding: size.width * 0.045,
                             ),
                           ),

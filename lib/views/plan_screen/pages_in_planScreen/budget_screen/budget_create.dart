@@ -5,8 +5,10 @@ import 'package:get/get.dart';
 
 import 'package:graduation_thesis_project/models/budget.dart';
 import 'package:graduation_thesis_project/models/expense.dart';
+import 'package:graduation_thesis_project/views/commons/pages/select_expense.dart';
 
 import 'package:graduation_thesis_project/views/commons/pages/select_icon.dart';
+import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
@@ -16,7 +18,6 @@ import '../../../../../../remote/controllers/entites/budget_controller.dart';
 import '../../../transaction_screen/expense_screen/expense_list.dart';
 
 class BudgetCreate extends StatefulWidget {
-
   final List<Budget>? listBudget;
 
   const BudgetCreate({
@@ -29,15 +30,15 @@ class BudgetCreate extends StatefulWidget {
 }
 
 class _BudgetCreateState extends State<BudgetCreate> {
-
   final _budgetMoneyController = MoneyMaskedTextController(
       thousandSeparator: ',',
       initialValue: 0,
       precision: 0,
       decimalSeparator: '');
   final DateFormat df = DateFormat("yyyy-MM");
+
   // ignore: prefer_typing_uninitialized_variables
-  var dateTime, linkIcon;
+  var budgetEndDate;
   String budgetValue = "";
   final pageController = PageController();
 
@@ -63,10 +64,7 @@ class _BudgetCreateState extends State<BudgetCreate> {
         appBar: AppBar(
           title: Text(
             "Thêm mới ngân sách",
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: size.width * 0.05
-            ),
+            style: TextStyle(color: Colors.black, fontSize: size.width * 0.05),
           ),
           leading: IconButton(
             icon: const Icon(
@@ -96,74 +94,61 @@ class _BudgetCreateState extends State<BudgetCreate> {
                   borderRadius: BorderRadius.circular(15.0),
                   boxShadow: const [
                     BoxShadow(
-                        blurRadius: 1,
-                        spreadRadius: 2,
-                        color: Colors.grey
-                    )
+                        blurRadius: 1, spreadRadius: 2, color: Colors.grey)
                   ],
                 ),
                 child: Column(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(3),
                       margin: const EdgeInsets.only(top: 20),
                       width: size.width * 0.8,
                       height: size.width * 0.1,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(100),
-                          boxShadow: const [
-                            BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 2
-                            )
-                          ]
-                      ),
                       child: TextField(
                         controller: budgetNameController,
-                        onChanged: (value) => budgetName = value,
                         textAlign: TextAlign.center,
                         autofocus: false,
                         decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.only(left: 15, top: 5, bottom: 15),
-                          enabledBorder: UnderlineInputBorder(
+                          contentPadding: const EdgeInsets.only(),
+                          enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide.none
-                          ),
+                              borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                  width: size.width * 0.005)),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide.none
-                          ),
-                          filled: true,
+                              borderSide: BorderSide(
+                                  color: Colors.grey.shade600,
+                                  width: size.width * 0.005)),
+                          // filled: true,
                           fillColor: Colors.white,
                           hintText: "Nhập tên ngân sách",
-                          hintStyle: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w300
-                          ),
+                          hintStyle: TextStyle(
+                              fontSize: size.width * 0.04,
+                              color: Colors.grey.shade600,
+                              fontWeight: FontWeight.w400),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20,),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     GestureDetector(
                       onTap: () async {
                         budgetIcon = await Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => const SelectIcons())
-                        );
+                            MaterialPageRoute(
+                                builder: (context) => const SelectIcons()));
                       },
-                      child: Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                            color: Colors.amberAccent,
-                            borderRadius: BorderRadius.circular(100)
-                        ),
-                        padding: const EdgeInsets.all(18),
-                        child: SvgPicture.asset(budgetIcon == null ? "" : budgetIcon!),
-                      ),
+                      child: CircleIconContainer(
+                          urlImage: (budgetIcon != null)
+                              ? budgetIcon!
+                              : "images/QuestionIcon.svg",
+                          iconSize: size.width * 0.1,
+                          backgroundColor: Colors.yellow,
+                          padding: size.width * 0.05),
                     ),
-                    const SizedBox(height: 20,),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     Column(
                       children: [
                         Row(
@@ -173,9 +158,7 @@ class _BudgetCreateState extends State<BudgetCreate> {
                               width: size.width * 0.4,
                               child: const Text(
                                 'Thời gian diễn ra',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold
-                                ),
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
                             Container(
@@ -186,12 +169,8 @@ class _BudgetCreateState extends State<BudgetCreate> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(100),
                                   boxShadow: const [
-                                    BoxShadow(
-                                        color: Colors.grey,
-                                        blurRadius: 2
-                                    )
-                                  ]
-                              ),
+                                    BoxShadow(color: Colors.grey, blurRadius: 2)
+                                  ]),
                               child: InkWell(
                                 onTap: () async {
                                   DateTime? dateValue = await showDatePicker(
@@ -206,9 +185,14 @@ class _BudgetCreateState extends State<BudgetCreate> {
                                   );
 
                                   setState(() {
-                                    dateTime = dateValue as DateTime;
-                                    final int year1, year2, month1, month2, day1, day2;
-                                    DateTime t = dateTime;
+                                    budgetEndDate = dateValue as DateTime;
+                                    final int year1,
+                                        year2,
+                                        month1,
+                                        month2,
+                                        day1,
+                                        day2;
+                                    DateTime t = budgetEndDate;
                                     DateTime t2 = DateTime.now();
                                     year1 = t.year;
                                     month1 = t.month;
@@ -219,19 +203,20 @@ class _BudgetCreateState extends State<BudgetCreate> {
 
                                     if (year1 < year2) {
                                       setState(() {
-                                        dateTime = null;
+                                        budgetEndDate = null;
                                       });
                                       _showCalendarDialog();
-                                    } else if (year1 == year2 && month1 < month2) {
+                                    } else if (year1 == year2 &&
+                                        month1 < month2) {
                                       setState(() {
-                                        dateTime = null;
+                                        budgetEndDate = null;
                                       });
                                       _showCalendarDialog();
                                     } else if (year1 == year2 &&
                                         month1 == month2 &&
                                         day1 < day2) {
                                       setState(() {
-                                        dateTime = null;
+                                        budgetEndDate = null;
                                       });
                                       _showCalendarDialog();
                                     }
@@ -240,23 +225,23 @@ class _BudgetCreateState extends State<BudgetCreate> {
                                 child: Container(
                                   alignment: Alignment.center,
                                   child: SizedBox(
-                                    child: dateTime == null
+                                    child: budgetEndDate == null
                                         ? Text(
-                                      "",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: size.width * 0.04,
-                                        decoration: TextDecoration.none,
-                                      ),
-                                    )
+                                            "Chọn ngày",
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: size.width * 0.04,
+                                              decoration: TextDecoration.none,
+                                            ),
+                                          )
                                         : Text(
-                                      df.format(dateTime),
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: size.width * 0.04,
-                                        decoration: TextDecoration.none,
-                                      ),
-                                    ),
+                                            df.format(budgetEndDate),
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: size.width * 0.04,
+                                              decoration: TextDecoration.none,
+                                            ),
+                                          ),
                                   ),
                                 ),
                               ),
@@ -273,9 +258,7 @@ class _BudgetCreateState extends State<BudgetCreate> {
                               width: size.width * 0.4,
                               child: const Text(
                                 'Loại chi tiêu',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold
-                                ),
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
                             Container(
@@ -286,28 +269,32 @@ class _BudgetCreateState extends State<BudgetCreate> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(100),
                                   boxShadow: const [
-                                    BoxShadow(
-                                        color: Colors.grey,
-                                        blurRadius: 2
-                                    )
-                                  ]
-                              ),
+                                    BoxShadow(color: Colors.grey, blurRadius: 2)
+                                  ]),
                               child: InkWell(
                                 onTap: () async {
-                                  expense = await Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) => ExpenseList(isLoadByBudget: true)));
+                                  await Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) => SelectExpense(
+                                              isLoadByBudget: true))).then((value) {
+                                                setState(() {
+                                                  expense = value;
+                                                });
+                                  });
                                 },
                                 child: Container(
                                     alignment: Alignment.center,
-                                    child:  Text(
-                                      expense == null ? "" : expense!.expenseName.toString(),
+                                    child: Text(
+                                      expense == null
+                                          ? "Chọn chi tiêu"
+                                          : expense!.expenseName.toString(),
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: expense == null?Colors.grey:Colors.black,
                                         fontSize: size.width * 0.04,
                                         decoration: TextDecoration.none,
+                                        fontWeight: FontWeight.w400
                                       ),
-                                    )
-                                ),
+                                    )),
                               ),
                             ),
                           ],
@@ -322,9 +309,7 @@ class _BudgetCreateState extends State<BudgetCreate> {
                               width: size.width * 0.4,
                               child: const Text(
                                 'Giá trị ngân sách',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold
-                                ),
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
                             Container(
@@ -335,12 +320,8 @@ class _BudgetCreateState extends State<BudgetCreate> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(100),
                                   boxShadow: const [
-                                    BoxShadow(
-                                        color: Colors.grey,
-                                        blurRadius: 2
-                                    )
-                                  ]
-                              ),
+                                    BoxShadow(color: Colors.grey, blurRadius: 2)
+                                  ]),
                               child: Stack(
                                 alignment: Alignment.centerRight,
                                 children: [
@@ -349,42 +330,40 @@ class _BudgetCreateState extends State<BudgetCreate> {
                                     controller: _budgetMoneyController,
                                     autofocus: false,
                                     keyboardType: TextInputType.number,
-                                    style: const TextStyle(
-                                      color: Colors.blue
-                                    ),
+                                    style: const TextStyle(color: Colors.blue),
                                     decoration: InputDecoration(
-                                      contentPadding: const EdgeInsets.only(bottom: 13.0),
+                                      contentPadding:
+                                          const EdgeInsets.only(bottom: 13.0),
                                       enabledBorder: UnderlineInputBorder(
-                                          borderRadius: BorderRadius.circular(30),
-                                          borderSide: BorderSide.none
-                                      ),
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          borderSide: BorderSide.none),
                                       focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(30),
-                                          borderSide: BorderSide.none
-                                      ),
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          borderSide: BorderSide.none),
                                       filled: true,
                                       fillColor: Colors.white,
                                       hintStyle: const TextStyle(
                                           fontSize: 8,
                                           color: Colors.black,
-                                          fontWeight: FontWeight.w300
-                                      ),
+                                          fontWeight: FontWeight.w300),
                                     ),
                                   ),
                                   Container(
                                     padding: const EdgeInsets.all(3),
-                                    margin: const EdgeInsets.symmetric(horizontal: 1),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 1),
                                     decoration: BoxDecoration(
                                         color: Colors.redAccent,
-                                        borderRadius: BorderRadius.circular(100)
-                                    ),
+                                        borderRadius:
+                                            BorderRadius.circular(100)),
                                     child: const Text(
                                       "VNĐ",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 8
-                                      ),
+                                          fontSize: 8),
                                     ),
                                   )
                                 ],
@@ -398,11 +377,12 @@ class _BudgetCreateState extends State<BudgetCreate> {
                 ),
               ),
               ElevatedButton(
-                onPressed: (){
-
-                  if(budgetName!.isEmpty || _budgetMoneyController.text.toString().isEmpty
-                      || expense == null || budgetIcon!.isEmpty || dateTime == null) {
-
+                onPressed: () {
+                  if (budgetName!.isEmpty ||
+                      _budgetMoneyController.text.toString().isEmpty ||
+                      expense == null ||
+                      budgetIcon!.isEmpty ||
+                      budgetEndDate == null) {
                     Fluttertoast.showToast(
                         msg: "Vui lòng điền đầy đủ thông tin",
                         toastLength: Toast.LENGTH_SHORT,
@@ -410,28 +390,27 @@ class _BudgetCreateState extends State<BudgetCreate> {
                         timeInSecForIosWeb: 1,
                         backgroundColor: Colors.blue,
                         textColor: Colors.white,
-                        fontSize: 13.0
-                    );
-
-                  }else{
-                    BudgetController().createBudget(budgetName, double.parse(_budgetMoneyController.text.toString().replaceAll(",", "")),
-                        budgetIcon, df.format(dateTime), expense);
+                        fontSize: 13.0);
+                  } else {
+                    BudgetController().createBudget(
+                        budgetName,
+                        double.parse(_budgetMoneyController.text
+                            .toString()
+                            .replaceAll(",", "")),
+                        budgetIcon,
+                        df.format(budgetEndDate),
+                        expense);
                     Get.back();
                   }
-
                 },
                 style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
-                    minimumSize: const Size(250, 30)
-                ),
-                child: const Text(
-                    "Tạo mới ngân sách"
-                ),
+                    minimumSize: const Size(250, 30)),
+                child: const Text("Tạo mới ngân sách"),
               ),
             ],
           ),
-        )
-    );
+        ));
   }
 
   _showCalendarDialog() {
@@ -462,8 +441,7 @@ class _BudgetCreateState extends State<BudgetCreate> {
                 child: Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.only(
-                      top: size.width * 0.005, bottom: size.width * 0.005
-                  ),
+                      top: size.width * 0.005, bottom: size.width * 0.005),
                   width: size.width * 0.2,
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,

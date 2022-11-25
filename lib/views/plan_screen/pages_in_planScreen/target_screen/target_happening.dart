@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/goal_controller.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/money_text_container.dart';
@@ -18,11 +20,12 @@ import '../../../commons/widgets/custom_round_rectangle_button.dart';
 import '../../../commons/widgets/single_row_container_2.dart';
 
 class TargetHappening extends StatefulWidget {
-   List<Goal> listTarget;
+  List<Goal> listGoal;
+
 
    TargetHappening({
     Key? key,
-    required this.listTarget,
+     required this.listGoal,
   }) : super(key: key);
 
   @override
@@ -33,30 +36,31 @@ class _TargetHappeningState extends State<TargetHappening> {
   bool isEmpty = false;
   final nf = NumberFormat("###,###");
   double targetPercent = 0;
-  final List<Goal> listTargetHappening = [];
+  List<Goal> listTargetHappening = [];
 
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
-    GoalController().getListGoal("Phuc").then((value) {
-      value.forEach((item) {
-        if (item.goalStatus == false) listTargetHappening.add(item);
+    GoalController().getByStatus(false).then((value) {
+      setState((){
+        listTargetHappening = List.from(value);
       });
     });
-
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    listTargetHappening.clear();
-    widget.listTarget.forEach((element) {
-      setState(() {
-        if (element.goalStatus == false) listTargetHappening.add(element);
-      });
-    });
+    // listTargetHappening.clear();
+    // widget.listGoal.forEach((item){
+    //   if(item.goalStatus==false){
+    //     setState((){
+    //       listTargetHappening.add(item);
+    //     });
+    //   }
+    // });
 
     return Scaffold(
       body: listTargetHappening.isEmpty
@@ -135,28 +139,32 @@ class _TargetHappeningState extends State<TargetHappening> {
                             ),
                           ).then((value) => setState(() {
                                 if (value == "Delete") {
-                                  widget.listTarget.clear();
+                                  // listTargetHappening.clear();
                                   GoalController()
-                                      .getListGoal("Phuc")
+                                      .getByStatus(false)
                                       .then((value) {
-                                    value.forEach((element) {
-                                      setState(() {
-                                        widget.listTarget.add(element);
-                                      });
-                                    });
+                                        setState((){
+                                          listTargetHappening = List.from(value);
+                                        });
                                   });
-
                                   Fluttertoast.showToast(
                                       msg: "Xóa mục tiêu thành công !");
                                 } else if (value == "Cancle") {
-                                  widget.listTarget.clear();
+                                  // listTargetHappening.clear();
                                   GoalController()
-                                      .getListGoal("Phuc")
+                                      .getByStatus(false)
                                       .then((value) {
-                                    value.forEach((element) {
-                                      setState(() {
-                                        widget.listTarget.add(element);
-                                      });
+                                    setState((){
+                                      listTargetHappening = List.from(value);
+                                    });
+                                  });
+                                }else if(value =="Finish"){
+                                  // listTargetHappening.clear();
+                                  GoalController()
+                                      .getByStatus(false)
+                                      .then((value) {
+                                    setState((){
+                                      listTargetHappening = List.from(value);
                                     });
                                   });
                                 }

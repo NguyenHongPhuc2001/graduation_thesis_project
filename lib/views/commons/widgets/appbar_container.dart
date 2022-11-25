@@ -29,23 +29,26 @@ class _AppBarContainerState extends State<AppBarContainer> {
     Size size = MediaQuery.of(context).size;
 
     return AppBar(
+      backgroundColor: Colors.white,
       flexibleSpace: Column(
         children: [
           Row(
             children: [
               IconButton(
-                iconSize: 18,
+                iconSize: size.width*0.06,
                 onPressed: () {
                   setState(() {
                     widget.pageController.jumpToPage(0);
                   });
                 },
-                icon: const Icon(
+                icon: Icon(
                   Icons.arrow_back,
                   color: Colors.black,
+                  size: size.width*0.06,
                 ),
               ),
               Container(
+                padding: EdgeInsets.only(left: size.width*0.04),
                 alignment: Alignment.center,
                 width: size.width * 0.70,
                 child: TextHeaderContainer(
@@ -66,8 +69,8 @@ class _AppBarContainerState extends State<AppBarContainer> {
               ),
               onTap: widget.onTap,
               child: Container(
-                width: size.width * 0.2,
-                padding: const EdgeInsets.all(3.0),
+                width: size.width * 0.23,
+                padding: EdgeInsets.all(size.width*0.015),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: Colors.blue,
@@ -86,7 +89,6 @@ class _AppBarContainerState extends State<AppBarContainer> {
           ),
         ],
       ),
-      backgroundColor: Colors.white,
       bottom: TabBar(
         onTap: (indexTab) {
           setState(() {
@@ -97,26 +99,26 @@ class _AppBarContainerState extends State<AppBarContainer> {
         labelColor: Colors.black,
         unselectedLabelColor: Colors.grey,
         indicatorColor: Colors.black,
-        indicatorWeight: 1,
-        indicatorSize: TabBarIndicatorSize.label,
-        tabs: const [
+        indicatorWeight: size.width*0.008,
+        indicatorSize: TabBarIndicatorSize.tab,
+        tabs: [
           Padding(
-            padding: EdgeInsets.only(bottom: 2),
+            padding: EdgeInsets.all(size.width*0.015),
             child: Text(
                 "Đang diễn ra",
                 style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500
+                  fontSize: size.width*0.04,
+                  fontWeight: FontWeight.w600
                 ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: 2),
+            padding: EdgeInsets.all(size.width*0.015),
             child: Text(
                 "Đã kết thúc",
                 style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500
+                  fontSize: size.width*0.04,
+                  fontWeight: FontWeight.w600
               ),
             ),
           ),

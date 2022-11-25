@@ -95,43 +95,32 @@ class _BudgetUpdateState extends State<BudgetUpdate> {
                 child: Column(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(3),
                       margin: const EdgeInsets.only(top: 20),
                       width: size.width * 0.8,
                       height: size.width * 0.1,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(100),
-                          boxShadow: const [
-                            BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 2
-                            )
-                          ]
-                      ),
                       child: TextField(
                         controller: _budgetNameController,
-                        onChanged: (value) => widget.budget.budgetName = value,
                         textAlign: TextAlign.center,
                         autofocus: false,
                         decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.only(left: 15, top: 5, bottom: 15),
-                          enabledBorder: UnderlineInputBorder(
+                          contentPadding: const EdgeInsets.only(),
+                          enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide.none
-                          ),
+                              borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                  width: size.width * 0.005)),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide.none
-                          ),
-                          filled: true,
+                              borderSide: BorderSide(
+                                  color: Colors.grey.shade600,
+                                  width: size.width * 0.005)),
+                          // filled: true,
                           fillColor: Colors.white,
                           hintText: "Nhập tên ngân sách",
-                          hintStyle: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w300
-                          ),
+                          hintStyle: TextStyle(
+                              fontSize: size.width * 0.04,
+                              color: Colors.grey.shade600,
+                              fontWeight: FontWeight.w400),
                         ),
                       ),
                     ),

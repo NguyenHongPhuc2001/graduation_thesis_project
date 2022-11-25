@@ -7,20 +7,18 @@ import 'dart:convert';
 
 import '../../utils/api_paths/api_paths.dart';
 
-class AccountAPI extends BaseAPI{
-
-  Future<bool?> changePassword(String? username, String? password, String? newPassword, String? rePassword) async {
-
+class AccountAPI extends BaseAPI {
+  Future<bool?> changePassword(String? username, String? password,
+      String? newPassword, String? rePassword) async {
     final queryParameters = {
-      "accountUsername" : username,
-      "accountPassword" : password,
-      "newPassword" : newPassword,
-      "rePassword" : rePassword
+      "accountUsername": username,
+      "accountPassword": password,
+      "newPassword": newPassword,
+      "rePassword": rePassword
     };
 
     final request = http.Request(
-        ApiPaths.METHOD_POST,
-        UriContainer().uriChangePassword("account"));
+        ApiPaths.METHOD_POST, UriContainer().uriChangePassword("account"));
 
     request.headers['content-type'] = 'application/json';
     request.headers['Authorization'] = (await manager.getAuthToken())!;
@@ -29,24 +27,18 @@ class AccountAPI extends BaseAPI{
     final streamedRequest = await request.send();
     final response = await http.Response.fromStream(streamedRequest);
 
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       return true;
     }
 
     return false;
   }
 
-  Future<void> signIn(String? username, String password) async {
+  Future<bool?> signIn(String? username, String password) async {
+    final queryParameters = {"username": username, "password": password};
 
-    final queryParameters = {
-      "username" : username,
-      "password" : password
-    };
-
-    final request = http.Request(
-      ApiPaths.METHOD_POST,
-      UriContainer().uriSignIn("account")
-    );
+    final request =
+        http.Request(ApiPaths.METHOD_POST, UriContainer().uriSignIn("account"));
 
     request.headers['content-type'] = 'application/json';
     request.body = jsonEncode(queryParameters);
@@ -61,6 +53,42 @@ class AccountAPI extends BaseAPI{
     manager.setAuthToken(token.token);
     manager.setUsername(username!);
 
+    if (data.entries.elementAt(1).value == 200) {
+      return true;
+    } else {
+      return false;
+    }
   }
-  
+
+  Future<bool?> signUp(
+      String? username, String password, String repassword) async {
+    final queryParameters = {
+      "accountUsername": username!,
+      "accountPassword": password,
+      "rePassword": repassword,
+      "role": {"roleName": "ROLE_USER"}
+    };
+
+    final request =
+        http.Request(ApiPaths.METHOD_POST, UriContainer().uriSignUp("account"));
+
+    request.headers['content-type'] = 'application/json';
+    request.body = jsonEncode(queryParameters);
+
+    final responseStream = await request.send();
+    final response = await http.Response.fromStream(responseStream);
+
+    Map<String, dynamic> data = jsonDecode(response.body);
+
+    final Token token = Token.fromJson(data.entries.elementAt(2).value);
+
+    manager.setAuthToken(token.token);
+    manager.setUsername(username!);
+
+    if (data.entries.elementAt(1).value == 201) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

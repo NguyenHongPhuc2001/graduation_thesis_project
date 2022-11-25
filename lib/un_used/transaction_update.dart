@@ -7,7 +7,7 @@
 // import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_select_rap.dart';
 // import 'package:intl/intl.dart';
 //
-// import '../../models/Event.dart';
+// import '../../models/event.dart';
 // import '../../models/RAP.dart';
 // import '../../models/Transaction.dart';
 // import '../../models/wallet.dart';

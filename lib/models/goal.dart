@@ -1,5 +1,9 @@
 import 'package:graduation_thesis_project/models/account.dart';
 
+
+List<Goal> goalsFromJson(List<dynamic> json) => List<Goal>.from(json.map((w) => Goal.fromJson(w))).toList();
+
+
 class Goal {
   int goalId;
   String goalName;

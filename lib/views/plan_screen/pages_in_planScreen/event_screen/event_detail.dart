@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/expense.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/event_controller.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/appbar_container_2.dart';
@@ -9,6 +10,7 @@ import 'package:graduation_thesis_project/views/commons/widgets/custom_round_rec
 import 'package:graduation_thesis_project/views/commons/widgets/single_row_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_updateEvent.dart';
+import 'package:graduation_thesis_project/views/transaction_screen/expense_screen/expense_list.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../models/event.dart';
@@ -26,7 +28,6 @@ class EventDetail extends StatefulWidget {
 }
 
 class _EventDetailState extends State<EventDetail> {
-
   final DateFormat df = DateFormat("yyy-MM-dd");
   var event, check;
 
@@ -47,38 +48,44 @@ class _EventDetailState extends State<EventDetail> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     List<Expense> lsTransaction = [];
-    final Duration dayLeft = DateTime.parse(widget.event.eventEndDate).difference(DateTime.now());
+    final Duration dayLeft =
+        DateTime.parse(widget.event.eventEndDate).difference(DateTime.now());
 
     DateTime dateTime = DateTime.parse(event.eventEndDate);
-    String correctDate = "${dateTime.year}-${dateTime.month}-${dateTime.day + 1}";
+    String correctDate =
+        "${dateTime.year}-${dateTime.month}-${dateTime.day + 1}";
 
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: Size(size.width, size.width * 0.15),
           child: AppBarContainer2(
-              text: "Chi tiết",
-              backIcon: CupertinoIcons.xmark,
-              prefixIcon2: Icons.edit,
-              onBackTap: () async {
-                Navigator.pop(context, "Cancle");
-              },
-              onPrefixIcon2Tap: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => UpdateEvent(
-                      event: widget.event,
-                    ),
+            text: "Chi tiết",
+            backIcon: CupertinoIcons.xmark,
+            prefixIcon2: Icons.edit,
+            onBackTap: () async {
+              Navigator.pop(context, "Cancle");
+            },
+            onPrefixIcon2Tap: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UpdateEvent(
+                    event: widget.event,
                   ),
-                ).then((value) => setState(() {
-                      if (value == "Update") {
-                        event = EventController()
-                            .getOneEvent(widget.event.eventId!);
-                        Fluttertoast.showToast(msg: "Update success !");
-                      }
-                    }));
-              },),
+                ),
+              ).then((value) {
+                  if (value == "Update") {
+                    EventController().getOneEvent(widget.event.eventId!).then((value) {
+                      setState((){
+                        event = value;
+                      });
+                    });
+                    Fluttertoast.showToast(msg: "Update success !");
+                  }
+              });
+            },
+          ),
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -108,7 +115,9 @@ class _EventDetailState extends State<EventDetail> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           CircleIconContainer(
-                            urlImage: (event != null) ? event.eventIcon : widget.event.eventIcon,
+                            urlImage: (event != null)
+                                ? event.eventIcon
+                                : widget.event.eventIcon,
                             iconSize: size.width * 0.1,
                             backgroundColor: Colors.lightBlue,
                             padding: size.width * 0.045,
@@ -117,7 +126,9 @@ class _EventDetailState extends State<EventDetail> {
                             height: size.width * 0.03,
                           ),
                           TextContainer(
-                            text: (event != null) ? event.eventName : widget.event.eventName,
+                            text: (event != null)
+                                ? event.eventName
+                                : widget.event.eventName,
                             textColor: Colors.black,
                             textSize: size.width * 0.055,
                             textFontWeight: FontWeight.bold,
@@ -129,20 +140,21 @@ class _EventDetailState extends State<EventDetail> {
                   ),
                   SingleRowContainer(
                     height: size.height * 0.16,
-                    paddingTop: size.width * 0.1,
+                    paddingTop: size.width * 0.06,
                     paddingBottom: size.width * 0.01,
                     children: <Widget>[
-                      SizedBox(
-                        width: size.width * 0.3,
+                      Padding(
+                        padding:EdgeInsets.only(left: size.width*0.05),
                         child: CircleIconContainer(
                           urlImage: "images/CalendarIcon_4.svg",
                           iconSize: size.width * 0.1,
                           backgroundColor: Colors.white,
-                          padding: size.width * 0.05,
+                          padding: size.width * 0.045,
                         ),
                       ),
-                      SizedBox(
-                        width: size.width * 0.62,
+                      Container(
+                        padding: EdgeInsets.only(top: size.width*0.05),
+                        width: size.width * 0.6,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -170,8 +182,8 @@ class _EventDetailState extends State<EventDetail> {
                     paddingTop: size.width * 0.01,
                     paddingBottom: size.width * 0.01,
                     children: <Widget>[
-                      SizedBox(
-                        width: size.width * 0.3,
+                      Padding(
+                        padding: EdgeInsets.only(left: size.width*0.06),
                         child: CircleIconContainer(
                           urlImage: "images/WalletIcon_1.svg",
                           iconSize: size.width * 0.1,
@@ -215,7 +227,9 @@ class _EventDetailState extends State<EventDetail> {
                                     widget.event.eventName,
                                     widget.event.eventIcon,
                                     widget.event.eventEndDate,
-                                    int.parse(widget.event.wallet!.walletId.toString()), check);
+                                    int.parse(widget.event.wallet!.walletId
+                                        .toString()),
+                                    check);
                                 event.eventStatus = check;
                               }
                             });
@@ -234,8 +248,7 @@ class _EventDetailState extends State<EventDetail> {
                             BoxShadow(
                                 color: Colors.grey.shade400,
                                 blurRadius: 2,
-                                spreadRadius: 2
-                            ),
+                                spreadRadius: 2),
                           ],
                         )
                       : CustomRoundRectangleButton(
@@ -271,13 +284,13 @@ class _EventDetailState extends State<EventDetail> {
                             BoxShadow(
                                 color: Colors.grey.shade400,
                                 blurRadius: 2,
-                                spreadRadius: 2
-                            ),
+                                spreadRadius: 2),
                           ],
                         ),
                   CustomRoundRectangleButton(
                     backgroundColor: const Color(0xff3A86FF),
                     onTap: () {
+                      Get.to(ExpenseList(isLoadByBudget: true));
                     },
                     buttonWith: size.width * 0.85,
                     padding: size.width * 0.04,
@@ -293,8 +306,7 @@ class _EventDetailState extends State<EventDetail> {
                       BoxShadow(
                           color: Colors.grey.shade400,
                           blurRadius: 2,
-                          spreadRadius: 2
-                      ),
+                          spreadRadius: 2),
                     ],
                   ),
                 ],

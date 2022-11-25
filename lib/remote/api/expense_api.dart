@@ -24,8 +24,10 @@ class ExpenseAPI extends BaseAPI{
         UriContainer().uriGetOne("expense"));
 
     String? token = await manager.getAuthToken();
+
     request.headers['content-type'] = 'application/json';
     request.headers['Authorization'] = 'Bearer ${token!}';
+
     request.body = jsonEncode(queryParameters);
 
     final streamedRequest = await request.send();

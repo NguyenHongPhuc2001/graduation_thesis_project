@@ -32,7 +32,7 @@ class SingleRowContainer2 extends StatelessWidget {
             BoxShadow(
               offset: const Offset(0, 0),
               color: Colors.grey.shade500,
-              blurRadius: 1,
+              blurRadius: size.width*0.015,
             ),
           ],
         ),

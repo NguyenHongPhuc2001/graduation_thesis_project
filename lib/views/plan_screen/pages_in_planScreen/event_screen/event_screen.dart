@@ -49,7 +49,7 @@ class _EventScreenState extends State<EventScreen> {
         length: 2,
         child: Scaffold(
           appBar: PreferredSize(
-            preferredSize: Size(size.width, size.width * 0.3),
+            preferredSize: Size(size.width, size.width * 0.33),
             child: AppBarContainer(
               text: "Sự kiện",
               screenPageController: _eventPageController,
@@ -63,8 +63,7 @@ class _EventScreenState extends State<EventScreen> {
                 ).then((value) {
                   setState(() {
                     if (value == "Create") {
-                      ls.clear();
-                      EventController().getListEvent().then((value) {
+                      EventController().getByStatus(false).then((value) {
                         setState(() {
                           ls = List.from(value);
                         });
@@ -81,8 +80,8 @@ class _EventScreenState extends State<EventScreen> {
             physics: const NeverScrollableScrollPhysics(),
             controller: _eventPageController,
             children: [
-              EventHappening(listEvent: ls, listTransaction: const []),
-              EventEnd(listEvent: ls, listTransaction: const []),
+              EventHappening(),
+              EventEnd(),
             ],
           ),
         ),
