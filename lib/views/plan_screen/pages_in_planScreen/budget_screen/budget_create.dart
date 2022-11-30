@@ -38,13 +38,9 @@ class _BudgetCreateState extends State<BudgetCreate> {
   final DateFormat df = DateFormat("yyyy-MM");
 
   // ignore: prefer_typing_uninitialized_variables
-  var budgetEndDate;
-  String budgetValue = "";
   final pageController = PageController();
 
-  String? budgetIcon;
-  String? budgetName;
-  Expense? expense;
+  var expense,budgetIcon,budgetValue,budgetEndDate;
 
   final budgetNameController = TextEditingController();
 
@@ -52,6 +48,7 @@ class _BudgetCreateState extends State<BudgetCreate> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    budgetEndDate = DateTime.now();
   }
 
   @override
@@ -134,9 +131,13 @@ class _BudgetCreateState extends State<BudgetCreate> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        budgetIcon = await Navigator.of(context).push(
+                        await Navigator.of(context).push(
                             MaterialPageRoute(
-                                builder: (context) => const SelectIcons()));
+                                builder: (context) => const SelectIcons())).then((value) {
+                                  setState(() {
+                                    budgetIcon = value;
+                                  });
+                        });
                       },
                       child: CircleIconContainer(
                           urlImage: (budgetIcon != null)
@@ -377,9 +378,9 @@ class _BudgetCreateState extends State<BudgetCreate> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {
-                  if (budgetName!.isEmpty ||
-                      _budgetMoneyController.text.toString().isEmpty ||
+                onPressed: ()async {
+                  if (budgetNameController.text.isEmpty ||
+                      _budgetMoneyController.numberValue.toString().isEmpty ||
                       expense == null ||
                       budgetIcon!.isEmpty ||
                       budgetEndDate == null) {
@@ -392,15 +393,18 @@ class _BudgetCreateState extends State<BudgetCreate> {
                         textColor: Colors.white,
                         fontSize: 13.0);
                   } else {
-                    BudgetController().createBudget(
-                        budgetName,
-                        double.parse(_budgetMoneyController.text
-                            .toString()
-                            .replaceAll(",", "")),
+                    await BudgetController().createBudget(
+                        budgetNameController.text,
+                        _budgetMoneyController.numberValue,
                         budgetIcon,
                         df.format(budgetEndDate),
-                        expense);
-                    Get.back();
+                        expense.expenseId).then((value) {
+                          if(value==false){
+                            Fluttertoast.showToast(msg: "Ngân sách cho loại giao dịch đã tồn tại !");
+                          }else{
+                            Get.back(result: "Create");
+                          }
+                    });
                   }
                 },
                 style: ElevatedButton.styleFrom(

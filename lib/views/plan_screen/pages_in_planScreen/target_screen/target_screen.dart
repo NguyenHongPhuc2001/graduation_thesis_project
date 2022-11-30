@@ -24,6 +24,7 @@ class _TargetScreenState extends State<TargetScreen> {
   final PageController _targetPageController = PageController();
   List<Goal> listGoalHappenning = [];
   List<Goal> listGoalEnd = [];
+  bool check = false;
 
   @override
   void initState() {
@@ -62,6 +63,7 @@ class _TargetScreenState extends State<TargetScreen> {
                         GoalController().getByStatus(false).then((value) {
                           setState(() {
                             listGoalHappenning = List.from(value);
+                            check = true;
                           });
                         });
                         Fluttertoast.showToast(
@@ -71,15 +73,14 @@ class _TargetScreenState extends State<TargetScreen> {
               },
             ),
           ),
-          body: PageView.builder(
-              controller: _targetPageController,
-              itemCount: 2,
-              itemBuilder: (context, pagePosition){
-                if (pagePosition == 0) {
-                  return TargetHappening(listGoal: listGoalHappenning);
-                } else
-                  return TargetEnd();
-              }),
+          body: PageView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: _targetPageController,
+            children: [
+              TargetHappening(listGoal: listGoalHappenning, check: check),
+              TargetEnd(),
+            ],
+          ),
         ),
       ),
     );

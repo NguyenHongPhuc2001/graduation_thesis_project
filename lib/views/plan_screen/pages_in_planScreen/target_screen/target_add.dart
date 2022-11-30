@@ -31,6 +31,8 @@ class _AddTargetState extends State<AddTarget> {
   final DateFormat df = DateFormat("yyyy-MM-dd");
   var goalEndDate, goalIcon, colorSelectedIndex = 0, goalColor;
 
+  List<Goal> listGoal = [];
+
   List<Color> items = [
     Colors.blue,
     Colors.red,
@@ -76,8 +78,8 @@ class _AddTargetState extends State<AddTarget> {
               color: Colors.black,
               size: 20,
             ),
-            onPressed: () {
-              Get.back();
+            onPressed: () async {
+              Get.back(result:  "Cancle");
             },
           ),
           centerTitle: true,

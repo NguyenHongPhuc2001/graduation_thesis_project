@@ -39,30 +39,25 @@ class _TargetDetailState extends State<TargetDetail> {
       decimalSeparator: '',
       initialValue: 0,
       precision: 0);
-  var goalName,
-      goalEndDate,
-      goalPresentCost,
-      goalFinalCost,
-      goalIcon,
-      goalColor,
-      target;
+  var target;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    goalName = widget.target.goalName;
-    goalEndDate = widget.target.goalEndDate;
-    goalPresentCost = widget.target.goalPresentCost;
-    goalFinalCost = widget.target.goalFinalCost;
+    // goalName = widget.target.goalName;
+    // goalEndDate = widget.target.goalEndDate;
+    // goalPresentCost = widget.target.goalPresentCost;
+    // goalFinalCost = widget.target.goalFinalCost;
+    // goalColor = int.parse(widget.target.goalColor);
     target = widget.target;
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    if (goalPresentCost != null && goalFinalCost != null) {
-      percentTarget = (goalPresentCost / goalFinalCost);
+    if (target.goalPresentCost != null && target.goalFinalCost != null) {
+      percentTarget = (target.goalPresentCost / target.goalFinalCost);
     }
 
     return SafeArea(
@@ -117,7 +112,7 @@ class _TargetDetailState extends State<TargetDetail> {
                       urlImage: target.goalIcon,
                       iconSize: size.width * 0.1,
                       backgroundColor:
-                          Color(int.parse(widget.target.goalColor)),
+                          Color(int.parse(target.goalColor)),
                       padding: size.width * 0.045,
                     ),
                     Container(
@@ -194,8 +189,8 @@ class _TargetDetailState extends State<TargetDetail> {
                                         children: [
                                           TextContainer(
                                             text: nf.format(
-                                                (goalPresentCost != null)
-                                                    ? goalPresentCost
+                                                (target.goalPresentCost != null)
+                                                    ? target.goalPresentCost
                                                     : target.goalPresentCost),
                                             textColor: Colors.grey,
                                             textSize: size.width * 0.045,
@@ -262,7 +257,7 @@ class _TargetDetailState extends State<TargetDetail> {
                                 padding:
                                     EdgeInsets.only(top: size.width * 0.03),
                                 child: MoneyTextContainer(
-                                  value: target.goalFinalCost - goalPresentCost,
+                                  value: target.goalFinalCost - target.goalPresentCost,
                                   textSize: size.width * 0.04,
                                   textFontWeight: FontWeight.w400,
                                   color: Colors.black,
@@ -303,7 +298,7 @@ class _TargetDetailState extends State<TargetDetail> {
                   height: size.width * 0.1,
                 ),
                 CustomRoundRectangleButton(
-                  backgroundColor: Color(int.parse(widget.target.goalColor)),
+                  backgroundColor: Color(int.parse(target.goalColor)),
                   onTap: () {
                     _showEnterMoneyDialog();
                   },
@@ -409,36 +404,33 @@ class _TargetDetailState extends State<TargetDetail> {
             CustomRoundRectangleButton(
               onTap: () {
                 setState(() {
-                  if (goalName != null &&
-                      goalPresentCost != null &&
-                      goalFinalCost != null &&
-                      goalEndDate != null) {
+
                     GoalController()
                         .updateGoal(
-                            widget.target.goalId,
-                            widget.target.goalName,
-                            widget.target.goalIcon,
-                            widget.target.goalEndDate,
-                            widget.target.goalFinalCost,
-                            widget.target.goalColor,
-                            goalPresentCost + _moneyTextController.numberValue,
+                            target.goalId,
+                           target.goalName,
+                            target.goalIcon,
+                            target.goalEndDate,
+                            target.goalFinalCost,
+                            target.goalColor,
+                            target.goalPresentCost + _moneyTextController.numberValue,
                     target.goalStatus)
                         .then((value) {
                       GoalController()
                           .getOneGoal(widget.target.goalId)
                           .then((value) {
                         setState(() {
-                          goalName = value.goalName;
-                          goalIcon = value.goalIcon;
-                          goalEndDate = value.goalEndDate;
-                          goalFinalCost = value.goalFinalCost;
-                          goalPresentCost = value.goalPresentCost;
+                          // goalName = value.goalName;
+                          // goalIcon = value.goalIcon;
+                          // goalEndDate = value.goalEndDate;
+                          // goalFinalCost = value.goalFinalCost;
+                          // goalPresentCost = value.goalPresentCost;
+                          target = value;
                           Navigator.pop(context);
-                          Fluttertoast.showToast(msg: "Add money success!");
+                          Fluttertoast.showToast(msg: "Thêm số tiền thành công !");
                         });
                       });
                     });
-                  }
                 });
               },
               buttonWith: size.width * 0.3,

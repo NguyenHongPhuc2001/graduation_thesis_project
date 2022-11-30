@@ -22,10 +22,12 @@ class ExpenseCreate extends StatefulWidget {
 }
 
 class _ExpenseCreateState extends State<ExpenseCreate> {
+  final controllerExpenseName = TextEditingController();
   String? valueChoose;
   String? _expenseName = "";
   String? _expenseIcon = "images/palm_tree.svg";
   var event;
+
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +37,7 @@ class _ExpenseCreateState extends State<ExpenseCreate> {
 
     Size size = MediaQuery.of(context).size;
 
-    final controllerExpenseName = TextEditingController();
 
-    controllerExpenseName.text = _expenseName!;
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -107,7 +107,7 @@ class _ExpenseCreateState extends State<ExpenseCreate> {
                                   width: size.width * 0.005)),
                           // filled: true,
                           fillColor: Colors.white,
-                          hintText: "Nhập tên mục tiêu",
+                          hintText: "Nhập tên chi tiêu",
                           hintStyle: TextStyle(
                               fontSize: size.width * 0.04,
                               color: Colors.grey.shade600,
@@ -241,14 +241,15 @@ class _ExpenseCreateState extends State<ExpenseCreate> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {
-                  widget.expenseController.createExpense(
-                      _expenseName,
+                onPressed: () async {
+                  await widget.expenseController.createExpense(
+                      controllerExpenseName.text,
                       valueChoose == 'Chi tiêu'
                           ? ExpenseType.DISBURSE.name
                           : ExpenseType.INCOME.name,
-                      _expenseIcon);
-                  Get.back();
+                      _expenseIcon!).then((value) {
+                    Get.back(result: "Create");
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),

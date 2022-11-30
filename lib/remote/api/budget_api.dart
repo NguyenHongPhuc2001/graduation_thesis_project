@@ -9,59 +9,87 @@ import '../../models/expense.dart';
 import '../../models/response/response_model.dart';
 import '../../utils/api_paths/api_paths.dart';
 import 'package:http/http.dart' as http;
-class BudgetAPI extends BaseAPI{
 
-  Future<bool?> create(String? budgetName, double? budgetValue, String? budgetIcon, String? budgetMothYear, Expense? expense) async{
+class BudgetAPI extends BaseAPI {
 
+
+  Future<bool?> create(String? budgetName, double? budgetValue,
+      String? budgetIcon, String? budgetMothYear, int? expenseId) async {
     String? username = await manager.getUsername();
-    Account account = Account(accountUsername: username!);
+    // Account account = Account(accountUsername: username!);
 
     final queryParameters = {
-      "budgetName" : budgetName,
-      "budgetValue" : budgetValue,
-      "budgetIcon" : budgetIcon,
-      "budgetMothYear" : budgetMothYear,
-      "expense" : expense,
-      "account" : account
+      "budgetName": budgetName,
+      "budgetValue": budgetValue,
+      "budgetIcon": budgetIcon,
+      "budgetMothYear": budgetMothYear,
+      "expense": {
+        "expenseId":expenseId,
+      },
+      "account": {
+        "accountUsername":username!
+      }
     };
 
-    final request = http.Request( ApiPaths.METHOD_POST, UriContainer().uriCreate("budget"));
+    final request =
+        http.Request(ApiPaths.METHOD_POST, UriContainer().uriCreate("budget"));
 
     String? token = await manager.getAuthToken();
     request.headers['content-type'] = 'application/json';
     request.headers['Authorization'] = 'Bearer ${token!}';
-    request.headers['content-type'] = 'application/json';
     request.body = jsonEncode(queryParameters);
 
     final streamedRequest = await request.send();
     final response = await http.Response.fromStream(streamedRequest);
 
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       return true;
     }
 
     return false;
   }
 
-
-  Future<bool?> update(int? budgetId, String? budgetName, double? budgetValue, String? budgetIcon, String? budgetMothYear, Expense? expense) async{
-
+  Future<bool?> update(int? budgetId, String? budgetName, double? budgetValue,
+      String? budgetIcon, String? budgetMothYear, Expense? expense) async {
     String? username = await manager.getUsername();
     Account account = Account(accountUsername: username!);
 
     final queryParameters = {
-      "budgetId" : budgetId,
-      "budgetName" : budgetName,
-      "budgetValue" : budgetValue,
-      "budgetIcon" : budgetIcon,
-      "budgetMothYear" : budgetMothYear,
-      "expense" : expense,
-      "account" : account
+      "budgetId": budgetId,
+      "budgetName": budgetName,
+      "budgetValue": budgetValue,
+      "budgetIcon": budgetIcon,
+      "budgetMothYear": budgetMothYear,
+      "expense": expense,
+      "account": account
     };
+
+    final request =
+        http.Request(ApiPaths.METHOD_PUT, UriContainer().uriUpdate("budget"));
+
+    String? token = await manager.getAuthToken();
+    request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
+    request.body = jsonEncode(queryParameters);
+
+    final streamedRequest = await request.send();
+    final response = await http.Response.fromStream(streamedRequest);
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<bool?> delete(int? budgetId) async {
+    String? username = await manager.getUsername();
+    Account account = Account(accountUsername: username!);
+
+    final queryParameters = {"budgetId": budgetId, "account": account};
 
     final request = http.Request(
-        ApiPaths.METHOD_PUT,
-        UriContainer().uriUpdate("budget"));
+        ApiPaths.METHOD_DELETE, UriContainer().uriDelete("budget"));
 
     String? token = await manager.getAuthToken();
     request.headers['content-type'] = 'application/json';
@@ -71,55 +99,20 @@ class BudgetAPI extends BaseAPI{
     final streamedRequest = await request.send();
     final response = await http.Response.fromStream(streamedRequest);
 
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       return true;
     }
 
     return false;
   }
-
-
-  Future<bool?> delete(int? budgetId) async{
-
-    String? username = await manager.getUsername();
-    Account account = Account(accountUsername: username!);
-
-    final queryParameters = {
-      "budgetId" : budgetId,
-      "account" : account
-    };
-
-    final request = http.Request(
-        ApiPaths.METHOD_DELETE,
-        UriContainer().uriDelete("budget"));
-
-    String? token = await manager.getAuthToken();
-    request.headers['content-type'] = 'application/json';
-    request.headers['Authorization'] = 'Bearer ${token!}';
-    request.body = jsonEncode(queryParameters);
-
-    final streamedRequest = await request.send();
-    final response = await http.Response.fromStream(streamedRequest);
-
-    if(response.statusCode == 200){
-      return true;
-    }
-
-    return false;
-  }
-
 
   Future<List<Budget>?> getList() async {
-
     String? username = await manager.getUsername();
 
-    final queryParameters = {
-      "accountUsername" : username
-    };
+    final queryParameters = {"accountUsername": username};
 
-    final request = http.Request(
-        ApiPaths.METHOD_GET,
-        UriContainer().uriGetList("budget"));
+    final request =
+        http.Request(ApiPaths.METHOD_GET, UriContainer().uriGetList("budget"));
 
     String? token = await manager.getAuthToken();
     request.headers['content-type'] = 'application/json';
@@ -129,15 +122,50 @@ class BudgetAPI extends BaseAPI{
     final streamedRequest = await request.send();
     final response = await http.Response.fromStream(streamedRequest);
 
-    if(response.statusCode == 200){
-
+    if (response.statusCode == 200) {
       ResponseModel model = responseModelFromJson(response.body);
       List<Budget> budgets = budgetsFromJson(model.modelList!.toList());
 
       return budgets;
-
     }
 
     return null;
+  }
+
+  Future<List<Budget>> getListByStatus(bool budgetStatus) async {
+    String? token = await manager.getAuthToken();
+    String? userName = await manager.getUsername();
+
+    final queryParameters = {
+      "budgetStatus": budgetStatus,
+      "account": {"accountUsername": userName!}
+    };
+
+    final request = http.Request(
+        ApiPaths.METHOD_GET, UriContainer().uriGetListByStatus("budget"));
+
+    request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
+    request.body = jsonEncode(queryParameters);
+
+    final responeStream = await request.send();
+    final respone = await http.Response.fromStream(responeStream);
+
+    Map<String, dynamic> dataFromAPI = jsonDecode(respone.body);
+
+    var completer = Completer<List<Budget>>();
+
+    var map = Map.fromIterable(dataFromAPI['objectList'] as List);
+
+    List<Budget> budgets = budgetsFromJson(map.keys.toList());
+
+
+    if (dataFromAPI.entries.elementAt(1).value == 200) {
+      completer.complete(budgets);
+    } else {
+      completer.completeError("Could not get the data !");
+    }
+
+    return completer.future;
   }
 }

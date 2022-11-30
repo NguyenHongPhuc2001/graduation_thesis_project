@@ -7,6 +7,8 @@ import 'package:graduation_thesis_project/views/commons/widgets/text_container.d
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+import '../../../../remote/controllers/entites/budget_controller.dart';
+
 class BudgetEnd extends StatefulWidget {
   final List<Budget>? listBudget;
 
@@ -23,6 +25,20 @@ class _BudgetEndState extends State<BudgetEnd> {
   final nf = NumberFormat("###,###");
   final df = DateFormat("dd-MM-yyyy");
 
+  List<Budget> listBudgetEnd = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    BudgetController().getListByStatus(true).then((value) {
+      setState(() {
+        listBudgetEnd = List.from(value);
+      });
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
 
@@ -32,7 +48,7 @@ class _BudgetEndState extends State<BudgetEnd> {
     bool isOverSpending = false;
 
     return Scaffold(
-      body: widget.listBudget!.isEmpty
+      body: listBudgetEnd.isEmpty
           ? Container(
         margin: EdgeInsets.only(top: size.width * 0.2) ,
         child: SizedBox(
@@ -93,11 +109,11 @@ class _BudgetEndState extends State<BudgetEnd> {
           : SizedBox(
         width: size.width,
         child: ListView.builder(
-            itemCount: widget.listBudget!.length,
+            itemCount: listBudgetEnd.length,
             itemBuilder: (context, index) {
 
-              percentSpending = (widget.listBudget!.elementAt(index).budgetPresentValue! /  widget.listBudget!.elementAt(index).budgetValue) * 100;
-              if (widget.listBudget!.elementAt(index).budgetStatus!) {
+              percentSpending = (listBudgetEnd.elementAt(index).budgetPresentValue! /  listBudgetEnd.elementAt(index).budgetValue) * 100;
+              if (listBudgetEnd.elementAt(index).budgetStatus!) {
                 isOverSpending = true;
                 percentOver = percentSpending - 100;
               }
@@ -122,7 +138,7 @@ class _BudgetEndState extends State<BudgetEnd> {
                     SizedBox(
                       width: size.width * 0.20,
                       child: CircleIconContainer(
-                        urlImage: widget.listBudget!.elementAt(index).budgetIcon,
+                        urlImage: listBudgetEnd.elementAt(index).budgetIcon,
                         iconSize: size.width * 0.1,
                         backgroundColor: Colors.orange,
                         padding: size.width * 0.040,
@@ -150,7 +166,7 @@ class _BudgetEndState extends State<BudgetEnd> {
                                     MainAxisAlignment.start,
                                     children: [
                                       Text(
-                                        widget.listBudget!.elementAt(index).budgetName,
+                                        listBudgetEnd.elementAt(index).budgetName,
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontWeight:
@@ -176,7 +192,7 @@ class _BudgetEndState extends State<BudgetEnd> {
                                   ),
                                   const SizedBox(height: 3,),
                                   Text(
-                                    "Kỳ hạn: ${widget.listBudget!.elementAt(index).budgetMothYear}",
+                                    "Kỳ hạn: ${listBudgetEnd.elementAt(index).budgetMothYear}",
                                     style: TextStyle(
                                       fontSize: size.width * 0.03,
                                       color: Colors.black54,
@@ -199,7 +215,7 @@ class _BudgetEndState extends State<BudgetEnd> {
                                     Row(
                                       children: [
                                         TextContainer(
-                                          text: nf.format(widget.listBudget!.elementAt(index).budgetPresentValue),
+                                          text: nf.format(listBudgetEnd.elementAt(index).budgetPresentValue),
                                           textColor: Colors.black,
                                           textSize: size.width * 0.03,
                                           textFontWeight: FontWeight.bold,
@@ -223,7 +239,7 @@ class _BudgetEndState extends State<BudgetEnd> {
                                       Row(
                                         children: [
                                           TextContainer(
-                                            text: nf.format( widget.listBudget!.elementAt(index).budgetValue - totalSpending),
+                                            text: nf.format( listBudgetEnd.elementAt(index).budgetValue - totalSpending),
                                             textColor: Colors.black,
                                             textSize: size.width * 0.03,
                                             textFontWeight: FontWeight.bold,
@@ -268,9 +284,9 @@ class _BudgetEndState extends State<BudgetEnd> {
                             child: LinearPercentIndicator(
                               barRadius: Radius.circular(size.width * 0.5),
                               lineHeight: size.width * 0.02,
-                              percent: widget.listBudget!.elementAt(index).budgetStatus! ? 1.0
-                                  : ((widget.listBudget!.elementAt(index).budgetPresentValue!) / (widget.listBudget!.elementAt(index).budgetValue)),
-                              progressColor: widget.listBudget!.elementAt(index).budgetStatus! ? Colors.red : Colors.green,
+                              percent: listBudgetEnd.elementAt(index).budgetStatus! ? 1.0
+                                  : ((listBudgetEnd.elementAt(index).budgetPresentValue!) / (listBudgetEnd.elementAt(index).budgetValue)),
+                              progressColor: listBudgetEnd.elementAt(index).budgetStatus! ? Colors.red : Colors.green,
                               width: size.width * 0.75,
                             ),
                           ),
@@ -324,7 +340,7 @@ class _BudgetEndState extends State<BudgetEnd> {
                                   ),
                                 ),
                                 Visibility(
-                                  visible: widget.listBudget!.elementAt(index).budgetStatus! ? true : false,
+                                  visible: listBudgetEnd.elementAt(index).budgetStatus! ? true : false,
                                   child: Padding(
                                     padding: EdgeInsets.only(left: size.width * 0.028),
                                     child: Row(

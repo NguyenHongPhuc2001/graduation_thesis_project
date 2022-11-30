@@ -62,11 +62,15 @@ class _EventDetailState extends State<EventDetail> {
           child: AppBarContainer2(
             text: "Chi tiết",
             backIcon: CupertinoIcons.xmark,
-            prefixIcon2: Icons.edit,
+            prefixIcon1: Icons.edit,
+            prefixIcon2: Icons.delete,
+            onPrefixIcon2Tap: ()async{
+              _showDeleteDialog(widget.event);
+            },
             onBackTap: () async {
               Navigator.pop(context, "Cancle");
             },
-            onPrefixIcon2Tap: () async {
+            onPrefixIcon1Tap: () async {
               await Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -218,21 +222,28 @@ class _EventDetailState extends State<EventDetail> {
                   (check == true)
                       ? CustomRoundRectangleButton(
                           backgroundColor: const Color(0xff3a86ff),
-                          onTap: () {
-                            setState(() {
+                          onTap: () async {
+
                               if (check != null) {
-                                check = !check;
-                                EventController().updateEvent(
+                                setState((){
+                                  check = !check;
+                                });
+
+                                await EventController().updateEvent(
                                     widget.event.eventId!,
                                     widget.event.eventName,
                                     widget.event.eventIcon,
                                     widget.event.eventEndDate,
                                     int.parse(widget.event.wallet!.walletId
                                         .toString()),
-                                    check);
-                                event.eventStatus = check;
+                                    check).then((value) {
+                                      setState((){
+                                        event.eventStatus = check;
+                                      });
+
+                                });
+
                               }
-                            });
                           },
                           buttonWith: size.width * 0.85,
                           padding: size.width * 0.04,
@@ -253,22 +264,25 @@ class _EventDetailState extends State<EventDetail> {
                         )
                       : CustomRoundRectangleButton(
                           backgroundColor: const Color(0xff3a86ff),
-                          onTap: () {
-                            setState(() {
+                          onTap: () async {
                               if (check != null) {
-                                check = !check;
-                                EventController().updateEvent(
+                                setState((){
+                                  check = !check;
+                                });
+
+                                await EventController().updateEvent(
                                     widget.event.eventId!,
                                     widget.event.eventName,
                                     widget.event.eventIcon,
                                     widget.event.eventEndDate,
                                     int.parse(widget.event.wallet!.walletId
                                         .toString()),
-                                    check);
-
-                                event.eventStatus = check;
+                                    check).then((value) {
+                                  setState((){
+                                    event.eventStatus = check;
+                                  });
+                                });
                               }
-                            });
                           },
                           buttonWith: size.width * 0.85,
                           padding: size.width * 0.04,
@@ -290,7 +304,7 @@ class _EventDetailState extends State<EventDetail> {
                   CustomRoundRectangleButton(
                     backgroundColor: const Color(0xff3A86FF),
                     onTap: () {
-                      Get.to(ExpenseList(isLoadByBudget: true));
+                      Get.to(ExpenseList(isLoadByBudget: false));
                     },
                     buttonWith: size.width * 0.85,
                     padding: size.width * 0.04,
@@ -368,56 +382,47 @@ class _EventDetailState extends State<EventDetail> {
             actionsAlignment: MainAxisAlignment.spaceAround,
             actions: [
               CustomRoundRectangleButton(
-                border: Border.all(
-                  width: size.width * 0.004,
-                  color: Colors.grey.shade500,
-                ),
-                backgroundColor: Colors.white,
                 onTap: () {
                   Navigator.pop(context);
                 },
-                buttonWith: size.width * 0.25,
-                padding: size.width * 0.035,
-                borderRadius: size.width * 0.015,
+                buttonWith: size.width * 0.3,
+                padding: size.width * 0.02,
+                borderRadius: size.width * 0.01,
                 text: TextContainer(
                   text: "HỦY",
                   textColor: Colors.black,
-                  textSize: size.width * 0.05,
+                  textSize: size.width * 0.03,
                   textFontWeight: FontWeight.bold,
                   decoration: TextDecoration.none,
+                ),
+                backgroundColor: Colors.white,
+                border: Border.all(
+                  width: size.width * 0.005,
+                  color: Colors.grey,
                 ),
               ),
               CustomRoundRectangleButton(
-                border: Border.all(
-                  width: size.width * 0.002,
-                  color: Colors.grey,
-                ),
-                backgroundColor: const Color(0xff3a86ff),
                 onTap: () {
-                  setState(() {
-                    EventController()
-                        .deleteEvent(widget.event.eventId!)
+                  setState(() async{
+                    await EventController()
+                        .deleteEvent(ev.eventId!)
                         .then((value) {
-                      if (value == "Delete") {
-                        Navigator.pop(context);
-                        Navigator.pop(context, value);
-                      } else {
-                        Navigator.pop(context);
-                        Fluttertoast.showToast(msg: "Delete fail !");
-                      }
+                      Navigator.pop(context);
+                      Navigator.pop(context, "Delete");
                     });
                   });
                 },
-                buttonWith: size.width * 0.25,
-                padding: size.width * 0.035,
-                borderRadius: size.width * 0.015,
+                buttonWith: size.width * 0.3,
+                padding: size.width * 0.02,
+                borderRadius: size.width * 0.01,
                 text: TextContainer(
-                  text: "OK",
+                  text: "XÁC NHẬN",
                   textColor: Colors.white,
-                  textSize: size.width * 0.05,
+                  textSize: size.width * 0.03,
                   textFontWeight: FontWeight.bold,
                   decoration: TextDecoration.none,
                 ),
+                backgroundColor: Color(0xff2B4BF2),
               ),
             ],
           );

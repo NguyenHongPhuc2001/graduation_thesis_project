@@ -15,8 +15,8 @@ class BudgetController extends GetxController{
     budgetList.assignAll(eList!);
   }
 
-  Future<bool?> createBudget(String? budgetName, double? budgetValue, String? budgetIcon, String? budgetMothYear, Expense? expense) async {
-    return await BudgetAPI().create(budgetName, budgetValue, budgetIcon, budgetMothYear, expense);
+  Future<bool?> createBudget(String budgetName, double budgetValue, String budgetIcon, String budgetMothYear, int expenseId) async {
+    return await BudgetAPI().create(budgetName, budgetValue, budgetIcon, budgetMothYear, expenseId);
   }
 
   Future<bool?> updateBudget(int? budgetId, String? budgetName, double? budgetValue, String? budgetIcon, String? budgetMothYear, Expense? expense) async {
@@ -26,5 +26,10 @@ class BudgetController extends GetxController{
   Future<bool?> deleteBudget(int? budgetId) async {
     return await BudgetAPI().delete(budgetId);
   }
+
+  Future<List<Budget>> getListByStatus(bool budgetStatus)async{
+    return await BudgetAPI().getListByStatus(budgetStatus);
+  }
+
 
 }

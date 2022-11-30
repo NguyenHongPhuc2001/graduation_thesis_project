@@ -8,6 +8,8 @@ import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen
 import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen/wallet_setting.dart';
 import 'package:intl/intl.dart';
 import '../../../models/wallet.dart';
+import '../../commons/widgets/custom_round_rectangle_button.dart';
+import '../../commons/widgets/text_container.dart';
 
 // ignore: must_be_immutable
 class WalletList extends StatefulWidget {
@@ -234,4 +236,6 @@ class _WalletListState extends State<WalletList> {
 
     return Column(children: walletItems);
   }
+
+
 }

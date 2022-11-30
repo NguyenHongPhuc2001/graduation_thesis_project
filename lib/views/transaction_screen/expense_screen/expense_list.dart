@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/expense.dart';
 
@@ -23,10 +24,20 @@ class ExpenseList extends StatefulWidget {
 
 class _ExpenseListState extends State<ExpenseList> {
 
+  List<Expense> listExpense =[];
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadExpenseList();
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
-    _loadExpenseList();
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -88,7 +99,11 @@ class _ExpenseListState extends State<ExpenseList> {
         alignment: FractionalOffset.bottomCenter,
         child: InkWell(
           onTap: (){
-            Get.to(ExpenseCreate(isLoadByBudget: true,));
+            Get.to(ExpenseCreate(isLoadByBudget: true,))!.then((value) {
+              if(value=="Create"){
+                Fluttertoast.showToast(msg: "Thêm chi tiêu thành công !");
+              }
+            });
           },
           child: Text(
                 widget.isLoadByBudget ? "Thêm mới chi tiêu" : "Thêm mới chi tiêu",
@@ -190,8 +205,8 @@ class _ExpenseListState extends State<ExpenseList> {
 
   }
 
-  _loadExpenseList() {
-    widget.expenseController.getExpenses();
+ _loadExpenseList() async {
+    await widget.expenseController.getExpenses();
   }
 
 }

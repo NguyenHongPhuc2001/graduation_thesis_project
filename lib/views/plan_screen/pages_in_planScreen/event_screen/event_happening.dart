@@ -15,12 +15,15 @@ import '../../../commons/widgets/single_row_container_2.dart';
 
 // ignore: must_be_immutable
 class EventHappening extends StatefulWidget {
+  bool check;
 
-  EventHappening({ Key? key,  }) : super(key: key);
+  EventHappening({
+    Key? key,
+    required this.check,
+  }) : super(key: key);
 
   @override
   State<EventHappening> createState() => _EventHappeningState();
-
 }
 
 class _EventHappeningState extends State<EventHappening> {
@@ -34,24 +37,31 @@ class _EventHappeningState extends State<EventHappening> {
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
-
     EventController().getByStatus(false).then((value) {
-      setState((){
+      setState(() {
         lsEventHappening = List.from(value);
       });
-    }, onError: (e){
-      e.printError();
     });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    EventController().getByStatus(false).then((value) {
-        lsEventHappening = List.from(value);
-    });
+    if (widget.check == true) {
+      lsEventHappening.clear();
+      if (mounted) {
+        EventController().getByStatus(false).then((value) {
+          setState(() {
+            lsEventHappening = List.from(value);
+          });
+        });
+      }
+      setState(() {
+        widget.check = false;
+      });
+    }
 
     return SafeArea(
       child: Scaffold(
@@ -117,118 +127,135 @@ class _EventHappeningState extends State<EventHappening> {
                     itemCount: lsEventHappening.length,
                     itemBuilder: (context, index) {
                       return Padding(
-                              padding: EdgeInsets.only(top: size.width * 0.07),
-                              child: InkWell(
-                                onTap: () async {
-                                  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => EventDetail(
-                                        event:
-                                            lsEventHappening.elementAt(index),
-                                      ),
-                                    ),
-                                  ).then((value) => setState(() {
-                                        if (value == "Delete") {
-                                          EventController().getByStatus(false).then((value) {
-                                            setState(() {
-                                              lsEventHappening  =List.from(value);
-                                            });
-                                          });
-                                          Fluttertoast.showToast(msg: "Xóa sự kiện thành công !");
-                                        } else if (value == "Cancel") {
-                                          EventController().getByStatus(false).then((value) {
-                                            setState(() {
-                                              lsEventHappening  =List.from(value);
-                                            });
-                                          });
-                                        }
-                                      }));
-                                },
-                                child: SingleRowContainer2(
-                                  paddingLeft: size.width * 0.01,
-                                  paddingRight: size.width * 0.01,
-                                  paddingTop: size.width * 0.02,
-                                  paddingBottom: size.width * 0.02,
-                                  height: size.height * 0.13,
-                                  background: Colors.white,
+                        padding: EdgeInsets.only(top: size.width * 0.07),
+                        child: InkWell(
+                          onTap: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EventDetail(
+                                  event: lsEventHappening.elementAt(index),
+                                ),
+                              ),
+                            ).then((value) => setState(() {
+                                  if (value == "Delete") {
+                                    EventController()
+                                        .getByStatus(false)
+                                        .then((value) {
+                                      setState(() {
+                                        lsEventHappening = List.from(value);
+                                      });
+                                    });
+                                    Fluttertoast.showToast(
+                                        msg: "Xóa sự kiện thành công !");
+                                  } else if (value == "Cancel") {
+                                    EventController()
+                                        .getByStatus(false)
+                                        .then((value) {
+                                      setState(() {
+                                        lsEventHappening = List.from(value);
+                                      });
+                                    });
+                                    setState(() {
+                                      widget.check = true;
+                                    });
+                                  }
+                                }));
+                          },
+                          child: SingleRowContainer2(
+                            paddingLeft: size.width * 0.01,
+                            paddingRight: size.width * 0.01,
+                            paddingTop: size.width * 0.02,
+                            paddingBottom: size.width * 0.02,
+                            height: size.height * 0.13,
+                            background: Colors.white,
+                            children: [
+                              CircleIconContainer(
+                                urlImage:
+                                    lsEventHappening.elementAt(index).eventIcon,
+                                iconSize: size.width * 0.07,
+                                backgroundColor: const Color(0xffFB8500),
+                                padding: size.width * 0.045,
+                              ),
+                              SizedBox(
+                                width: size.width * 0.7,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    CircleIconContainer(
-                                      urlImage: lsEventHappening.elementAt(index).eventIcon,
-                                      iconSize: size.width * 0.07,
-                                      backgroundColor: const Color(0xffFB8500),
-                                      padding: size.width * 0.045,
+                                    TextContainer(
+                                      text: lsEventHappening
+                                          .elementAt(index)
+                                          .eventName,
+                                      textColor: Colors.black,
+                                      textSize: size.width * 0.045,
+                                      textFontWeight: FontWeight.w500,
+                                      decoration: TextDecoration.none,
                                     ),
-                                    SizedBox(
-                                      width: size.width * 0.7,
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          TextContainer(
-                                            text: lsEventHappening.elementAt(index).eventName,
-                                            textColor: Colors.black,
-                                            textSize: size.width * 0.045,
-                                            textFontWeight:FontWeight.w500,
-                                            decoration:
-                                                TextDecoration.none,
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(right: size.width * 0.01),
-                                            child: Container(
-                                              width: size.width * 0.4,
-                                              height: size.height * 0.04,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.red,
-                                                  borderRadius: BorderRadius.circular(100),
-                                                  boxShadow: const [BoxShadow(
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          right: size.width * 0.01),
+                                      child: Container(
+                                        width: size.width * 0.4,
+                                        height: size.height * 0.04,
+                                        decoration: BoxDecoration(
+                                            color: Colors.red,
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            boxShadow: const [
+                                              BoxShadow(
                                                   color: Colors.grey,
-                                                  blurRadius: 0.2
-                                                )]
-                                              ),
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                children: [
-                                                  const Text(
-                                                    "Đã chi",
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 11
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.symmetric(vertical: 3.0),
-                                                    child: Container(
-                                                      alignment: Alignment.center,
-                                                      width: size.width * 0.23,
-                                                      decoration: BoxDecoration(
-                                                          color: Colors.white,
-                                                          borderRadius: BorderRadius.circular(100),
-                                                          boxShadow: const [BoxShadow(
-                                                              color: Colors.grey,
-                                                              blurRadius: 0.2
-                                                          )]
-                                                      ),
-                                                      child: MoneyTextContainer(
-                                                        value: 10,
-                                                        textSize: size.width * 0.035,
-                                                        textFontWeight: FontWeight.w500,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
+                                                  blurRadius: 0.2)
+                                            ]),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            const Text(
+                                              "Đã chi",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 11),
                                             ),
-                                          ),
-                                        ],
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 3.0),
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                width: size.width * 0.23,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            100),
+                                                    boxShadow: const [
+                                                      BoxShadow(
+                                                          color: Colors.grey,
+                                                          blurRadius: 0.2)
+                                                    ]),
+                                                child: MoneyTextContainer(
+                                                  value: 10,
+                                                  textSize: size.width * 0.035,
+                                                  textFontWeight:
+                                                      FontWeight.w500,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                            );
+                            ],
+                          ),
+                        ),
+                      );
                     }),
               ),
       ),

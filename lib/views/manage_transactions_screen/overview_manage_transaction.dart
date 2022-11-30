@@ -38,7 +38,6 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
     listMonthOfTran.clear();
     listTranByDate.clear();
 
-
     //TODO: check
     // widget.listTransaction.forEach((element) {
     //   if (element.createDate.month == widget.month)
@@ -86,13 +85,13 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                     TextContainer(
                       text: "Tổng thu",
                       textColor: Colors.grey,
-                      textSize: size.width * 0.05,
+                      textSize: size.width * 0.04,
                       textFontWeight: FontWeight.w500,
                       decoration: TextDecoration.none,
                     ),
                     MoneyTextContainer(
                       value: 222222222,
-                      textSize: size.width * 0.05,
+                      textSize: size.width * 0.04,
                       textFontWeight: FontWeight.w500,
                       color: Colors.blueAccent,
                     ),
@@ -105,13 +104,13 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                     TextContainer(
                       text: "Tổng chi",
                       textColor: Colors.grey,
-                      textSize: size.width * 0.05,
+                      textSize: size.width * 0.04,
                       textFontWeight: FontWeight.w500,
                       decoration: TextDecoration.none,
                     ),
                     MoneyTextContainer(
                       value: 2111122,
-                      textSize: size.width * 0.05,
+                      textSize: size.width * 0.04,
                       textFontWeight: FontWeight.w500,
                       color: Colors.red,
                     ),
@@ -124,7 +123,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                 ),
                 MoneyTextContainer(
                   value: 222222,
-                  textSize: size.width * 0.05,
+                  textSize: size.width * 0.04,
                   textFontWeight: FontWeight.w500,
                   color: Colors.black,
                 ),
@@ -142,7 +141,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                       margin: EdgeInsets.only(top: size.width * 0.04),
                       buttonWith: size.width * 0.7,
                       padding: size.width * 0.03,
-                      borderRadius: size.width * 0.05,
+                      borderRadius: size.width * 0.1,
                       text: TextContainer(
                         text: "XEM BÁO CÁO THÁNG NÀY",
                         textColor: Colors.white,
@@ -150,7 +149,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                         textFontWeight: FontWeight.bold,
                         decoration: TextDecoration.none,
                       ),
-                      backgroundColor: Colors.lightBlue,
+                      backgroundColor: Colors.blue,
                     ),
                   ],
                 ),
@@ -159,10 +158,8 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
           ),
         ),
         SliverList(
-          delegate: SliverChildBuilderDelegate(
-              childCount: listTranByDate.length, (context, index) {
+          delegate: SliverChildBuilderDelegate(childCount: 1, (context, index) {
             List<Expense> listTranOfMonth = [];
-
 
             //TODO: check
             // widget.listTransaction.forEach((item) {
@@ -178,166 +175,301 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
             //   singleTotalSpending += item.transactionValue;
             // });
 
+            // return Padding(
+            //   padding: EdgeInsets.only(top: size.width * 0.1),
+            //   child: Container(
+            //     padding: EdgeInsets.symmetric(vertical: size.width * 0.02),
+            //     decoration: BoxDecoration(
+            //       color: Colors.white,
+            //       boxShadow: [
+            //         BoxShadow(
+            //           offset: Offset(0, 0),
+            //           blurRadius: size.width * 0.01,
+            //           color: Colors.grey,
+            //         ),
+            //       ],
+            //     ),
+            //     width: size.width,
+            //     child: Column(
+            //       children: [
+            //         SingleRowContainer(
+            //           boxDecoration: BoxDecoration(
+            //             border: Border(
+            //               bottom: BorderSide(
+            //                 width: size.width * 0.001,
+            //                 color: Colors.black,
+            //               ),
+            //             ),
+            //           ),
+            //           paddingTop: size.width * 0.02,
+            //           paddingBottom: size.width * 0.02,
+            //           children: [
+            //             Container(
+            //               padding: EdgeInsets.only(left: size.width * 0.02),
+            //               width: size.width * 0.6,
+            //               child: Row(
+            //                 children: [
+            //                   TextContainer(
+            //                     text: "12-12-2022",
+            //                     textColor: Colors.black,
+            //                     textSize: size.width * 0.07,
+            //                     textFontWeight: FontWeight.bold,
+            //                     decoration: TextDecoration.none,
+            //                   ),
+            //                   SizedBox(
+            //                     width: size.width * 0.03,
+            //                   ),
+            //                   Column(
+            //                     crossAxisAlignment: CrossAxisAlignment.start,
+            //                     children: [
+            //                       TextContainer(
+            //                         text:
+            //                             // "${getNameOfDays(listTranByDate.elementAt(index).createDate.weekday)}",
+            //                         "Thứ",
+            //                         textColor: Colors.black,
+            //                         textSize: size.width * 0.03,
+            //                         textFontWeight: FontWeight.w400,
+            //                         decoration: TextDecoration.none,
+            //                       ),
+            //                       TextContainer(
+            //                         text:
+            //                             // "tháng ${listTranByDate.elementAt(index).createDate.month} năm ${listTranByDate.elementAt(index).createDate.year}",
+            //                         "tháng / năm 2022}",
+            //                         textColor: Colors.black,
+            //                         textSize: size.width * 0.03,
+            //                         textFontWeight: FontWeight.w400,
+            //                         decoration: TextDecoration.none,
+            //                       ),
+            //                     ],
+            //                   ),
+            //                 ],
+            //               ),
+            //             ),
+            //             Container(
+            //               padding: EdgeInsets.only(right: size.width * 0.02),
+            //               alignment: Alignment.centerRight,
+            //               width: size.width * 0.3,
+            //               child: MoneyTextContainer(
+            //                 value: singleTotalSpending,
+            //                 textSize: size.width * 0.05,
+            //                 textFontWeight: FontWeight.bold,
+            //                 color: Colors.black,
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //         Container(
+            //           width: size.width,
+            //           height: size.width * 0.183 * listTranOfMonth.length,
+            //           child: ListView.builder(
+            //               physics: NeverScrollableScrollPhysics(),
+            //               itemCount: listTranOfMonth.length,
+            //               itemBuilder: (context, index) {
+            //                 return Padding(
+            //                   padding: EdgeInsets.only(top: size.width * 0.04),
+            //                   child: InkWell(
+            //                     onTap: () {
+            //                       // Navigator.push(
+            //                       //   context,
+            //                       //   MaterialPageRoute(
+            //                       //     builder: (context) => TransactionDetail(
+            //                       //         transaction:
+            //                       //             listTranOfMonth.elementAt(index),
+            //                       //         listTransaction:
+            //                       //             widget.listTransaction),
+            //                       //   ),
+            //                       // );
+            //                     },
+            //                     child: SingleRowContainer(
+            //                       boxDecoration: BoxDecoration(),
+            //                       paddingTop: size.width * 0.01,
+            //                       paddingBottom: size.width * 0.01,
+            //                       children: [
+            //                         Container(
+            //                           width: size.width * 0.2,
+            //                           child: CircleIconContainer(
+            //                             urlImage: "images/QuestionIcon.svg",
+            //                             iconSize: size.width * 0.08,
+            //                             backgroundColor:
+            //                                 Colors.deepOrangeAccent,
+            //                             padding: size.width * 0.02,
+            //                           ),
+            //                         ),
+            //                         Container(
+            //                           width: size.width * 0.5,
+            //                           child: Column(
+            //                             crossAxisAlignment:
+            //                                 CrossAxisAlignment.start,
+            //                             children: [
+            //                               TextContainer(
+            //                                 text: "Rap name",
+            //                                 textColor: Colors.black,
+            //                                 textSize: size.width * 0.045,
+            //                                 textFontWeight: FontWeight.bold,
+            //                                 decoration: TextDecoration.none,
+            //                               ),
+            //                               SizedBox(
+            //                                 height: size.width * 0.02,
+            //                               ),
+            //                               TextContainer(
+            //                                 text: "Transaction note",
+            //                                 textColor: Colors.grey,
+            //                                 textSize: size.width * 0.03,
+            //                                 textFontWeight: FontWeight.bold,
+            //                                 decoration: TextDecoration.none,
+            //                               ),
+            //                             ],
+            //                           ),
+            //                         ),
+            //                         Container(
+            //                           padding: EdgeInsets.only(
+            //                               right: size.width * 0.02),
+            //                           alignment: Alignment.centerRight,
+            //                           width: size.width * 0.3,
+            //                           child: MoneyTextContainer(
+            //                             value: 2000000,
+            //                             textSize: size.width * 0.05,
+            //                             textFontWeight: FontWeight.bold,
+            //                             color: Colors.red,
+            //                           ),
+            //                         ),
+            //                       ],
+            //                     ),
+            //                   ),
+            //                 );
+            //               }),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // );
+
             return Padding(
-              padding: EdgeInsets.only(top: size.width * 0.1),
+              padding: EdgeInsets.only(top: size.width*0.1),
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: size.width * 0.02),
+                padding: EdgeInsets.all(size.width * 0.01),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
                       offset: Offset(0, 0),
-                      blurRadius: size.width * 0.01,
                       color: Colors.grey,
-                    ),
+                      blurRadius: size.width*0.01,
+                      spreadRadius: size.width*0.001,
+                    )
                   ],
                 ),
-                width: size.width,
                 child: Column(
+                  mainAxisSize: MainAxisSize.max,
                   children: [
-                    SingleRowContainer(
-                      boxDecoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            width: size.width * 0.001,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      paddingTop: size.width * 0.02,
-                      paddingBottom: size.width * 0.02,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          padding: EdgeInsets.only(left: size.width * 0.02),
-                          width: size.width * 0.6,
-                          child: Row(
+                          width: size.width * 0.1,
+                          child: TextContainer(
+                            text: "24",
+                            textColor: Colors.black,
+                            textSize: size.width * 0.07,
+                            textFontWeight: FontWeight.w500,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                        Container(
+                          width: size.width * 0.52,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               TextContainer(
-                                text: "12-12-2022",
+                                text: "Thứ hai",
                                 textColor: Colors.black,
-                                textSize: size.width * 0.07,
-                                textFontWeight: FontWeight.bold,
+                                textSize: size.width * 0.04,
+                                textFontWeight: FontWeight.w400,
                                 decoration: TextDecoration.none,
                               ),
-                              SizedBox(
-                                width: size.width * 0.03,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  TextContainer(
-                                    text:
-                                        // "${getNameOfDays(listTranByDate.elementAt(index).createDate.weekday)}",
-                                    "Thứ",
-                                    textColor: Colors.black,
-                                    textSize: size.width * 0.03,
-                                    textFontWeight: FontWeight.w400,
-                                    decoration: TextDecoration.none,
-                                  ),
-                                  TextContainer(
-                                    text:
-                                        // "tháng ${listTranByDate.elementAt(index).createDate.month} năm ${listTranByDate.elementAt(index).createDate.year}",
-                                    "tháng / năm 2022}",
-                                    textColor: Colors.black,
-                                    textSize: size.width * 0.03,
-                                    textFontWeight: FontWeight.w400,
-                                    decoration: TextDecoration.none,
-                                  ),
-                                ],
+                              TextContainer(
+                                text: "tháng 10 2022",
+                                textColor: Colors.black,
+                                textSize: size.width * 0.04,
+                                textFontWeight: FontWeight.w400,
+                                decoration: TextDecoration.none,
                               ),
                             ],
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.only(right: size.width * 0.02),
-                          alignment: Alignment.centerRight,
                           width: size.width * 0.3,
+                          alignment: Alignment.centerRight,
                           child: MoneyTextContainer(
-                            value: singleTotalSpending,
-                            textSize: size.width * 0.05,
-                            textFontWeight: FontWeight.bold,
+                            value: 500000,
+                            textSize: size.width * 0.035,
+                            textFontWeight: FontWeight.w500,
                             color: Colors.black,
                           ),
                         ),
                       ],
                     ),
+                    Divider(thickness: size.width*0.001, color: Colors.black),
                     Container(
                       width: size.width,
-                      height: size.width * 0.183 * listTranOfMonth.length,
+                      height: size.width * 0.15*5,
                       child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: listTranOfMonth.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: EdgeInsets.only(top: size.width * 0.04),
-                              child: InkWell(
-                                onTap: () {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => TransactionDetail(
-                                  //         transaction:
-                                  //             listTranOfMonth.elementAt(index),
-                                  //         listTransaction:
-                                  //             widget.listTransaction),
-                                  //   ),
-                                  // );
-                                },
-                                child: SingleRowContainer(
-                                  boxDecoration: BoxDecoration(),
-                                  paddingTop: size.width * 0.01,
-                                  paddingBottom: size.width * 0.01,
-                                  children: [
-                                    Container(
-                                      width: size.width * 0.2,
+                        physics: NeverScrollableScrollPhysics(),
+                          itemCount: 5,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                              padding: EdgeInsets.only(top: size.width*0.03, bottom: size.width*0.01),
+                              width: size.width,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(left: size.width*0.01),
+                                    child: Container(
+                                      width: size.width * 0.1,
                                       child: CircleIconContainer(
                                         urlImage: "images/QuestionIcon.svg",
-                                        iconSize: size.width * 0.08,
-                                        backgroundColor:
-                                            Colors.deepOrangeAccent,
+                                        iconSize: size.width * 0.07,
+                                        backgroundColor: Colors.yellow,
                                         padding: size.width * 0.02,
                                       ),
                                     ),
-                                    Container(
-                                      width: size.width * 0.5,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          TextContainer(
-                                            text: "Rap name",
-                                            textColor: Colors.black,
-                                            textSize: size.width * 0.045,
-                                            textFontWeight: FontWeight.bold,
-                                            decoration: TextDecoration.none,
-                                          ),
-                                          SizedBox(
-                                            height: size.width * 0.02,
-                                          ),
-                                          TextContainer(
-                                            text: "Transaction note",
-                                            textColor: Colors.grey,
-                                            textSize: size.width * 0.03,
-                                            textFontWeight: FontWeight.bold,
-                                            decoration: TextDecoration.none,
-                                          ),
-                                        ],
-                                      ),
+                                  ),
+                                  Container(
+                                    width: size.width * 0.6,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        TextContainer(
+                                          text: "Lương",
+                                          textColor: Colors.black,
+                                          textSize: size.width * 0.04,
+                                          textFontWeight: FontWeight.w400,
+                                          decoration: TextDecoration.none,
+                                        ),
+                                        SizedBox(height: size.width*0.01),
+                                        TextContainer(
+                                          text: "ghi chú",
+                                          textColor: Colors.black,
+                                          textSize: size.width * 0.03,
+                                          textFontWeight: FontWeight.w400,
+                                          decoration: TextDecoration.none,
+                                        ),
+                                      ],
                                     ),
-                                    Container(
-                                      padding: EdgeInsets.only(
-                                          right: size.width * 0.02),
-                                      alignment: Alignment.centerRight,
-                                      width: size.width * 0.3,
-                                      child: MoneyTextContainer(
-                                        value: 2000000,
-                                        textSize: size.width * 0.05,
-                                        textFontWeight: FontWeight.bold,
-                                        color: Colors.red,
-                                      ),
+                                  ),
+                                  Container(
+                                    width: size.width * 0.21,
+                                    alignment: Alignment.centerRight,
+                                    child: MoneyTextContainer(
+                                      value: 500000,
+                                      textSize: size.width * 0.035,
+                                      textFontWeight: FontWeight.w500,
+                                      color: Colors.blue,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             );
                           }),

@@ -13,7 +13,7 @@ import 'base_api.dart';
 
 class ExpenseAPI extends BaseAPI{
 
-  Future<Expense?> getOne(int expenseId) async {
+  Future<Expense> getOne(int expenseId) async {
 
     final queryParameters = {
       "expenseId" : expenseId
@@ -33,14 +33,23 @@ class ExpenseAPI extends BaseAPI{
     final streamedRequest = await request.send();
     final response = await http.Response.fromStream(streamedRequest);
 
-    if(response.statusCode == 200){
 
-      ResponseModel model = responseModelFromJson(response.body);
-      Expense expenses = expenseFromJson(model.model);
+    var completer = Completer<Expense>();
 
-      return expenses;
+    Map<String, dynamic> dataFromAPI = jsonDecode(response.body);
+
+
+    if(dataFromAPI.entries.elementAt(1).value == 200){
+
+      Expense expense = Expense.fromJson(dataFromAPI.entries.elementAt(2).value);
+
+      completer.complete(expense);
+
+    }else{
+      completer.completeError("Could not get the data");
     }
-    return null;
+
+    return completer.future;
   }
 
   Future<List<Expense>?> getList() async {
@@ -76,17 +85,20 @@ class ExpenseAPI extends BaseAPI{
     return null;
   }
 
-  Future<bool?> create(String? expenseName, String? expenseType, String? expenseIcon) async{
+  Future<bool?> create(String expenseName, String expenseType, String expenseIcon) async{
 
     String? username = await manager.getUsername();
-    Account account = Account(accountUsername: username!);
+    // Account account = Account(accountUsername: username!);
 
-    final queryParameters = {
-      "expenseName" : expenseName,
-      "expenseType" : expenseType,
-      "expenseIcon" : expenseIcon,
-      "isExpenseSystem" : false,
-      "account" : account
+    final queryParameters =
+    {
+      "expenseName":expenseName,
+      "expenseType":expenseType,
+      "expenseIcon":expenseIcon,
+      "isExpenseSystem":false,
+      "account" : {
+        "accountUsername" : username
+      }
     };
 
     final request = http.Request(
@@ -102,7 +114,12 @@ class ExpenseAPI extends BaseAPI{
     final streamedRequest = await request.send();
     final response = await http.Response.fromStream(streamedRequest);
 
-    if(response.statusCode == 200){
+
+    Map<String, dynamic> data = jsonDecode(response.body);
+
+    print(data.entries.elementAt(0).value);
+
+    if(response.statusCode == 201){
       return true;
     }
 

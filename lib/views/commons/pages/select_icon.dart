@@ -70,11 +70,11 @@ class _SelectIconsState extends State<SelectIcons> {
           return Padding(
             padding: EdgeInsets.only(top: size.width * 0.06),
             child: InkWell(
-              onTap: () {
-                setState(() {
-                  data = iconList.elementAt(index);
-                  Navigator.pop(context,data);
-                });
+              onTap: ()  {
+                  setState(() {
+                    data = iconList.elementAt(index);
+                  });
+                  Get.back(result: data);
               },
               customBorder: const CircleBorder(),
               child: Container(

@@ -25,17 +25,17 @@ class EventScreen extends StatefulWidget {
 
 class _EventScreenState extends State<EventScreen> {
   final _eventPageController = PageController();
-  bool statusOfInsert = false;
+  bool statusOfInsert = false, check =false;
   int nbBeforInsert = 0, nbAfterInsert = 0;
-  List<Event> ls = [];
+  List<Event> listEvent = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    EventController().getListEvent().then((value) {
+    EventController().getByStatus(false).then((value) {
       setState((){
-        ls = List.from(value);
+        listEvent = List.from(value);
       });
     });
   }
@@ -61,17 +61,15 @@ class _EventScreenState extends State<EventScreen> {
                     builder: (context) => AddEvent(),
                   ),
                 ).then((value) {
-                  setState(() {
                     if (value == "Create") {
-                      EventController().getByStatus(false).then((value) {
+                       EventController().getByStatus(false).then((value) {
                         setState(() {
-                          ls = List.from(value);
+                          listEvent = List.from(value);
+                          check =true;
                         });
                       });
-
-                      Fluttertoast.showToast(msg: "Add event successfully !");
+                      Fluttertoast.showToast(msg: "Thêm sự kiện thành công !");
                     }
-                  });
                 });
               },
             ),
@@ -80,7 +78,7 @@ class _EventScreenState extends State<EventScreen> {
             physics: const NeverScrollableScrollPhysics(),
             controller: _eventPageController,
             children: [
-              EventHappening(),
+              EventHappening(check: check),
               EventEnd(),
             ],
           ),

@@ -5,6 +5,9 @@ import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/wallet.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/wallet_controller.dart';
 
+import '../../commons/widgets/custom_round_rectangle_button.dart';
+import '../../commons/widgets/text_container.dart';
+
 // ignore: must_be_immutable
 class WalletSetting extends StatefulWidget {
   // int? walletId;
@@ -76,11 +79,7 @@ class _WalletSettingState extends State<WalletSetting> {
                 ),
                 child: GestureDetector(
                   onTap: () async {
-                    await WalletController()
-                        .delete(widget.wallet.walletId)
-                        .then((value) {
-                      Navigator.pop(context, "Delete");
-                    });
+                    await _showDeleteDialog(widget.wallet);
                   },
                   child: Stack(
                     alignment: Alignment.topRight,
@@ -232,5 +231,101 @@ class _WalletSettingState extends State<WalletSetting> {
             ],
           ),
         ));
+  }
+  _showDeleteDialog(Wallet wallet) {
+    Size size = MediaQuery.of(context).size;
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(size.width * 0.02)),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  color: Colors.blue,
+                  size: size.width * 0.1,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: size.width * 0.06),
+                  child: Text(
+                    "Xin đợi chút !",
+                    style: TextStyle(
+                      fontSize: size.width * 0.07,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            content: RichText(
+              text: TextSpan(
+                style: TextStyle(
+                  fontSize: size.width * 0.045,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                ),
+                children: [
+                  const TextSpan(text: "Bạn có chắc muốn xóa ví "),
+                  TextSpan(
+                      text: wallet.walletName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      )),
+                  const TextSpan(text: " chứ ?"),
+                ],
+              ),
+            ),
+            actionsAlignment: MainAxisAlignment.spaceAround,
+            actions: [
+              CustomRoundRectangleButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                buttonWith: size.width * 0.3,
+                padding: size.width * 0.02,
+                borderRadius: size.width * 0.01,
+                text: TextContainer(
+                  text: "HỦY",
+                  textColor: Colors.black,
+                  textSize: size.width * 0.03,
+                  textFontWeight: FontWeight.bold,
+                  decoration: TextDecoration.none,
+                ),
+                backgroundColor: Colors.white,
+                border: Border.all(
+                  width: size.width * 0.005,
+                  color: Colors.grey,
+                ),
+              ),
+              CustomRoundRectangleButton(
+                onTap: () {
+                  setState(() async{
+                    await WalletController()
+                        .delete(wallet.walletId)
+                        .then((value) {
+                      Navigator.pop(context);
+                      Navigator.pop(context, "Delete");
+                    });
+                  });
+                },
+                buttonWith: size.width * 0.3,
+                padding: size.width * 0.02,
+                borderRadius: size.width * 0.01,
+                text: TextContainer(
+                  text: "XÁC NHẬN",
+                  textColor: Colors.white,
+                  textSize: size.width * 0.03,
+                  textFontWeight: FontWeight.bold,
+                  decoration: TextDecoration.none,
+                ),
+                backgroundColor: Color(0xff2B4BF2),
+              ),
+            ],
+          );
+        });
   }
 }
