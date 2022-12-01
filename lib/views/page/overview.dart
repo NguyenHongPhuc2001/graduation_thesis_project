@@ -9,6 +9,7 @@ import 'package:charts_flutter_new/flutter.dart' as charts;
 
 import '../../controllers/entites/history_controller.dart';
 import '../../models/history.dart';
+import '../../remote/controllers/entites/history_controller.dart';
 import '../transaction_screen/wallet_screen/wallet_list.dart';
 
 // ignore: must_be_immutable
@@ -804,7 +805,7 @@ class _OverviewState extends State<Overview> {
 
   Future<double> _totalWithdraw(List<String> dates) async {
 
-    Future<List<History>?> histories = HistoryController().getHistoriesByWithdraw("ChuTT");
+    Future<List<History>?> histories = HistoryController().getHistoriesByWithdraw();
     double totalWithdraw = 0.0;
     await histories.then((value) {
       for (var h in value!) {

@@ -111,6 +111,34 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_charset_detector:
+    dependency: "direct main"
+    description:
+      name: flutter_charset_detector
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
+  flutter_charset_detector_android:
+    dependency: transitive
+    description:
+      name: flutter_charset_detector_android
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
+  flutter_charset_detector_ios:
+    dependency: transitive
+    description:
+      name: flutter_charset_detector_ios
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
+  flutter_charset_detector_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_charset_detector_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -441,6 +469,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.12"
+  tiengviet:
+    dependency: "direct main"
+    description:
+      name: tiengviet
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.0"
   typed_data:
     dependency: transitive
     description:

@@ -33,5 +33,4 @@ class ExpenseController extends GetxController{
     return await ExpenseAPI().getOne(expenseId);
   }
 
-
 }

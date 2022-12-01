@@ -4,6 +4,8 @@ import 'package:graduation_thesis_project/home.dart';
 import 'package:graduation_thesis_project/un_used/WalletNew.dart';
 import 'package:graduation_thesis_project/views/root.dart';
 
+import 'generated/l10n.dart';
+
 void main() {
   runApp(const MyApp());
 }

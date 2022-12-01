@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:graduation_thesis_project/controllers/entites/history_controller.dart';
 import 'package:graduation_thesis_project/models/expense.dart';
+import 'package:graduation_thesis_project/remote/controllers/entites/expense_controller.dart';
 import 'package:graduation_thesis_project/views/manage_transactions_screen/report_page.dart';
 
 import 'package:intl/intl.dart';
 
+import '../../models/history.dart';
+import '../../remote/controllers/entites/history_controller.dart';
 import '../commons/widgets/circle_icon_container.dart';
 import '../commons/widgets/custom_round_rectangle_button.dart';
 import '../commons/widgets/money_text_container.dart';
@@ -11,13 +16,15 @@ import '../commons/widgets/single_row_container.dart';
 import '../commons/widgets/text_container.dart';
 
 class OverviewManageTransaction extends StatefulWidget {
-  final List<Expense> listTransaction;
-  final int month;
+  final historyController = Get.put(HistoryController());
 
-  const OverviewManageTransaction({
+  final int month;
+  final int day;
+
+  OverviewManageTransaction({
     Key? key,
-    required this.listTransaction,
     required this.month,
+    required this.day,
   }) : super(key: key);
 
   @override
@@ -27,41 +34,58 @@ class OverviewManageTransaction extends StatefulWidget {
 
 class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
   final List<Tab> listTabs = [];
-  final List<Expense> listMonthOfTran = [];
-  final List<Expense> listTranByDate = [];
-  final df = DateFormat("EEEE");
+  List<History> listTransactionByMonth = [];
+  List<History> listTranByDate = [];
+  List<String> listDays = [];
+  final df_month = DateFormat("yyyy-MM");
+  final df_week = DateFormat("yyyy-MM-dd");
+  var month;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    month = "${DateTime.now().year}-${widget.month + 1}" as String;
+
+    widget.historyController.getListTransactionByMonth(month).then((value) {
+      if (value!.isEmpty == false) {
+        setState(() {
+          listTransactionByMonth = List.from(value!);
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    listMonthOfTran.clear();
-    listTranByDate.clear();
+    listDays.clear();
+    for (int i = 0; i < listTransactionByMonth.length - 1; i++) {
+      for (int j = i + 1; j < listTransactionByMonth.length; j++) {
+        DateTime date1 = df_week
+            .parse(listTransactionByMonth[i].historyNotedDate!)
+            .add(Duration(days: 1));
+        DateTime date2 = df_week
+            .parse(listTransactionByMonth[j].historyNotedDate!)
+            .add(Duration(days: 1));
+        int day1 = date1.day;
+        int day2 = date2.day;
+        if (day1 != day2) {
+          setState(() {
+            listDays.add(listTransactionByMonth[i].historyNotedDate!);
+          });
+        }
+      }
+    }
 
-    //TODO: check
-    // widget.listTransaction.forEach((element) {
-    //   if (element.createDate.month == widget.month)
-    //     listMonthOfTran.add(element);
-    // });
-
-    listMonthOfTran.forEach((element) {
-      listTranByDate.add(element);
-    });
-
-    //TODO: check
-    // for (int i = 0; i < listTranByDate.length; i++) {
-    //   int check = 0;
-    //   Transactions temp = listTranByDate[i];
-    //   for (int j = 0; j < listMonthOfTran.length; j++) {
-    //     if (listMonthOfTran[j].createDate.day == temp.createDate.day) check++;
-    //   }
-    //   if (check != 1) {
-    //     listTranByDate.removeAt(i);
-    //   }
-    // }
+    if (listDays.isEmpty) {
+      listDays.add(listTransactionByMonth[0].historyNotedDate!);
+    }
 
     return CustomScrollView(
       slivers: [
+
         SliverToBoxAdapter(
           child: Container(
             padding: EdgeInsets.all(size.width * 0.03),
@@ -157,195 +181,26 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
             ),
           ),
         ),
+
         SliverList(
-          delegate: SliverChildBuilderDelegate(childCount: 1, (context, index) {
-            List<Expense> listTranOfMonth = [];
+          delegate: SliverChildBuilderDelegate(childCount: listDays.length,
+              (BuildContext context, int index) {
+            List<History> listTransactionByDay = [];
 
-            //TODO: check
-            // widget.listTransaction.forEach((item) {
-            //   if (item.createDate.day ==
-            //       listTranByDate.elementAt(index).createDate.day)
-            //     listTranOfMonth.add(item);
-            // });
+            listTransactionByMonth.forEach((element) {
+              DateTime d1 = df_week
+                  .parse(element.historyNotedDate!)
+                  .add(Duration(days: 1));
+              DateTime d2 =
+                  df_week.parse(listDays[index]).add(Duration(days: 1));
+              if (d1.compareTo(d2) == 0) {
+                listTransactionByDay.add(element);
+              }
+            });
 
-            double singleTotalSpending = 0;
-
-            //TODO: check
-            // listTranOfMonth.forEach((item) {
-            //   singleTotalSpending += item.transactionValue;
-            // });
-
-            // return Padding(
-            //   padding: EdgeInsets.only(top: size.width * 0.1),
-            //   child: Container(
-            //     padding: EdgeInsets.symmetric(vertical: size.width * 0.02),
-            //     decoration: BoxDecoration(
-            //       color: Colors.white,
-            //       boxShadow: [
-            //         BoxShadow(
-            //           offset: Offset(0, 0),
-            //           blurRadius: size.width * 0.01,
-            //           color: Colors.grey,
-            //         ),
-            //       ],
-            //     ),
-            //     width: size.width,
-            //     child: Column(
-            //       children: [
-            //         SingleRowContainer(
-            //           boxDecoration: BoxDecoration(
-            //             border: Border(
-            //               bottom: BorderSide(
-            //                 width: size.width * 0.001,
-            //                 color: Colors.black,
-            //               ),
-            //             ),
-            //           ),
-            //           paddingTop: size.width * 0.02,
-            //           paddingBottom: size.width * 0.02,
-            //           children: [
-            //             Container(
-            //               padding: EdgeInsets.only(left: size.width * 0.02),
-            //               width: size.width * 0.6,
-            //               child: Row(
-            //                 children: [
-            //                   TextContainer(
-            //                     text: "12-12-2022",
-            //                     textColor: Colors.black,
-            //                     textSize: size.width * 0.07,
-            //                     textFontWeight: FontWeight.bold,
-            //                     decoration: TextDecoration.none,
-            //                   ),
-            //                   SizedBox(
-            //                     width: size.width * 0.03,
-            //                   ),
-            //                   Column(
-            //                     crossAxisAlignment: CrossAxisAlignment.start,
-            //                     children: [
-            //                       TextContainer(
-            //                         text:
-            //                             // "${getNameOfDays(listTranByDate.elementAt(index).createDate.weekday)}",
-            //                         "Thứ",
-            //                         textColor: Colors.black,
-            //                         textSize: size.width * 0.03,
-            //                         textFontWeight: FontWeight.w400,
-            //                         decoration: TextDecoration.none,
-            //                       ),
-            //                       TextContainer(
-            //                         text:
-            //                             // "tháng ${listTranByDate.elementAt(index).createDate.month} năm ${listTranByDate.elementAt(index).createDate.year}",
-            //                         "tháng / năm 2022}",
-            //                         textColor: Colors.black,
-            //                         textSize: size.width * 0.03,
-            //                         textFontWeight: FontWeight.w400,
-            //                         decoration: TextDecoration.none,
-            //                       ),
-            //                     ],
-            //                   ),
-            //                 ],
-            //               ),
-            //             ),
-            //             Container(
-            //               padding: EdgeInsets.only(right: size.width * 0.02),
-            //               alignment: Alignment.centerRight,
-            //               width: size.width * 0.3,
-            //               child: MoneyTextContainer(
-            //                 value: singleTotalSpending,
-            //                 textSize: size.width * 0.05,
-            //                 textFontWeight: FontWeight.bold,
-            //                 color: Colors.black,
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //         Container(
-            //           width: size.width,
-            //           height: size.width * 0.183 * listTranOfMonth.length,
-            //           child: ListView.builder(
-            //               physics: NeverScrollableScrollPhysics(),
-            //               itemCount: listTranOfMonth.length,
-            //               itemBuilder: (context, index) {
-            //                 return Padding(
-            //                   padding: EdgeInsets.only(top: size.width * 0.04),
-            //                   child: InkWell(
-            //                     onTap: () {
-            //                       // Navigator.push(
-            //                       //   context,
-            //                       //   MaterialPageRoute(
-            //                       //     builder: (context) => TransactionDetail(
-            //                       //         transaction:
-            //                       //             listTranOfMonth.elementAt(index),
-            //                       //         listTransaction:
-            //                       //             widget.listTransaction),
-            //                       //   ),
-            //                       // );
-            //                     },
-            //                     child: SingleRowContainer(
-            //                       boxDecoration: BoxDecoration(),
-            //                       paddingTop: size.width * 0.01,
-            //                       paddingBottom: size.width * 0.01,
-            //                       children: [
-            //                         Container(
-            //                           width: size.width * 0.2,
-            //                           child: CircleIconContainer(
-            //                             urlImage: "images/QuestionIcon.svg",
-            //                             iconSize: size.width * 0.08,
-            //                             backgroundColor:
-            //                                 Colors.deepOrangeAccent,
-            //                             padding: size.width * 0.02,
-            //                           ),
-            //                         ),
-            //                         Container(
-            //                           width: size.width * 0.5,
-            //                           child: Column(
-            //                             crossAxisAlignment:
-            //                                 CrossAxisAlignment.start,
-            //                             children: [
-            //                               TextContainer(
-            //                                 text: "Rap name",
-            //                                 textColor: Colors.black,
-            //                                 textSize: size.width * 0.045,
-            //                                 textFontWeight: FontWeight.bold,
-            //                                 decoration: TextDecoration.none,
-            //                               ),
-            //                               SizedBox(
-            //                                 height: size.width * 0.02,
-            //                               ),
-            //                               TextContainer(
-            //                                 text: "Transaction note",
-            //                                 textColor: Colors.grey,
-            //                                 textSize: size.width * 0.03,
-            //                                 textFontWeight: FontWeight.bold,
-            //                                 decoration: TextDecoration.none,
-            //                               ),
-            //                             ],
-            //                           ),
-            //                         ),
-            //                         Container(
-            //                           padding: EdgeInsets.only(
-            //                               right: size.width * 0.02),
-            //                           alignment: Alignment.centerRight,
-            //                           width: size.width * 0.3,
-            //                           child: MoneyTextContainer(
-            //                             value: 2000000,
-            //                             textSize: size.width * 0.05,
-            //                             textFontWeight: FontWeight.bold,
-            //                             color: Colors.red,
-            //                           ),
-            //                         ),
-            //                       ],
-            //                     ),
-            //                   ),
-            //                 );
-            //               }),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // );
 
             return Padding(
-              padding: EdgeInsets.only(top: size.width*0.1),
+              padding: EdgeInsets.only(top: size.width * 0.1),
               child: Container(
                 padding: EdgeInsets.all(size.width * 0.01),
                 decoration: BoxDecoration(
@@ -354,8 +209,8 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                     BoxShadow(
                       offset: Offset(0, 0),
                       color: Colors.grey,
-                      blurRadius: size.width*0.01,
-                      spreadRadius: size.width*0.001,
+                      blurRadius: size.width * 0.01,
+                      spreadRadius: size.width * 0.001,
                     )
                   ],
                 ),
@@ -366,9 +221,14 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
+                          alignment: Alignment.center,
                           width: size.width * 0.1,
                           child: TextContainer(
-                            text: "24",
+                            text: df_week
+                                .parse(listDays[index])
+                                .add(Duration(days: 1))
+                                .day
+                                .toString(),
                             textColor: Colors.black,
                             textSize: size.width * 0.07,
                             textFontWeight: FontWeight.w500,
@@ -381,14 +241,18 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               TextContainer(
-                                text: "Thứ hai",
+                                text: getNameOfDays(df_week
+                                    .parse(listDays[index])
+                                    .add(Duration(days: 1))
+                                    .weekday),
                                 textColor: Colors.black,
                                 textSize: size.width * 0.04,
                                 textFontWeight: FontWeight.w400,
                                 decoration: TextDecoration.none,
                               ),
                               TextContainer(
-                                text: "tháng 10 2022",
+                                text:
+                                    "tháng ${df_week.parse(listDays[index]).add(Duration(days: 1)).month} năm ${df_week.parse(listDays[index]).add(Duration(days: 1)).year}",
                                 textColor: Colors.black,
                                 textSize: size.width * 0.04,
                                 textFontWeight: FontWeight.w400,
@@ -409,26 +273,32 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                         ),
                       ],
                     ),
-                    Divider(thickness: size.width*0.001, color: Colors.black),
+                    Divider(thickness: size.width * 0.001, color: Colors.black),
                     Container(
                       width: size.width,
-                      height: size.width * 0.15*5,
+                      height: size.width * 0.15 * 5,
+
                       child: ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                          itemCount: 5,
-                          itemBuilder: (BuildContext context, int index) {
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: listTransactionByDay.length,
+                          itemBuilder: (BuildContext context, int index1)  {
+
                             return Container(
-                              padding: EdgeInsets.only(top: size.width*0.03, bottom: size.width*0.01),
+                              padding: EdgeInsets.only(
+                                  top: size.width * 0.03,
+                                  bottom: size.width * 0.01),
                               width: size.width,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(left: size.width*0.01),
+                                    padding: EdgeInsets.only(
+                                        left: size.width * 0.01),
                                     child: Container(
                                       width: size.width * 0.1,
                                       child: CircleIconContainer(
-                                        urlImage: "images/QuestionIcon.svg",
+                                        urlImage: listTransactionByDay[index1].expense!.expenseIcon,
                                         iconSize: size.width * 0.07,
                                         backgroundColor: Colors.yellow,
                                         padding: size.width * 0.02,
@@ -442,15 +312,16 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         TextContainer(
-                                          text: "Lương",
+                                          text: listTransactionByDay[index1].expense!.expenseName,
                                           textColor: Colors.black,
                                           textSize: size.width * 0.04,
                                           textFontWeight: FontWeight.w400,
                                           decoration: TextDecoration.none,
                                         ),
-                                        SizedBox(height: size.width*0.01),
+                                        SizedBox(height: size.width * 0.01),
                                         TextContainer(
-                                          text: "ghi chú",
+                                          text: listTransactionByDay[index1]
+                                              .historyNote!,
                                           textColor: Colors.black,
                                           textSize: size.width * 0.03,
                                           textFontWeight: FontWeight.w400,
@@ -463,7 +334,8 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                                     width: size.width * 0.21,
                                     alignment: Alignment.centerRight,
                                     child: MoneyTextContainer(
-                                      value: 500000,
+                                      value: listTransactionByDay[index1]
+                                          .historyCost!,
                                       textSize: size.width * 0.035,
                                       textFontWeight: FontWeight.w500,
                                       color: Colors.blue,
@@ -482,11 +354,16 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
         ),
       ],
     );
+    return Container();
   }
 
-  String getNameOfDays(int month) {
+  DateTime findFirstDateOfTheWeek(DateTime dateTime) {
+    return dateTime.subtract(Duration(days: dateTime.weekday - 1));
+  }
+
+  String getNameOfDays(int weekDay) {
     String date = "";
-    switch (month) {
+    switch (weekDay) {
       case 1:
         date = "Thứ hai";
         break;

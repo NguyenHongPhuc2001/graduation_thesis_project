@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:graduation_thesis_project/models/expense.dart';
+
 import 'base/base_model.dart';
 
 History historyFromJson(String str) => History.fromJson(json.decode(str));
@@ -19,11 +21,11 @@ class History extends BaseModel{
   String accountUsername;
   int? walletId;
   int? eventId;
-  int? expenseId;
+  Expense? expense;
 
   History ({this.historyId, required this.historyType, this.historyNotedDate,
     this.historyAction, this.historyCost, this.historyNote, required this.accountUsername,
-    this.walletId, this.eventId, this.expenseId});
+    this.walletId, this.eventId, this.expense});
 
   factory History.fromJson(Map<String, dynamic> json) => History(
       historyId: json['historyId'],
@@ -35,7 +37,7 @@ class History extends BaseModel{
       accountUsername: json['accountUsername'],
       walletId: json['walletId'],
       eventId: json['eventId'],
-      expenseId: json['expenseId']
+      expense: Expense.fromJson(json['expense'])
   );
 
   Map<String, dynamic> toJson () => {
@@ -48,7 +50,7 @@ class History extends BaseModel{
     "accountUsername" : accountUsername,
     "walletId" : walletId,
     "eventId" : eventId,
-    "expenseId" : expenseId
+    "expense" : expense!.toJson().toString()
   };
 
 }

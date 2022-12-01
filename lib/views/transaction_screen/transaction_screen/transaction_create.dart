@@ -99,38 +99,38 @@ class _TransactionCreateState extends State<TransactionCreate> {
                   ),
                   child: Column(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(3),
-                        margin: const EdgeInsets.only(top: 20),
-                        width: size.width * 0.8,
-                        height: size.width * 0.13,
-                        child: TextField(
-                          controller: controllerTransactionName,
-                          textAlign: TextAlign.center,
-                          autofocus: false,
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.only(
-                                left: 15, top: 5, bottom: 15),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: BorderSide(
-                                    color: Colors.grey.shade300,
-                                    width: size.width * 0.005)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: BorderSide(
-                                    color: Colors.grey.shade600,
-                                    width: size.width * 0.005)),
-                            // filled: true,
-                            fillColor: Colors.white,
-                            hintText: "Nhập tên giao dịch",
-                            hintStyle: TextStyle(
-                                fontSize: size.width * 0.04,
-                                color: Colors.grey.shade600,
-                                fontWeight: FontWeight.w400),
-                          ),
-                        ),
-                      ),
+                      // Container(
+                      //   padding: const EdgeInsets.all(3),
+                      //   margin: const EdgeInsets.only(top: 20),
+                      //   width: size.width * 0.8,
+                      //   height: size.width * 0.13,
+                      //   child: TextField(
+                      //     controller: controllerTransactionName,
+                      //     textAlign: TextAlign.center,
+                      //     autofocus: false,
+                      //     decoration: InputDecoration(
+                      //       contentPadding: const EdgeInsets.only(
+                      //           left: 15, top: 5, bottom: 15),
+                      //       enabledBorder: OutlineInputBorder(
+                      //           borderRadius: BorderRadius.circular(30),
+                      //           borderSide: BorderSide(
+                      //               color: Colors.grey.shade300,
+                      //               width: size.width * 0.005)),
+                      //       focusedBorder: OutlineInputBorder(
+                      //           borderRadius: BorderRadius.circular(30),
+                      //           borderSide: BorderSide(
+                      //               color: Colors.grey.shade600,
+                      //               width: size.width * 0.005)),
+                      //       // filled: true,
+                      //       fillColor: Colors.white,
+                      //       hintText: "Nhập tên giao dịch",
+                      //       hintStyle: TextStyle(
+                      //           fontSize: size.width * 0.04,
+                      //           color: Colors.grey.shade600,
+                      //           fontWeight: FontWeight.w400),
+                      //     ),
+                      //   ),
+                      // ),
                       const SizedBox(
                         height: 20,
                       ),
@@ -262,7 +262,7 @@ class _TransactionCreateState extends State<TransactionCreate> {
                             ),
                             InkWell(
                               onTap: () {
-                                Get.to(ExpenseList(isLoadByBudget: true))!
+                                Get.to(ExpenseList(isLoadByBudget: false))!
                                     .then((value) {
                                   setState(() {
                                     expense = value;
@@ -517,16 +517,15 @@ class _TransactionCreateState extends State<TransactionCreate> {
                 ElevatedButton(
                   onPressed: () async {
 
-                    if(expense==null||wallet==null||controllerTransactionName.text ==""||controllerTransactionValue.numberValue==0){
+                    if(expense==null||wallet==null||controllerTransactionValue.numberValue==0){
                       Fluttertoast.showToast(msg: "Vui lòng nhập đầy đủ thông tin !");
                     }else{
-                      // print("wallet balance value : ${(wallet.walletBalance-controllerTransactionValue.numberValue).toString()}");
+
                       await widget.transactionController.createTransaction("DISBURSE", df.format(DateTime.now()), "WITHDRAW", controllerTransactionValue.numberValue,
-                          controllerTransactionNote.text, expense.expenseId, wallet.walletId, (event==null)?null:event.eventId).then((value) {
+                          controllerTransactionNote.text, expense.expense, wallet.walletId, (event==null)?null:event.eventId).then((value) {
                             Get.back(result: "Create");
                       });
                     }
-
                   },
                   style: ElevatedButton.styleFrom(
                       shape: const StadiumBorder(),

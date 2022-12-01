@@ -52,5 +52,21 @@ class UriContainer {
     return uri;
   }
 
+  Uri uriGetListByMonth(String path){
+    Uri uri = Uri.http("10.0.2.2:8989", "/${path}/${ApiPaths.HISTORY_GET_LIST_BY_MONTH}");
+    return uri;
+  }
+
+  Uri uriGetListByWeek(String path){
+    Uri uri = Uri.http("10.0.2.2:8989", "/${path}/${ApiPaths.HISTORY_GET_LIST_BY_WEEK}");
+    return uri;
+  }
+
+  Uri uriGetListByDay(String path){
+    Uri uri = Uri.http("10.0.2.2:8989", "/${path}/${ApiPaths.HISTORY_GET_LIST_BY_DAY}");
+    return uri;
+  }
+
+
 }
 

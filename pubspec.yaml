@@ -49,6 +49,8 @@ dependencies:
   charts_flutter: ^0.12.0
   dropdown_button2: ^1.8.9
   shared_preferences: ^2.0.15
+  tiengviet: ^0.5.0
+  flutter_charset_detector: ^1.0.2
 
 dev_dependencies:
   flutter_test:
@@ -102,3 +104,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_intl:
+  enabled: true

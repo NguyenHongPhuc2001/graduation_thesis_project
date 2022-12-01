@@ -398,7 +398,7 @@ class _BudgetCreateState extends State<BudgetCreate> {
                         _budgetMoneyController.numberValue,
                         budgetIcon,
                         df.format(budgetEndDate),
-                        expense.expenseId).then((value) {
+                        expense.expense).then((value) {
                           if(value==false){
                             Fluttertoast.showToast(msg: "Ngân sách cho loại giao dịch đã tồn tại !");
                           }else{
