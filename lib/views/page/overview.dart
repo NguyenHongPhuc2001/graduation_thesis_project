@@ -86,7 +86,7 @@ class _OverviewState extends State<Overview> {
                                 child: ElevatedButton(
                                   onPressed: () async{
                                     List<Wallet>? wallets = await widget.walletController.getList();
-                                    Get.to(WalletList());
+                                    Get.to(WalletList(isTransaction:false));
                                   },
                                   style: ButtonStyle(
                                     shape: MaterialStateProperty.all(

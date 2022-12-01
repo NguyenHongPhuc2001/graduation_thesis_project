@@ -115,7 +115,7 @@ class _AccountManagementState extends State<AccountManagement> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>WalletList()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>WalletList(isTransaction:false)));
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: const StadiumBorder(),

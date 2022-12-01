@@ -10,7 +10,7 @@ class WalletController extends GetxController {
     return await WalletAPI().getList();
   }
 
-  Future<bool?> updateWallet(int? walletId, String? walletName, String? walletBalance) async {
+  Future<bool?> updateWallet(int? walletId, String? walletName, double? walletBalance) async {
     return await WalletAPI().update(walletId, walletName, walletBalance);
   }
 

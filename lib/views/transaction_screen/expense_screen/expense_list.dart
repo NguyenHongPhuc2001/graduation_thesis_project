@@ -128,6 +128,7 @@ class _ExpenseListState extends State<ExpenseList> {
         onTap: () {
           if(isLoadByBudget){
             Navigator.of(context).pop(item);
+
           }else{
             Get.to(ExpenseSetting(expenseId: item.expenseId, expenseName: item.expenseName, expenseType: item.expenseType, expenseIcon: item.expenseIcon));
           }

@@ -210,7 +210,7 @@ class _WalletSettingState extends State<WalletSetting> {
                   await widget.walletController.updateWallet(
                       widget.wallet.walletId,
                       controllerWalletName.text,
-                      controllerWalletBalance.numberValue.toString());
+                      controllerWalletBalance.numberValue);
                   Navigator.pop(context, "Update");
                 },
                 style: ElevatedButton.styleFrom(

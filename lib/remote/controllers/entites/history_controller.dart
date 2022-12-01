@@ -13,4 +13,19 @@ class HistoryController extends GetxController {
     return await HistoryAPI().getHistoriesByWithdraw(accountUsername);
   }
 
+  Future<bool> createTransaction(String historyType,String historyNotedDate,String historyAction,
+      double historyCost, String historyNote, int expenseId, int walletId, int? eventId)async{
+    return await HistoryAPI().createTransaction(historyType, historyNotedDate, historyAction, historyCost, historyNote, expenseId, walletId, eventId);
+  }
+
+  Future<bool> updateTransaction(String? historyType,String? historyNotedDate,String? historyAction,
+      double? historyCost, String? historyNote, int? expenseId, int? walletId, int? eventId) async {
+    return await HistoryAPI().updateTransaction(historyType,historyNotedDate,historyAction,
+        historyCost,  historyNote,  expenseId,  walletId, eventId);
+  }
+
+  Future<bool> deleteTransaction(int historyId) async{
+    return await HistoryAPI().deleteTransaction(historyId);
+  }
+
 }

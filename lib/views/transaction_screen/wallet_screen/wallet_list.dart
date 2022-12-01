@@ -14,8 +14,8 @@ import '../../commons/widgets/text_container.dart';
 // ignore: must_be_immutable
 class WalletList extends StatefulWidget {
   WalletController walletController = Get.put(WalletController());
-
-  WalletList({Key? key}) : super(key: key);
+  final bool isTransaction;
+  WalletList({Key? key, required this.isTransaction}) : super(key: key);
 
   @override
   State<WalletList> createState() => _WalletListState();
@@ -125,7 +125,7 @@ class _WalletListState extends State<WalletList> {
       for (Wallet item in wallets) {
         walletItems.add(GestureDetector(
           onTap: () async {
-            await Get.to(WalletSetting(
+            (widget.isTransaction==false) ? await Get.to(WalletSetting(
               wallet: item,
             ))!
                 .then((value) => {
@@ -160,7 +160,7 @@ class _WalletListState extends State<WalletList> {
                           }
                         }
                       })
-                    });
+                    }): Get.back(result: item);
           },
           child: Container(
             alignment: Alignment.center,

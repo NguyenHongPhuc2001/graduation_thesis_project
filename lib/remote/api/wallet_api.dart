@@ -43,7 +43,7 @@ class WalletAPI extends BaseAPI{
     return null;
   }
 
-  Future<bool?> update(int? walletId, String? walletName, String? walletBalance) async{
+  Future<bool?> update(int? walletId, String? walletName, double? walletBalance) async{
 
     String? username = await manager.getUsername();
     Account account = Account(accountUsername: username!);
@@ -52,7 +52,9 @@ class WalletAPI extends BaseAPI{
       "walletId" : walletId,
       "walletName" : walletName,
       "walletBalance" : walletBalance,
-      "account" : account
+      "account" : {
+        "accountUsername":username!
+      }
     };
 
     final request = http.Request(

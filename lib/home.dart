@@ -7,6 +7,7 @@ import 'package:graduation_thesis_project/views/page/overview.dart';
 import 'package:graduation_thesis_project/views/page/setting.dart';
 import 'package:graduation_thesis_project/views/plan_screen/plan_main_screen.dart';
 import 'package:graduation_thesis_project/views/transaction_screen/expense_screen/expense_create.dart';
+import 'package:graduation_thesis_project/views/transaction_screen/transaction_screen/transaction_create.dart';
 import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen/wallet_create.dart';
 
 import 'views/manage_transactions_screen/manage_transaction_main_screen.dart';
@@ -39,26 +40,11 @@ class _HomeState extends State<Home> {
         child: FittedBox(
           child: FloatingActionButton(
             onPressed: () async {
-              // Get.to(WalletCreate())?.then((value) {
-              //   setState(() {
-              //     if(value.runtimeType == bool){
-              //       Fluttertoast.showToast(
-              //           msg: "Đã thêm mới ví !",
-              //           toastLength: Toast.LENGTH_SHORT,
-              //           gravity: ToastGravity.BOTTOM,
-              //           timeInSecForIosWeb: 1,
-              //           backgroundColor: Colors.blue,
-              //           textColor: Colors.white,
-              //           fontSize: 12.0
-              //       );
-              //     }
-              //   });
-              // });
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          ExpenseCreate(isLoadByBudget: false)));
+              Get.to(TransactionCreate())!.then((value){
+                if(value=="Create"){
+                  Fluttertoast.showToast(msg: "Tạo giao dịch thành công !");
+                }
+              });
             },
             child: const Icon(Icons.add),
           ),
