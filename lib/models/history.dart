@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:graduation_thesis_project/models/expense.dart';
+import 'package:intl/intl.dart';
 
 import 'base/base_model.dart';
 
@@ -9,6 +10,8 @@ List<History> historiesFromJson(List<dynamic> json) => List<History>.from(json.m
 
 String historyToJson(History history) => json.encode(history);
 String historiesToJson(List<History> histories) => json.encode(List<dynamic>.from(histories.map((h) => h.toJson())));
+
+DateFormat df = DateFormat("yyyy-MM-dd");
 
 class History extends BaseModel{
 

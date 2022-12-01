@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/controllers/entites/history_controller.dart';
 import 'package:graduation_thesis_project/models/expense.dart';
+import 'package:graduation_thesis_project/models/response/list_days_have_transaction_in_month.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/expense_controller.dart';
 import 'package:graduation_thesis_project/views/manage_transactions_screen/report_page.dart';
 
@@ -18,8 +19,8 @@ import '../commons/widgets/text_container.dart';
 class OverviewManageTransaction extends StatefulWidget {
   final historyController = Get.put(HistoryController());
 
-  final int month;
-  final int day;
+  int month;
+  int day;
 
   OverviewManageTransaction({
     Key? key,
@@ -36,7 +37,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
   final List<Tab> listTabs = [];
   List<History> listTransactionByMonth = [];
   List<History> listTranByDate = [];
-  List<String> listDays = [];
+  List<ListDaysHaveTransactionInMonth> listDays = [];
   final df_month = DateFormat("yyyy-MM");
   final df_week = DateFormat("yyyy-MM-dd");
   var month;
@@ -47,12 +48,16 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
     super.initState();
     month = "${DateTime.now().year}-${widget.month + 1}" as String;
 
+    widget.historyController.getListDaysHaveTransactionByMonth(month).then((value) {
+      setState((){
+        listDays = List.from(value!);
+      });
+    });
+
     widget.historyController.getListTransactionByMonth(month).then((value) {
-      if (value!.isEmpty == false) {
         setState(() {
           listTransactionByMonth = List.from(value!);
         });
-      }
     });
   }
 
@@ -60,32 +65,10 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    listDays.clear();
-    for (int i = 0; i < listTransactionByMonth.length - 1; i++) {
-      for (int j = i + 1; j < listTransactionByMonth.length; j++) {
-        DateTime date1 = df_week
-            .parse(listTransactionByMonth[i].historyNotedDate!)
-            .add(Duration(days: 1));
-        DateTime date2 = df_week
-            .parse(listTransactionByMonth[j].historyNotedDate!)
-            .add(Duration(days: 1));
-        int day1 = date1.day;
-        int day2 = date2.day;
-        if (day1 != day2) {
-          setState(() {
-            listDays.add(listTransactionByMonth[i].historyNotedDate!);
-          });
-        }
-      }
-    }
-
-    if (listDays.isEmpty) {
-      listDays.add(listTransactionByMonth[0].historyNotedDate!);
-    }
+    print("List by month :${listDays.length}");
 
     return CustomScrollView(
       slivers: [
-
         SliverToBoxAdapter(
           child: Container(
             padding: EdgeInsets.all(size.width * 0.03),
@@ -181,18 +164,24 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
             ),
           ),
         ),
-
         SliverList(
-          delegate: SliverChildBuilderDelegate(childCount: listDays.length,
+          delegate: SliverChildBuilderDelegate(
+              childCount: listDays.length,
               (BuildContext context, int index) {
+
             List<History> listTransactionByDay = [];
 
             listTransactionByMonth.forEach((element) {
+
               DateTime d1 = df_week
-                  .parse(element.historyNotedDate!)
-                  .add(Duration(days: 1));
+                  .parse(element.historyNotedDate!);
               DateTime d2 =
-                  df_week.parse(listDays[index]).add(Duration(days: 1));
+                  df_week.parse(listDays[index].date).subtract(Duration(days: 1));
+
+
+              print(d1);
+              print(d2);
+
               if (d1.compareTo(d2) == 0) {
                 listTransactionByDay.add(element);
               }
@@ -225,8 +214,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                           width: size.width * 0.1,
                           child: TextContainer(
                             text: df_week
-                                .parse(listDays[index])
-                                .add(Duration(days: 1))
+                                .parse(listDays[index].date)
                                 .day
                                 .toString(),
                             textColor: Colors.black,
@@ -242,8 +230,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                             children: [
                               TextContainer(
                                 text: getNameOfDays(df_week
-                                    .parse(listDays[index])
-                                    .add(Duration(days: 1))
+                                    .parse(listDays[index].date)
                                     .weekday),
                                 textColor: Colors.black,
                                 textSize: size.width * 0.04,
@@ -252,7 +239,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                               ),
                               TextContainer(
                                 text:
-                                    "tháng ${df_week.parse(listDays[index]).add(Duration(days: 1)).month} năm ${df_week.parse(listDays[index]).add(Duration(days: 1)).year}",
+                                    "tháng ${df_week.parse(listDays[index].date).month} năm ${df_week.parse(listDays[index].date).year}",
                                 textColor: Colors.black,
                                 textSize: size.width * 0.04,
                                 textFontWeight: FontWeight.w400,
@@ -276,13 +263,11 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                     Divider(thickness: size.width * 0.001, color: Colors.black),
                     Container(
                       width: size.width,
-                      height: size.width * 0.15 * 5,
-
+                      height: size.width * 0.15 * listTransactionByDay.length,
                       child: ListView.builder(
                           physics: NeverScrollableScrollPhysics(),
                           itemCount: listTransactionByDay.length,
-                          itemBuilder: (BuildContext context, int index1)  {
-
+                          itemBuilder: (BuildContext context, int index1) {
                             return Container(
                               padding: EdgeInsets.only(
                                   top: size.width * 0.03,
@@ -298,7 +283,9 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                                     child: Container(
                                       width: size.width * 0.1,
                                       child: CircleIconContainer(
-                                        urlImage: listTransactionByDay[index1].expense!.expenseIcon,
+                                        urlImage: listTransactionByDay[index1]
+                                            .expense!
+                                            .expenseIcon,
                                         iconSize: size.width * 0.07,
                                         backgroundColor: Colors.yellow,
                                         padding: size.width * 0.02,
@@ -312,7 +299,9 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         TextContainer(
-                                          text: listTransactionByDay[index1].expense!.expenseName,
+                                          text: listTransactionByDay[index1]
+                                              .expense!
+                                              .expenseName,
                                           textColor: Colors.black,
                                           textSize: size.width * 0.04,
                                           textFontWeight: FontWeight.w400,

@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/history.dart';
 import 'package:graduation_thesis_project/remote/api/History_API.dart';
 
+import '../../../models/response/list_days_have_transaction_in_month.dart';
+
 class HistoryController extends GetxController {
 
   List<History> historyList = <History>[].obs;
@@ -33,4 +35,9 @@ class HistoryController extends GetxController {
   Future<List<History>?> getListTransactionByDay(String day)async{
     return await HistoryAPI().getListTransactionByDay(day);
   }
+
+  Future<List<ListDaysHaveTransactionInMonth>?> getListDaysHaveTransactionByMonth(String month)async{
+    return await HistoryAPI().getListDaysHaveTransactionByMonth(month);
+  }
+
 }

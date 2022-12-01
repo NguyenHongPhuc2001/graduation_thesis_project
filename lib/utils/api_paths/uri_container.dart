@@ -67,6 +67,10 @@ class UriContainer {
     return uri;
   }
 
+  Uri uriGetListDayInMonth(String path){
+    Uri uri = Uri.http("10.0.2.2:8989", "/${path}/${ApiPaths.HISTORY_GET_LIST_DAY_IN_MONTH}");
+    return uri;
+  }
 
 }
 

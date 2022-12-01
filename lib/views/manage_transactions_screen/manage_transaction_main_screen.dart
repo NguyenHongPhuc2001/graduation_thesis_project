@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:graduation_thesis_project/controllers/entites/history_controller.dart';
 import 'package:graduation_thesis_project/models/expense.dart';
+import 'package:graduation_thesis_project/models/history.dart';
+import 'package:graduation_thesis_project/models/response/list_days_have_transaction_in_month.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/budget_controller.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/expense_controller.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/history_controller.dart';
@@ -30,9 +32,6 @@ class _ManageTransactionState extends State<ManageTransaction> {
   int _selectedIndex = DateTime.now().month - 1;
   final listItems = <String>["Tuần", "Tháng"];
   String currentItem = "Tuần";
-
-
-
 
   DateFormat df = DateFormat("yyyy-MM-dd");
 
@@ -83,9 +82,7 @@ class _ManageTransactionState extends State<ManageTransaction> {
               onTap: () {
                 showSearch(
                   context: context,
-                  delegate: CustomSearchDelegate(
-
-                  ),
+                  delegate: CustomSearchDelegate(),
                 );
               },
               splashColor: Colors.white,
@@ -125,14 +122,22 @@ class _ManageTransactionState extends State<ManageTransaction> {
                     Icons.more_vert,
                     color: Colors.black,
                   ),
-                  onSelected: (value) async{
+                  onSelected: (value) async {
+                    // List<ListDaysHaveTransactionInMonth> list = [];
+                    List<History> list = [];
 
-                    print("ssss");
-                    await HistoryController().getListTransactionByMonth("2022-12").then((value) {
-                      value!.forEach((item){
-                        print(item.toJson());
+                    await HistoryController()
+                        .getListTransactionByMonth("2022-12")
+                        .then((value) {
+                      setState(() {
+                        list = List.from(value!);
                       });
                     });
+
+                    list.forEach((element) {
+                      print(element.historyNotedDate!);
+                    });
+
 
                     setState(() {
                       currentItem = value;
@@ -155,7 +160,6 @@ class _ManageTransactionState extends State<ManageTransaction> {
                 setState(() {
                   _selectedIndex = value;
                 });
-                print(_selectedIndex);
               },
               indicatorColor: Colors.black,
               labelColor: Colors.black,
@@ -168,7 +172,7 @@ class _ManageTransactionState extends State<ManageTransaction> {
               tabs: listTabs,
             ),
           ),
-          body: OverviewManageTransaction(month: _selectedIndex,day: 1),
+          body: OverviewManageTransaction(month: _selectedIndex, day: 1),
         ),
       ),
     );
@@ -211,8 +215,6 @@ class _ManageTransactionState extends State<ManageTransaction> {
 }
 
 class CustomSearchDelegate extends SearchDelegate {
-
-
   List<String> searchItems = [
     "Ăn uống",
     "Nhiên liệu",
@@ -249,7 +251,7 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   // TODO: implement textInputAction
   TextInputAction get textInputAction {
-   return TextInputAction.search;
+    return TextInputAction.search;
   }
 
   @override
@@ -261,9 +263,7 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   // TODO: implement searchFieldStyle
   TextStyle? get searchFieldStyle {
-    return TextStyle(
-      fontSize: 13
-    );
+    return TextStyle(fontSize: 13);
   }
 
   @override

@@ -212,36 +212,6 @@ class _TransactionCreateState extends State<TransactionCreate> {
                                       ),
                                     ),
                                 ),
-                                // decoration: InputDecoration(
-                                //     hintText: 'Nhập số tiền',
-                                //     hintStyle: TextStyle(
-                                //       fontSize: size.width * 0.034,
-                                //       color: Colors.grey,
-                                //       fontWeight: FontWeight.w400,
-                                //     ),
-                                //     enabledBorder: InputBorder.none,
-                                //     focusedBorder: InputBorder.none,
-                                //     isDense: true,
-                                //     suffixIcon: Padding(
-                                //       padding: EdgeInsets.symmetric(
-                                //           vertical: size.width * 0.006,
-                                //           horizontal: size.width * 0.01),
-                                //       child: Container(
-                                //         alignment: Alignment.center,
-                                //         width: size.width * 0.02,
-                                //         decoration: BoxDecoration(
-                                //           borderRadius: BorderRadius.circular(
-                                //               size.width * 0.1),
-                                //           color: Colors.red,
-                                //         ),
-                                //         child: Text(
-                                //           "VNĐ",
-                                //           style: TextStyle(
-                                //               color: Colors.white,
-                                //               fontWeight: FontWeight.w500),
-                                //         ),
-                                //       ),
-                                //     )),
                               ),
                             ),
                           ],
@@ -522,7 +492,7 @@ class _TransactionCreateState extends State<TransactionCreate> {
                     }else{
 
                       await widget.transactionController.createTransaction("DISBURSE", df.format(DateTime.now()), "WITHDRAW", controllerTransactionValue.numberValue,
-                          controllerTransactionNote.text, expense.expense, wallet.walletId, (event==null)?null:event.eventId).then((value) {
+                          controllerTransactionNote.text, expense.expenseId, wallet.walletId, (event==null)?null:event.eventId).then((value) {
                             Get.back(result: "Create");
                       });
                     }

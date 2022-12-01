@@ -8,10 +8,13 @@ import 'package:graduation_thesis_project/utils/api_paths/uri_container.dart';
 
 import '../../models/chart/pie_item.dart';
 import '../../models/history.dart';
+import '../../models/response/list_days_have_transaction_in_month.dart';
 import '../../models/response/response_model.dart';
 import 'package:http/http.dart' as http;
 
 class HistoryAPI extends BaseAPI {
+
+
   Future<List<History>?> getHistoriesByWithdraw() async {
     String? username = await manager.getUsername();
     String? token = await manager.getAuthToken();
@@ -133,7 +136,9 @@ class HistoryAPI extends BaseAPI {
       "historyNote": historyNote,
       "accountUsername": userName!,
       "walletId": walletId,
-      "expenseId": expenseId,
+      "expense": {
+        "expenseId":expenseId
+      },
       "eventId": eventId
     };
 
@@ -238,8 +243,6 @@ class HistoryAPI extends BaseAPI {
 
     Map<String, dynamic> dataFromAPI = jsonDecode(response.body);
 
-
-
     if (dataFromAPI.entries.elementAt(1).value == 200) {
       List<History> map =
           historiesFromJson(dataFromAPI.entries.elementAt(2).value);
@@ -284,4 +287,40 @@ class HistoryAPI extends BaseAPI {
     }
 
   }
+
+  Future<List<ListDaysHaveTransactionInMonth>?> getListDaysHaveTransactionByMonth(String month) async {
+    String? userName = await manager.getUsername();
+    String? token = await manager.getAuthToken();
+
+    final queryParameters = {
+      "accountUsername": userName!,
+      "month": month,
+    };
+
+    final request = http.Request(
+        ApiPaths.METHOD_GET, UriContainer().uriGetListDayInMonth("history"));
+
+    request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
+    request.body = jsonEncode(queryParameters);
+
+    final streamedRequest = await request.send();
+    final response = await http.Response.fromStream(streamedRequest);
+
+    Map<String, dynamic> dataFromAPI = jsonDecode(response.body);
+
+
+
+    if (dataFromAPI.entries.elementAt(1).value == 200) {
+      List<ListDaysHaveTransactionInMonth> map =
+      listDaysHaveTransactionInMonthFromJson(dataFromAPI.entries.elementAt(2).value);
+
+      return map;
+    } else {
+      return null;
+    }
+
+  }
+
+
 }

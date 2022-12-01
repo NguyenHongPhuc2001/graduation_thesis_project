@@ -33,4 +33,5 @@ class ApiPaths {
   static const String HISTORY_GET_LIST_BY_WEEK = "get_list_by_week";
   static const String HISTORY_GET_LIST_BY_MONTH = "get_list_by_month";
   static const String HISTORY_GET_LIST_BY_DAY = "get_list_by_day";
+  static const String HISTORY_GET_LIST_DAY_IN_MONTH =  "get_list_day_in_month";
 }
