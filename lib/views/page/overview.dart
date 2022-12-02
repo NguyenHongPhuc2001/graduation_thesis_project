@@ -914,7 +914,7 @@ class _OverviewState extends State<Overview> {
     await _totalWithdraw(datesOfLastMonth).then((value){
       totalLastWithdraw = value;
     });
-    
+
     final data = [
       Withdraw("Tháng trước", totalLastWithdraw),
       Withdraw("Tháng này", totalCurrentWithdraw),

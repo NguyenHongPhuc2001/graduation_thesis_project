@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/home.dart';
 import 'package:graduation_thesis_project/un_used/WalletNew.dart';
+import 'package:graduation_thesis_project/utils/charts/pie.dart';
 import 'package:graduation_thesis_project/views/root.dart';
 
 import 'generated/l10n.dart';
@@ -29,6 +30,16 @@ class _MyAppState extends State<MyApp> {
       ),
       debugShowCheckedModeBanner: false,
       home: const RootPage()
+      // Column(
+      //   mainAxisAlignment: MainAxisAlignment.center,
+      //   children: [
+      //     SizedBox(
+      //       height: 180,
+      //       width: 180,
+      //       child: DonutAutoLabelChart.withSampleData(),
+      //     ),
+      //   ],
+      // )
     );
   }
 }

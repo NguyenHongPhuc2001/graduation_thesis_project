@@ -28,6 +28,7 @@ class ManageTransaction extends StatefulWidget {
 }
 
 class _ManageTransactionState extends State<ManageTransaction> {
+
   final List<Tab> listTabs = [];
   int _selectedIndex = DateTime.now().month - 1;
   final listItems = <String>["Tuần", "Tháng"];

@@ -48,18 +48,21 @@ class HistoryAPI extends BaseAPI {
     return completer.future;
   }
 
-  Future<List<PieItem>?> getPieItems(String accountUsername, String date,
-      String getDateType, String apiPaths) async {
+  Future<List<PieItem>?> getPieItems(String date, String getDateType, String apiPaths) async {
+
+    String? username = await manager.getUsername();
+    String? token = await manager.getAuthToken();
+
     final queryParameters = {
-      "accountUsername": accountUsername,
+      "accountUsername": username,
       "date": date,
       "getDateType": getDateType
     };
 
-    final request =
-        http.Request(ApiPaths.METHOD_GET, UriContainer().uriGetList("history"));
+    final request = http.Request(ApiPaths.METHOD_GET, Uri.http("10.0.2.2:8989", ApiPaths.HISTORY_DOMAIN + apiPaths));
 
     request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
     request.body = jsonEncode(queryParameters);
 
     final streamedRequest = await request.send();

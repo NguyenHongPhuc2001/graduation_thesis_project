@@ -143,7 +143,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ReportPage()));
+                                builder: (context) => const ReportPage()));
                       },
                       margin: EdgeInsets.only(top: size.width * 0.04),
                       buttonWith: size.width * 0.7,

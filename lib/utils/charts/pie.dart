@@ -1,9 +1,9 @@
 import 'package:charts_flutter_new/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:graduation_thesis_project/services/remote_services.dart';
 import 'package:graduation_thesis_project/utils/api.dart';
 
 import '../../models/chart/pie_item.dart';
+import '../../remote/controllers/chart/pie_controller.dart';
 import '../date/date_utils.dart';
 
 // ignore: must_be_immutable
@@ -20,30 +20,40 @@ class DonutAutoLabelChart extends StatelessWidget {
 
   factory DonutAutoLabelChart.withSampleData() {
     return DonutAutoLabelChart(
-      seriesList: _createSampleData(),
-      animate: false,
+      seriesList: _createData(),
+      animate: false
     );
   }
 
   @override
   Widget build(BuildContext context) {
 
+    if(seriesList[0].data.isNotEmpty){
+
+      return charts.PieChart<String>(
+          seriesList,
+          animate: animate,
+          defaultRenderer: charts.ArcRendererConfig(
+              arcWidth: 60,
+              arcRendererDecorators: [charts.ArcLabelDecorator()])
+      );
+
+    }
+
     return charts.PieChart<String>(
-      seriesList,
-      animate: animate,
-      defaultRenderer: charts.ArcRendererConfig(
-          arcWidth: 60,
-          arcRendererDecorators: [charts.ArcLabelDecorator()])
+        seriesList,
+        animate: animate
     );
+
   }
 
-  static List<charts.Series<dynamic, String>> _createSampleData() {
+  static List<charts.Series<dynamic, String>> _createData() {
 
     DateTime now = DateTime.now();
     String dateFormat = "${now.year}-${now.month}-${now.day}";
 
-    RemoteService().getPieItems("ChuTT", dateFormat, "MONTH", ApiPaths.HISTORY_GET_LIST_BY_RECHARGE_PIE_CHART.toString()).then((value) async {
-       data = await value!;
+    PieItemController().getPieItems(dateFormat, "MONTH", ApiPaths.HISTORY_GET_LIST_BY_WITHDRAW_PIE_CHART.toString()).then((value) async {
+       data = value!;
     });
 
     return [
@@ -53,17 +63,9 @@ class DonutAutoLabelChart extends StatelessWidget {
         measureFn: (PieItem item, _) => item.totalCost,
         data: data,
         // Set a label accessor to control the text of the arc label.
-        labelAccessorFn: (PieItem row, _) => '${row.expenseName}',
+        labelAccessorFn: (PieItem row, _) => row.expenseName,
       )
     ];
   }
 
 }
-
-class LinearSales {
-  final int year;
-  final int sales;
-
-  LinearSales(this.year, this.sales);
-}
-
