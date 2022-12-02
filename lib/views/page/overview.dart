@@ -879,16 +879,28 @@ class _OverviewState extends State<Overview> {
     }
 
     for (var i = 0; i < totalDatesOfCurrentMonth; i++) {
-      datesOfLastMonth.add( '$currentYear-$currentMonth-${i + 1}');
+      if(i < 10){
+        datesOfCurrentMonth.add( '$currentYear-$currentMonth-0${i + 1}');
+      }else{
+        datesOfCurrentMonth.add( '$currentYear-$currentMonth-${i + 1}');
+      }
     }
 
     if (check) {
       for (var i = 0; i < totalDatesOfLastMonth; i++) {
-        datesOfLastMonth.add( '${currentYear-1}-12-${i + 1}');
+        if(i < 10){
+          datesOfLastMonth.add( '${currentYear-1}-12-0${i + 1}');
+        }else{
+          datesOfLastMonth.add( '${currentYear-1}-12-${i + 1}');
+        }
       }
     }else{
       for (var i = 0; i < totalDatesOfLastMonth; i++) {
-        datesOfLastMonth.add( '$currentYear-${currentMonth - 1}-${i + 1}');
+        if(i < 10){
+          datesOfLastMonth.add( '$currentYear-${currentMonth - 1}-0${i + 1}');
+        }else{
+          datesOfLastMonth.add( '$currentYear-${currentMonth - 1}-${i + 1}');
+        }
       }
     }
 
@@ -902,7 +914,7 @@ class _OverviewState extends State<Overview> {
     await _totalWithdraw(datesOfLastMonth).then((value){
       totalLastWithdraw = value;
     });
-
+    
     final data = [
       Withdraw("Tháng trước", totalLastWithdraw),
       Withdraw("Tháng này", totalCurrentWithdraw),
