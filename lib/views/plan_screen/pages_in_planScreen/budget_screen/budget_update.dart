@@ -38,12 +38,13 @@ class _BudgetUpdateState extends State<BudgetUpdate> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _loadBudgetData();
   }
 
   @override
   Widget build(BuildContext context) {
 
-    _loadBudgetData();
+
 
     Size size = MediaQuery.of(context).size;
 

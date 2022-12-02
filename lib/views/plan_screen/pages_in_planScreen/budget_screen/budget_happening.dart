@@ -53,11 +53,9 @@ class _BudgetHappeningState extends State<BudgetHappening> {
 
     if (widget.check == true) {
       listBudgetHappenning.clear();
-      if (mounted) {
         setState(() {
           listBudgetHappenning = List.from(widget.listBudget);
         });
-      }
       setState(() {
         widget.check = false;
       });

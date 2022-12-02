@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:get_storage/get_storage.dart';
 import 'package:graduation_thesis_project/remote/api/base_api.dart';
 import 'package:graduation_thesis_project/utils/api_paths/uri_container.dart';
 
@@ -42,7 +43,9 @@ class BudgetAPI extends BaseAPI {
     final streamedRequest = await request.send();
     final response = await http.Response.fromStream(streamedRequest);
 
-    if (response.statusCode == 200) {
+    Map<String, dynamic> map = jsonDecode(response.body);
+
+    if (map.entries.elementAt(1).value == 201) {
       return true;
     }
 

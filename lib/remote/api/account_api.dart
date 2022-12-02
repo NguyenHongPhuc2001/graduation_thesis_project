@@ -66,7 +66,9 @@ class AccountAPI extends BaseAPI {
       "accountUsername": username!,
       "accountPassword": password,
       "rePassword": repassword,
-      "role": {"roleName": "ROLE_USER"}
+      "role": {
+        "roleName": "ROLE_USER1"
+      }
     };
 
     final request =
