@@ -22,10 +22,13 @@ class OverviewManageTransaction extends StatefulWidget {
   int month;
   int day;
 
+  bool check;
+
   OverviewManageTransaction({
     Key? key,
     required this.month,
     required this.day,
+    required this.check,
   }) : super(key: key);
 
   @override
@@ -48,16 +51,18 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
     super.initState();
     month = "${DateTime.now().year}-${widget.month + 1}" as String;
 
-    widget.historyController.getListDaysHaveTransactionByMonth(month).then((value) {
-      setState((){
+    widget.historyController
+        .getListDaysHaveTransactionByMonth(month)
+        .then((value) {
+      setState(() {
         listDays = List.from(value!);
       });
     });
 
     widget.historyController.getListTransactionByMonth(month).then((value) {
-        setState(() {
-          listTransactionByMonth = List.from(value!);
-        });
+      setState(() {
+        listTransactionByMonth = List.from(value!);
+      });
     });
   }
 
@@ -65,7 +70,33 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    print("List by month :${listDays.length}");
+
+    if(widget.check==true){
+      month = "${DateTime.now().year}-${widget.month + 1}" as String;
+
+      widget.historyController
+          .getListDaysHaveTransactionByMonth(month)
+          .then((value) {
+        setState(() {
+          listDays = List.from(value!);
+        });
+      });
+
+      widget.historyController.getListTransactionByMonth(month).then((value) {
+        setState(() {
+          listTransactionByMonth = List.from(value!);
+        });
+      });
+
+      setState(() {
+        widget.check=false;
+      });
+    }
+
+
+    print("Check value ${widget.check}");
+
+
 
     return CustomScrollView(
       slivers: [
@@ -164,26 +195,29 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
             ),
           ),
         ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-              childCount: listDays.length,
-              (BuildContext context, int index) {
 
+        SliverList(
+          delegate: SliverChildBuilderDelegate(childCount: listDays.length,
+              (BuildContext context, int index) {
             List<History> listTransactionByDay = [];
 
             listTransactionByMonth.forEach((element) {
-
-              DateTime d1 = df_week
-                  .parse(element.historyNotedDate!);
-              DateTime d2 =
-                  df_week.parse(listDays[index].date).subtract(Duration(days: 1));
-
-
-              print(d1);
-              print(d2);
-
+              DateTime d1 = df_week.parse(element.historyNotedDate!);
+              DateTime d2 = df_week
+                  .parse(listDays[index].date)
+                  .subtract(Duration(days: 1));
               if (d1.compareTo(d2) == 0) {
                 listTransactionByDay.add(element);
+              }
+            });
+
+            double sum = 0.0;
+
+            listTransactionByDay.forEach((element) {
+              if(element.historyAction=="WITHDRAW"){
+                  sum-=element.historyCost!;
+              }else{
+                  sum+=element.historyCost!;
               }
             });
 
@@ -252,7 +286,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                           width: size.width * 0.3,
                           alignment: Alignment.centerRight,
                           child: MoneyTextContainer(
-                            value: 500000,
+                            value: sum,
                             textSize: size.width * 0.035,
                             textFontWeight: FontWeight.w500,
                             color: Colors.black,
@@ -263,14 +297,14 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                     Divider(thickness: size.width * 0.001, color: Colors.black),
                     Container(
                       width: size.width,
-                      height: size.width * 0.15 * listTransactionByDay.length,
+                      height: size.width * 0.19 * listTransactionByDay.length,
                       child: ListView.builder(
                           physics: NeverScrollableScrollPhysics(),
                           itemCount: listTransactionByDay.length,
                           itemBuilder: (BuildContext context, int index1) {
                             return Container(
                               padding: EdgeInsets.only(
-                                  top: size.width * 0.03,
+                                  top: size.width * 0.02,
                                   bottom: size.width * 0.01),
                               width: size.width,
                               child: Row(
@@ -327,7 +361,11 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                                           .historyCost!,
                                       textSize: size.width * 0.035,
                                       textFontWeight: FontWeight.w500,
-                                      color: Colors.blue,
+                                      color: (listTransactionByDay[index1]
+                                                  .historyAction ==
+                                              "WITHDRAW")
+                                          ? Colors.red
+                                          : Colors.blue,
                                     ),
                                   ),
                                 ],

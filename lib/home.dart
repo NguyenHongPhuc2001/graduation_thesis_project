@@ -24,11 +24,19 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int currentTab = 0;
 
+  bool check=false;
+
+  String? checkStr = "test";
+
+
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentScreen = Overview();
 
   @override
   Widget build(BuildContext context) {
+
+    print(currentTab);
+
     return Scaffold(
       body: PageStorage(
         bucket: bucket,
@@ -40,9 +48,18 @@ class _HomeState extends State<Home> {
         child: FittedBox(
           child: FloatingActionButton(
             onPressed: () async {
-              Get.to(TransactionCreate())!.then((value){
+              await Get.to(TransactionCreate())!.then((value){
                 if(value=="Create"){
                   Fluttertoast.showToast(msg: "Tạo giao dịch thành công !");
+
+                  setState(() {
+                    check=true;
+                    if(currentTab==1){
+                      currentScreen =
+                          ManageTransaction(check: check);
+                    }
+                  });
+
                 }
               });
             },
@@ -94,7 +111,7 @@ class _HomeState extends State<Home> {
                 onPressed: () {
                   setState(() {
                     currentScreen =
-                        const ManageTransaction(listTransaction: []);
+                        ManageTransaction(check: true);
                     currentTab = 1;
                   });
                 },

@@ -10,11 +10,8 @@ import '../../../models/account.dart';
 
 class ExpenseController extends GetxController{
 
-  List<Expense> expenseList = <Expense>[].obs;
-
-  Future<void> getExpenses() async {
-    List<Expense>? eList = await ExpenseAPI().getList();
-    expenseList.assignAll(eList!);
+  Future<List<Expense>?> getExpenses() async {
+    return await ExpenseAPI().getList();
   }
 
   Future<bool?> createExpense(String expenseName, String expenseType, String expenseIcon) async {

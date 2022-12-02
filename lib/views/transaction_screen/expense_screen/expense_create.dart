@@ -33,7 +33,7 @@ class _ExpenseCreateState extends State<ExpenseCreate> {
   Widget build(BuildContext context) {
 
     final List expenseTypes =
-        widget.isLoadByBudget ? ['Chi tiêu'] : ['Thu nhập', 'Chi tiêu'];
+        (widget.isLoadByBudget==true) ? ['Chi tiêu'] : ['Thu nhập', 'Chi tiêu'];
 
     Size size = MediaQuery.of(context).size;
 
@@ -44,7 +44,7 @@ class _ExpenseCreateState extends State<ExpenseCreate> {
         backgroundColor: const Color(0xE9ECEFED),
         appBar: AppBar(
           title: Text(
-            widget.isLoadByBudget ? "Thêm mới chi tiêu" : "Thêm mới giao dịch",
+            (widget.isLoadByBudget==true) ? "Thêm mới chi tiêu" : "Thêm mới giao dịch",
             style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,

@@ -25,7 +25,18 @@ class SelectExpense extends StatefulWidget {
 class _SelectExpenseState extends State<SelectExpense> {
 
   var expense;
+  List<Expense> listExpense =[];
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ExpenseController().getExpenses().then((value) {
+      setState(() {
+        listExpense = List.from(value!);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +72,7 @@ class _SelectExpenseState extends State<SelectExpense> {
         body: SingleChildScrollView(
             child: Column(
               children: [
-                _loadExpenseItem(widget.expenseController.expenseList, widget.isLoadByBudget),
+                _loadExpenseItem(listExpense, widget.isLoadByBudget),
                 const SizedBox(),
                 _addExpenseButton()
               ],

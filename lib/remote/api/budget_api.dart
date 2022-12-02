@@ -139,6 +139,8 @@ class BudgetAPI extends BaseAPI {
     String? token = await manager.getAuthToken();
     String? userName = await manager.getUsername();
 
+
+    print(token);
     final queryParameters = {
       "budgetStatus": budgetStatus,
       "account": {"accountUsername": userName!}

@@ -84,6 +84,9 @@ class ExpenseAPI extends BaseAPI{
     final streamedRequest = await request.send();
     final response = await http.Response.fromStream(streamedRequest);
 
+
+    print(response.body);
+
     if(response.statusCode == 200){
 
       ResponseModel model = responseModelFromJson(response.body);

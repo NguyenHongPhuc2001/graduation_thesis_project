@@ -31,12 +31,20 @@ class _ExpenseListState extends State<ExpenseList> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _loadExpenseList();
+
+    widget.expenseController.getExpenses().then((value) {
+      setState((){
+        listExpense = List.from(value!);
+      });
+    });
   }
+
+
 
 
   @override
   Widget build(BuildContext context) {
+
 
 
     return Scaffold(
@@ -68,7 +76,7 @@ class _ExpenseListState extends State<ExpenseList> {
         body: SingleChildScrollView(
             child: Column(
               children: [
-                _loadExpenseItem(widget.expenseController.expenseList, widget.isLoadByBudget),
+                _loadExpenseItem(listExpense, widget.isLoadByBudget),
                 const SizedBox(),
                 _addExpenseButton()
               ],
@@ -99,14 +107,14 @@ class _ExpenseListState extends State<ExpenseList> {
         alignment: FractionalOffset.bottomCenter,
         child: InkWell(
           onTap: (){
-            Get.to(ExpenseCreate(isLoadByBudget: true,))!.then((value) {
+            Get.to(ExpenseCreate(isLoadByBudget: widget.isLoadByBudget,))!.then((value) {
               if(value=="Create"){
                 Fluttertoast.showToast(msg: "Thêm chi tiêu thành công !");
               }
             });
           },
           child: Text(
-                widget.isLoadByBudget ? "Thêm mới chi tiêu" : "Thêm mới chi tiêu",
+                widget.isLoadByBudget ? "Thêm mới chi tiêu" : "Thêm mới thu chi",
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white
@@ -206,8 +214,5 @@ class _ExpenseListState extends State<ExpenseList> {
 
   }
 
- _loadExpenseList() async {
-    await widget.expenseController.getExpenses();
-  }
 
 }

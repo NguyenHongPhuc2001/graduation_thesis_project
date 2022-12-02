@@ -1,26 +1,17 @@
-import 'dart:convert';
-
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:graduation_thesis_project/controllers/entites/history_controller.dart';
-import 'package:graduation_thesis_project/models/expense.dart';
 import 'package:graduation_thesis_project/models/history.dart';
-import 'package:graduation_thesis_project/models/response/list_days_have_transaction_in_month.dart';
-import 'package:graduation_thesis_project/remote/controllers/entites/budget_controller.dart';
-import 'package:graduation_thesis_project/remote/controllers/entites/expense_controller.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/history_controller.dart';
-import 'package:graduation_thesis_project/views/commons/widgets/money_text_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
 import 'package:intl/intl.dart';
 import 'overview_manage_transaction.dart';
 
 class ManageTransaction extends StatefulWidget {
-  final List<Expense> listTransaction;
+  bool check;
 
-  const ManageTransaction({
+  ManageTransaction({
     Key? key,
-    required this.listTransaction,
+    required this.check,
   }) : super(key: key);
 
   @override
@@ -172,7 +163,7 @@ class _ManageTransactionState extends State<ManageTransaction> {
               tabs: listTabs,
             ),
           ),
-          body: OverviewManageTransaction(month: _selectedIndex, day: 1),
+          body: OverviewManageTransaction(month: _selectedIndex, day: 1,check: widget.check!,),
         ),
       ),
     );

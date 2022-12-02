@@ -135,6 +135,9 @@ class _UpdateEventState extends State<UpdateEvent> {
                       height: size.width * 0.1,
                       child: TextField(
                         controller: _eventNameController,
+                        onChanged: (value){
+
+                        },
                         textAlign: TextAlign.center,
                         autofocus: false,
                         decoration: InputDecoration(
