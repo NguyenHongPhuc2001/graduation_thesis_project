@@ -46,11 +46,6 @@ class _BudgetUpdateState extends State<BudgetUpdate> {
   @override
   Widget build(BuildContext context) {
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> a5ed2fd96eec9e63e570be08abc86004efcc79bf
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(

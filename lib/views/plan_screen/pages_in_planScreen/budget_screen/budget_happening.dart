@@ -54,18 +54,15 @@ class _BudgetHappeningState extends State<BudgetHappening> {
     bool isOverSpending = false;
 
     if (widget.check == true) {
-<<<<<<< HEAD
       listBudgetHappening.clear();
       if (mounted) {
-=======
-      listBudgetHappenning.clear();
->>>>>>> a5ed2fd96eec9e63e570be08abc86004efcc79bf
         setState(() {
           listBudgetHappening = List.from(widget.listBudget);
         });
-      setState(() {
-        widget.check = false;
-      });
+        setState(() {
+          widget.check = false;
+        });
+      }
     }
 
     return Scaffold(
