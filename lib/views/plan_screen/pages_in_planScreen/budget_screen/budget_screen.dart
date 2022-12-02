@@ -43,9 +43,14 @@ class _BudgetScreenState extends State<BudgetScreen> {
               screenPageController: _budgetPageController,
               pageController: widget.pageController,
               onTap: () async {
+<<<<<<< HEAD
                 Get.to(const BudgetCreate())!.then((value) {
+=======
+                await Get.to(BudgetCreate())!.then((value) {
+>>>>>>> a5ed2fd96eec9e63e570be08abc86004efcc79bf
                   if(value =="Create"){
                     setState(() {
+                      widget.budgetController.getBudgets();
                       check = true;
                     });
                   }

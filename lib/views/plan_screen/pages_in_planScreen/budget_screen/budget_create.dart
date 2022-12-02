@@ -378,7 +378,7 @@ class _BudgetCreateState extends State<BudgetCreate> {
                   if (budgetNameController.text.isEmpty ||
                       _budgetMoneyController.numberValue.toString().isEmpty ||
                       expense == null ||
-                      budgetIcon!.isEmpty ||
+                      budgetIcon == null ||
                       budgetEndDate == null) {
                     Fluttertoast.showToast(
                         msg: "Vui lòng điền đầy đủ thông tin",
