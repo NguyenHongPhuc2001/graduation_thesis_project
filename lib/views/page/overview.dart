@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:graduation_thesis_project/models/wallet.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/wallet_controller.dart';
 import 'package:graduation_thesis_project/utils/charts/bar.dart';
 import 'package:graduation_thesis_project/utils/date/date_utils.dart';
 import 'package:charts_flutter_new/flutter.dart' as charts;
 
-import '../../controllers/entites/history_controller.dart';
 import '../../models/history.dart';
 import '../../remote/controllers/entites/history_controller.dart';
 import '../transaction_screen/wallet_screen/wallet_list.dart';
@@ -36,8 +34,9 @@ class _OverviewState extends State<Overview> {
   var choose = 'month';
 
   @override
-  Widget build(BuildContext context) {
-
+  void initState() {
+    // TODO: implement initState
+    super.initState();
     _createDataWeek().then((value){
       dataWeek = value;
     });
@@ -45,6 +44,11 @@ class _OverviewState extends State<Overview> {
     _createDataMonth().then((value){
       dataMonth = value;
     });
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     Size size = MediaQuery.of(context).size;
 
@@ -86,7 +90,6 @@ class _OverviewState extends State<Overview> {
                                 width: size.width * 0.07,
                                 child: ElevatedButton(
                                   onPressed: () async{
-                                    List<Wallet>? wallets = await widget.walletController.getList();
                                     Get.to(WalletList(isTransaction:false));
                                   },
                                   style: ButtonStyle(
@@ -806,7 +809,9 @@ class _OverviewState extends State<Overview> {
   Future<double> _totalWithdraw(List<String> dates) async {
 
     Future<List<History>?> histories = HistoryController().getHistoriesByWithdraw();
+
     double totalWithdraw = 0.0;
+
     await histories.then((value) {
       for (var h in value!) {
         for (var d in dates) {

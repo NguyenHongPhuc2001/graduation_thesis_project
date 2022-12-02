@@ -39,14 +39,6 @@ class _AccountManagementState extends State<AccountManagement> {
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
-        // leading: IconButton(
-        //   onPressed: () {},
-        //   icon: const Icon(
-        //     Icons.arrow_back,
-        //     color: Colors.black,
-        //     size: 20.0,
-        //   ),
-        // ),
         elevation: 2,
       ),
       body: Scrollbar(

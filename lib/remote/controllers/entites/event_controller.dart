@@ -14,8 +14,7 @@ class EventController extends GetxController {
     return await EventAPI().getList();
   }
 
-  Future<String> createEvent(String eventName, String eventIcon, String eventEndDate,
-      int walletId)async {
+  Future<String> createEvent(String eventName, String eventIcon, String eventEndDate, int walletId)async {
     return await EventAPI().create(eventName, eventIcon, eventEndDate, walletId);
   }
 

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:graduation_thesis_project/models/expense.dart';
 import 'package:graduation_thesis_project/remote/api/base_api.dart';
 import 'package:graduation_thesis_project/utils/api_paths/api_paths.dart';
 import 'package:graduation_thesis_project/utils/api_paths/uri_container.dart';
@@ -16,13 +15,14 @@ class HistoryAPI extends BaseAPI {
 
 
   Future<List<History>?> getHistoriesByWithdraw() async {
+
     String? username = await manager.getUsername();
     String? token = await manager.getAuthToken();
 
     final queryParameters = {"accountUsername": username};
 
-    final request =
-        http.Request(ApiPaths.METHOD_GET, UriContainer().uriGetList("history"));
+    final request = http.Request(ApiPaths.METHOD_GET,
+        Uri.http("10.0.2.2:8989", ApiPaths.HISTORY_DOMAIN + ApiPaths.HISTORY_GET_LIST_BY_WITHDRAW_BAR_CHART));
 
     request.headers['content-type'] = 'application/json';
     request.headers['Authorization'] = 'Bearer ${token!}';
@@ -35,9 +35,12 @@ class HistoryAPI extends BaseAPI {
     var completer = Completer<List<History>>();
 
     if (response.statusCode == 200) {
-      ResponseModel model = responseModelFromJson(response.body);
-      List<History> histories = historiesFromJson(model.modelList!.toList());
+
+      Map<String, dynamic> data = jsonDecode(response.body);
+      var map = Map.fromIterable(data['objectList'] as List);
+      List<History> histories = historiesFromJson(map.keys.toList());
       completer.complete(histories);
+
     } else {
       completer.completeError("Could not get the data !");
     }

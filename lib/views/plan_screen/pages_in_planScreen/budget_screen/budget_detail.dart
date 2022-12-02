@@ -39,12 +39,10 @@ class _BudgetDetailState extends State<BudgetDetail> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    double total_spending = 0, percentSpending = 0, overSpending = 0;
+    double totalSpending = 0, percentSpending = 0, overSpending = 0;
     bool isOverSpending = false;
 
     listTransaction.clear();
-
-    // percentSpending = (total_spending / widget.budget!.budgetValue) * 100;
 
     if (percentSpending > 100) {
       isOverSpending = true;
@@ -111,7 +109,7 @@ class _BudgetDetailState extends State<BudgetDetail> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               MoneyTextContainer(
-                                value: total_spending,
+                                value: totalSpending,
                                 textSize: size.width * 0.04,
                                 textFontWeight: FontWeight.bold,
                                 color: Colors.black,
@@ -167,7 +165,7 @@ class _BudgetDetailState extends State<BudgetDetail> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     MoneyTextContainer(
-                                      value: total_spending,
+                                      value: totalSpending,
                                       textSize: size.width * 0.04,
                                       textFontWeight: FontWeight.w400,
                                       color: Colors.black,
@@ -188,7 +186,7 @@ class _BudgetDetailState extends State<BudgetDetail> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       MoneyTextContainer(
-                                        value: total_spending,
+                                        value: totalSpending,
                                         textSize: size.width * 0.04,
                                         textFontWeight: FontWeight.w400,
                                         color: Colors.black,
@@ -296,7 +294,7 @@ class _BudgetDetailState extends State<BudgetDetail> {
                                                     ],
                                                   ),
                                                   MoneyTextContainer(
-                                                    value: total_spending,
+                                                    value: totalSpending,
                                                     textSize: size.width * 0.05,
                                                     textFontWeight:
                                                         FontWeight.w400,
@@ -308,14 +306,14 @@ class _BudgetDetailState extends State<BudgetDetail> {
                                           ],
                                         ),
                                       ),
-                                      Container(
+                                      SizedBox(
                                         width: size.width,
                                         height: size.width *
                                             0.26 *
                                             listTransaction.length,
                                         child: ListView.builder(
                                             physics:
-                                                NeverScrollableScrollPhysics(),
+                                                const NeverScrollableScrollPhysics(),
                                             itemCount: listTransaction.length,
                                             itemBuilder: (context, index) {
                                               return Padding(
@@ -323,34 +321,7 @@ class _BudgetDetailState extends State<BudgetDetail> {
                                                     top: size.width * 0.035),
                                                 child: InkWell(
                                                   onTap: () async {
-                                                    // await Navigator.push(
-                                                    //   context,
-                                                    //   MaterialPageRoute(
-                                                    //     builder: (context) =>
-                                                    //         TransactionDetail(
-                                                    //       listTransaction: widget
-                                                    //           .listTransaction,
-                                                    //       transaction:
-                                                    //           listTransaction
-                                                    //               .elementAt(
-                                                    //         index,
-                                                    //       ),
-                                                    //     ),
-                                                    //   ),
-                                                    // ).then((value) =>
-                                                    //     setState(() {
-                                                    //       if (value ==
-                                                    //           "Delete") {
-                                                    //         Fluttertoast.showToast(
-                                                    //             msg:
-                                                    //                 "Xóa giao dịch thành công !");
-                                                    //       } else if (value ==
-                                                    //           "Save") {
-                                                    //         Fluttertoast.showToast(
-                                                    //             msg:
-                                                    //                 "Thêm giao dịch thành công !");
-                                                    //       }
-                                                    //     }));
+
                                                   },
                                                   child: SingleRowContainer(
                                                     boxDecoration:
@@ -374,7 +345,7 @@ class _BudgetDetailState extends State<BudgetDetail> {
                                                     paddingBottom:
                                                         size.width * 0.02,
                                                     children: [
-                                                      Container(
+                                                      SizedBox(
                                                         width: size.width * 0.2,
                                                         child:
                                                             CircleIconContainer(
@@ -388,7 +359,7 @@ class _BudgetDetailState extends State<BudgetDetail> {
                                                               0.045,
                                                         ),
                                                       ),
-                                                      Container(
+                                                      SizedBox(
                                                         width: size.width * 0.7,
                                                         child: Row(
                                                           crossAxisAlignment:
@@ -513,7 +484,7 @@ class _BudgetDetailState extends State<BudgetDetail> {
                   color: Colors.black,
                   fontWeight: FontWeight.w400,
                 ),
-                children: [
+                children: const [
                   TextSpan(text: "Bạn có chắc muốn xóa ngân sách "),
                   TextSpan(
                       text: "",

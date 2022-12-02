@@ -10,6 +10,8 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
 import '../../../../models/expense.dart';
 import '../../../../remote/controllers/entites/budget_controller.dart';
+import '../../../commons/widgets/custom_round_rectangle_button.dart';
+import '../../../commons/widgets/text_container.dart';
 import '../../../transaction_screen/expense_screen/expense_list.dart';
 
 class BudgetUpdate extends StatefulWidget {
@@ -38,12 +40,11 @@ class _BudgetUpdateState extends State<BudgetUpdate> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _loadBudgetData();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    _loadBudgetData();
 
     Size size = MediaQuery.of(context).size;
 
@@ -411,8 +412,7 @@ class _BudgetUpdateState extends State<BudgetUpdate> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                    await BudgetController().deleteBudget(widget.budget.budgetId, );
-                    Get.back();
+                    _showDeleteDialog(widget.budget);
                 },
                 style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
@@ -489,6 +489,101 @@ class _BudgetUpdateState extends State<BudgetUpdate> {
         precision: 0,
         decimalSeparator: ''
     );
+  }
+
+  _showDeleteDialog(Budget budget) {
+    Size size = MediaQuery.of(context).size;
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(size.width * 0.02)),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  color: Colors.blue,
+                  size: size.width * 0.1,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: size.width * 0.06),
+                  child: Text(
+                    "Xin đợi chút !",
+                    style: TextStyle(
+                      fontSize: size.width * 0.07,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            content: RichText(
+              text: TextSpan(
+                style: TextStyle(
+                  fontSize: size.width * 0.045,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                ),
+                children: [
+                  const TextSpan(text: "Bạn có chắc muốn xóa ngân sách "),
+                  TextSpan(
+                      text: budget.budgetName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      )),
+                  const TextSpan(text: " chứ ?"),
+                ],
+              ),
+            ),
+            actionsAlignment: MainAxisAlignment.spaceAround,
+            actions: [
+              CustomRoundRectangleButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                buttonWith: size.width * 0.3,
+                padding: size.width * 0.02,
+                borderRadius: size.width * 0.01,
+                text: TextContainer(
+                  text: "HỦY",
+                  textColor: Colors.black,
+                  textSize: size.width * 0.03,
+                  textFontWeight: FontWeight.bold,
+                  decoration: TextDecoration.none,
+                ),
+                backgroundColor: Colors.white,
+                border: Border.all(
+                  width: size.width * 0.005,
+                  color: Colors.grey,
+                ),
+              ),
+              CustomRoundRectangleButton(
+                onTap: () {
+                  setState(() async{
+                    await BudgetController().deleteBudget(widget.budget.budgetId, )
+                    .then((value) {
+                      Get.back();
+                    });
+                  });
+                },
+                buttonWith: size.width * 0.3,
+                padding: size.width * 0.02,
+                borderRadius: size.width * 0.01,
+                text: TextContainer(
+                  text: "XÁC NHẬN",
+                  textColor: Colors.white,
+                  textSize: size.width * 0.03,
+                  textFontWeight: FontWeight.bold,
+                  decoration: TextDecoration.none,
+                ),
+                backgroundColor: Color(0xff2B4BF2),
+              ),
+            ],
+          );
+        });
   }
 
 }

@@ -27,7 +27,7 @@ class BudgetController extends GetxController{
     return await BudgetAPI().delete(budgetId);
   }
 
-  Future<List<Budget>> getListByStatus(bool budgetStatus)async{
+  Future<List<Budget>> getListByStatus(bool budgetStatus) async {
     return await BudgetAPI().getListByStatus(budgetStatus);
   }
 
