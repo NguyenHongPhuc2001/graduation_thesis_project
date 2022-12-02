@@ -3,14 +3,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/expense.dart';
-import 'package:tiengviet/tiengviet.dart';
 import 'package:graduation_thesis_project/utils/enums/expense_type.dart';
 import 'package:graduation_thesis_project/utils/enums/history_type.dart';
 
 
 import '../../../remote/controllers/entites/expense_controller.dart';
 import 'expense_create.dart';
-import 'expense_setting.dart';
 
 class ExpenseList extends StatefulWidget {
 
@@ -134,12 +132,7 @@ class _ExpenseListState extends State<ExpenseList> {
     for (var item in expenses) {
       walletItems.add(GestureDetector(
         onTap: () {
-          // if(isLoadByBudget) {
             Navigator.of(context).pop(item);
-          // }
-          // }else{
-          //   Get.to(ExpenseSetting(expenseId: item.expenseId, expenseName: item.expenseName, expenseType: item.expenseType, expenseIcon: item.expenseIcon));
-          // }
         },
         child: Container(
           alignment: Alignment.center,

@@ -1,4 +1,3 @@
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/wallet.dart';
@@ -13,6 +12,7 @@ import '../../../commons/widgets/text_container.dart';
 
 // ignore: must_be_immutable
 class AddEvent extends StatefulWidget {
+
   WalletController walletController = Get.put(WalletController());
   EventController eventController = Get.put(EventController());
 
@@ -20,6 +20,7 @@ class AddEvent extends StatefulWidget {
 
   @override
   State<AddEvent> createState() => _AddEventState();
+
 }
 
 class _AddEventState extends State<AddEvent> {

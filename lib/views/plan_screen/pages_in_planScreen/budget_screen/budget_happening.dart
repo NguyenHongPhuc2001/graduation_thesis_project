@@ -11,10 +11,10 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 import 'budget_update.dart';
 
+// ignore: must_be_immutable
 class BudgetHappening extends StatefulWidget {
   final List<Budget> listBudget;
   bool check;
-
 
   BudgetHappening({
     Key? key,
@@ -27,10 +27,11 @@ class BudgetHappening extends StatefulWidget {
 }
 
 class _BudgetHappeningState extends State<BudgetHappening> {
+
   bool isEmpty = false;
   final nf = NumberFormat("###,###");
   final df = DateFormat("dd-MM-yyyy");
-  List<Budget> listBudgetHappenning = [];
+  List<Budget> listBudgetHappening = [];
 
   @override
   void initState() {
@@ -39,7 +40,8 @@ class _BudgetHappeningState extends State<BudgetHappening> {
 
     BudgetController().getListByStatus(false).then((value) {
       setState(() {
-        listBudgetHappenning = List.from(value);
+        listBudgetHappening = List.from(value);
+        print("check lenght " + listBudgetHappening.length.toString());
       });
     });
   }
@@ -52,19 +54,19 @@ class _BudgetHappeningState extends State<BudgetHappening> {
     bool isOverSpending = false;
 
     if (widget.check == true) {
-      listBudgetHappenning.clear();
+      listBudgetHappening.clear();
+      if (mounted) {
         setState(() {
-          listBudgetHappenning = List.from(widget.listBudget);
+          listBudgetHappening = List.from(widget.listBudget);
         });
-      setState(() {
-        widget.check = false;
-      });
+        setState(() {
+          widget.check = false;
+        });
+      }
     }
 
-
-
     return Scaffold(
-      body: listBudgetHappenning.isEmpty
+      body: listBudgetHappening.isEmpty
           ? Container(
               margin: EdgeInsets.only(top: size.width * 0.2),
               child: SizedBox(
@@ -125,15 +127,15 @@ class _BudgetHappeningState extends State<BudgetHappening> {
           : SizedBox(
               width: size.width,
               child: ListView.builder(
-                  itemCount: listBudgetHappenning.length,
+                  itemCount: listBudgetHappening.length,
                   itemBuilder: (context, index) {
-                    percentSpending = (listBudgetHappenning
+                    percentSpending = (listBudgetHappening
                                 .elementAt(index)
                                 .budgetPresentValue! /
-                        listBudgetHappenning.elementAt(index).budgetValue) *
+                        listBudgetHappening.elementAt(index).budgetValue) *
                         100;
 
-                    if (listBudgetHappenning.elementAt(index).budgetStatus!) {
+                    if (listBudgetHappening.elementAt(index).budgetStatus!) {
                       isOverSpending = true;
                       percentOver = percentSpending - 100;
                     }
@@ -146,7 +148,7 @@ class _BudgetHappeningState extends State<BudgetHappening> {
                       child: InkWell(
                           onTap: () {
                             Get.to(BudgetUpdate(
-                                budget: listBudgetHappenning.elementAt(index)));
+                                budget: listBudgetHappening.elementAt(index)));
                           },
                           child: SingleRowContainer(
                             boxDecoration: BoxDecoration(
@@ -164,7 +166,7 @@ class _BudgetHappeningState extends State<BudgetHappening> {
                               SizedBox(
                                 width: size.width * 0.20,
                                 child: CircleIconContainer(
-                                  urlImage: listBudgetHappenning
+                                  urlImage: listBudgetHappening
                                       .elementAt(index)
                                       .budgetIcon,
                                   iconSize: size.width * 0.05,
@@ -193,7 +195,7 @@ class _BudgetHappeningState extends State<BudgetHappening> {
                                                   MainAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  listBudgetHappenning
+                                                  listBudgetHappening
                                                       .elementAt(index)
                                                       .budgetName,
                                                   style: TextStyle(
@@ -223,7 +225,7 @@ class _BudgetHappeningState extends State<BudgetHappening> {
                                               height: 3,
                                             ),
                                             Text(
-                                              "Kỳ hạn: ${listBudgetHappenning.elementAt(index).budgetMothYear}",
+                                              "Kỳ hạn: ${listBudgetHappening.elementAt(index).budgetMothYear}",
                                               style: TextStyle(
                                                 fontSize: size.width * 0.03,
                                                 color: Colors.black54,
@@ -246,7 +248,7 @@ class _BudgetHappeningState extends State<BudgetHappening> {
                                               Row(
                                                 children: [
                                                   TextContainer(
-                                                    text: nf.format(listBudgetHappenning
+                                                    text: nf.format(listBudgetHappening
                                                         .elementAt(index)
                                                         .budgetPresentValue),
                                                     textColor: Colors.black,
@@ -277,7 +279,7 @@ class _BudgetHappeningState extends State<BudgetHappening> {
                                                 Row(
                                                   children: [
                                                     TextContainer(
-                                                      text: nf.format(listBudgetHappenning
+                                                      text: nf.format(listBudgetHappening
                                                               .elementAt(index)
                                                               .budgetValue -
                                                           totalSpending),
@@ -352,17 +354,17 @@ class _BudgetHappeningState extends State<BudgetHappening> {
                                         barRadius:
                                             Radius.circular(size.width * 0.5),
                                         lineHeight: size.width * 0.02,
-                                        percent: listBudgetHappenning
+                                        percent: listBudgetHappening
                                                 .elementAt(index)
                                                 .budgetStatus!
                                             ? 1.0
-                                            : ((listBudgetHappenning
+                                            : ((listBudgetHappening
                                                     .elementAt(index)
                                                     .budgetPresentValue!) /
-                                                (listBudgetHappenning
+                                                (listBudgetHappening
                                                     .elementAt(index)
                                                     .budgetValue)),
-                                        progressColor: listBudgetHappenning
+                                        progressColor: listBudgetHappening
                                                 .elementAt(index)
                                                 .budgetStatus!
                                             ? Colors.red
@@ -432,7 +434,7 @@ class _BudgetHappeningState extends State<BudgetHappening> {
                                             ),
                                           ),
                                           Visibility(
-                                            visible: listBudgetHappenning
+                                            visible: listBudgetHappening
                                                     .elementAt(index)
                                                     .budgetStatus!
                                                 ? true

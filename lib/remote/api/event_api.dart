@@ -29,8 +29,6 @@ class EventAPI extends BaseAPI{
 
     var completer = Completer<Event>();
 
-    print(dataFromAPI.entries.elementAt(3).toString());
-
     final Event event = Event.fromJson(dataFromAPI.entries.elementAt(2).value);
 
     completer.complete(event);
@@ -110,6 +108,7 @@ class EventAPI extends BaseAPI{
       "eventName": eventName,
       "eventEndDate": eventEndDate,
       "eventIcon": linkIcon,
+      // ignore: unnecessary_null_comparison
       "eventStatus": (status != null) ? status : false,
       "wallet": {
         "walletId": walletId

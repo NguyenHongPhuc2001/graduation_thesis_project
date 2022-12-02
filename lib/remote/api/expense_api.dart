@@ -6,10 +6,8 @@ import 'package:http/http.dart' as http;
 
 import '../../models/account.dart';
 import '../../models/expense.dart';
-import '../../models/response/response_model.dart';
 import '../../utils/api_paths/api_paths.dart';
 import 'base_api.dart';
-import 'package:flutter_charset_detector/flutter_charset_detector.dart';
 
 class ExpenseAPI extends BaseAPI{
 
@@ -32,18 +30,6 @@ class ExpenseAPI extends BaseAPI{
 
     final streamedRequest = await request.send();
     final response = await http.Response.fromStream(streamedRequest);
-
-
-    // Uint8List bodyBytes = response.bodyBytes;
-    //
-    // print(bodyBytes);
-    // DecodingResult decoded = (await CharsetDetector.autoDecode(bodyBytes));
-    //
-    // print(decoded.charset);
-    //
-    // String charset = decoded.charset;
-    // String bodyInRightEncodage = decoded.string;
-
 
     var completer = Completer<Expense>();
 
@@ -89,8 +75,10 @@ class ExpenseAPI extends BaseAPI{
 
     if(response.statusCode == 200){
 
-      ResponseModel model = responseModelFromJson(response.body);
-      List<Expense> expenses = expensesFromJson(model.modelList!.toList());
+      Map<String, dynamic> data = jsonDecode(response.body);
+      var map = Map.fromIterable(data['objectList'] as List);
+      List<Expense> expenses = expensesFromJson(map.keys.toList());
+
 
       return expenses;
 
@@ -102,7 +90,6 @@ class ExpenseAPI extends BaseAPI{
   Future<bool?> create(String expenseName, String expenseType, String expenseIcon) async{
 
     String? username = await manager.getUsername();
-    // Account account = Account(accountUsername: username!);
 
     final queryParameters =
     {
@@ -127,13 +114,6 @@ class ExpenseAPI extends BaseAPI{
 
     final streamedRequest = await request.send();
     final response = await http.Response.fromStream(streamedRequest);
-
-
-
-
-    Map<String, dynamic> data = jsonDecode(response.body);
-
-    print(data.entries.elementAt(0).value);
 
     if(response.statusCode == 201){
       return true;

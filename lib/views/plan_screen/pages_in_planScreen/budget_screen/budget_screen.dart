@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import 'package:graduation_thesis_project/views/commons/widgets/appbar_container.dart';
 
-import '../../../../models/budget.dart';
 import '../../../../remote/controllers/entites/budget_controller.dart';
 import 'budget_create.dart';
 import 'budget_end.dart';
@@ -26,7 +25,6 @@ class _BudgetScreenState extends State<BudgetScreen> {
   final PageController _budgetPageController = PageController();
 
   bool check = false;
-
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +59,6 @@ class _BudgetScreenState extends State<BudgetScreen> {
               itemCount: 2,
               itemBuilder: (context, pagePosition) {
                 if (pagePosition == 0) {
-
                   return BudgetHappening(
                     listBudget: widget.budgetController.budgetList.where((b) => b.budgetExpired == false).toList(),
                     check: check,

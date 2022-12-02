@@ -7,17 +7,14 @@ import 'package:graduation_thesis_project/utils/api_paths/uri_container.dart';
 import '../../models/account.dart';
 import '../../models/budget.dart';
 import '../../models/expense.dart';
-import '../../models/response/response_model.dart';
 import '../../utils/api_paths/api_paths.dart';
 import 'package:http/http.dart' as http;
 
 class BudgetAPI extends BaseAPI {
 
-
   Future<bool?> create(String? budgetName, double? budgetValue,
       String? budgetIcon, String? budgetMothYear, int? expenseId) async {
     String? username = await manager.getUsername();
-    // Account account = Account(accountUsername: username!);
 
     final queryParameters = {
       "budgetName": budgetName,
@@ -114,8 +111,7 @@ class BudgetAPI extends BaseAPI {
 
     final queryParameters = {"accountUsername": username};
 
-    final request =
-        http.Request(ApiPaths.METHOD_GET, UriContainer().uriGetList("budget"));
+    final request = http.Request(ApiPaths.METHOD_GET, UriContainer().uriGetList("budget"));
 
     String? token = await manager.getAuthToken();
     request.headers['content-type'] = 'application/json';
@@ -126,8 +122,12 @@ class BudgetAPI extends BaseAPI {
     final response = await http.Response.fromStream(streamedRequest);
 
     if (response.statusCode == 200) {
-      ResponseModel model = responseModelFromJson(response.body);
-      List<Budget> budgets = budgetsFromJson(model.modelList!.toList());
+
+      Map<String, dynamic> data = jsonDecode(response.body);
+      var map = Map.fromIterable(data['objectList'] as List);
+      List<Budget> budgets = budgetsFromJson(map.keys.toList());
+
+      print(budgets.length);
 
       return budgets;
     }
@@ -142,8 +142,10 @@ class BudgetAPI extends BaseAPI {
 
     print(token);
     final queryParameters = {
-      "budgetStatus": budgetStatus,
-      "account": {"accountUsername": userName!}
+      "budgetExpired": budgetStatus,
+      "account": {
+        "accountUsername": userName!
+      }
     };
 
     final request = http.Request(
@@ -153,17 +155,14 @@ class BudgetAPI extends BaseAPI {
     request.headers['Authorization'] = 'Bearer ${token!}';
     request.body = jsonEncode(queryParameters);
 
-    final responeStream = await request.send();
-    final respone = await http.Response.fromStream(responeStream);
+    final responseStream = await request.send();
+    final response = await http.Response.fromStream(responseStream);
 
-    Map<String, dynamic> dataFromAPI = jsonDecode(respone.body);
-
+    Map<String, dynamic> dataFromAPI = jsonDecode(response.body);
     var completer = Completer<List<Budget>>();
-
     var map = Map.fromIterable(dataFromAPI['objectList'] as List);
 
     List<Budget> budgets = budgetsFromJson(map.keys.toList());
-
 
     if (dataFromAPI.entries.elementAt(1).value == 200) {
       completer.complete(budgets);

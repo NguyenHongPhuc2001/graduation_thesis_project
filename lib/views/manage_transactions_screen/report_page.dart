@@ -1,16 +1,18 @@
-import 'dart:math';
-
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:graduation_thesis_project/models/expense.dart';
+import 'package:get/get.dart';
+import 'package:graduation_thesis_project/models/chart/pie_item.dart';
 import 'package:graduation_thesis_project/un_used/ExpenseNew.dart';
 import 'package:graduation_thesis_project/models/Report.dart';
+import 'package:graduation_thesis_project/utils/api.dart';
+import 'package:graduation_thesis_project/utils/charts/pie.dart';
 import 'package:intl/intl.dart';
+import '../../remote/controllers/chart/pie_controller.dart';
 import '../../remote/expense_dao_test.dart';
 import '../commons/widgets/money_text_container.dart';
 import '../commons/widgets/text_container.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:charts_flutter_new/flutter.dart' as charts_new;
 
 class ReportPage extends StatefulWidget {
   const ReportPage({Key? key}) : super(key: key);
@@ -20,8 +22,13 @@ class ReportPage extends StatefulWidget {
 }
 
 class _ReportPageState extends State<ReportPage> {
+
+  List<charts_new.Series<dynamic, String>>  dataRecharge = [];
+  List<charts_new.Series<dynamic, String>>  dataWithdraw = [];
+
   final List<Tab> listTabsWeek = [];
   final List<Tab> listTabsMonth = [];
+  final PieItemController controller = Get.put(PieItemController());
   final DateFormat df = DateFormat("yyyy-MM-dd");
   var check = "Tháng",
       _selectedIndexWeek,
@@ -31,6 +38,9 @@ class _ReportPageState extends State<ReportPage> {
 
   @override
   void initState() {
+
+    super.initState();
+
     for (int i = 1; i <= 12; i++) {
       if (i == DateTime.now().month) {
         String now = "THÁNG NÀY";
@@ -78,12 +88,20 @@ class _ReportPageState extends State<ReportPage> {
 
     _selectedIndexMonth = DateTime.now().month - 1;
     _selectedIndexWeek = listTabsWeek.length - 1;
-    super.initState();
+
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    _createData("MONTH", ApiPaths.HISTORY_GET_LIST_BY_RECHARGE_PIE_CHART.toString()).then((value){
+      dataRecharge = value;
+    });
+
+    _createData("MONTH", ApiPaths.HISTORY_GET_LIST_BY_WITHDRAW_PIE_CHART.toString()).then((value){
+      dataWithdraw = value;
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -328,6 +346,36 @@ class _ReportPageState extends State<ReportPage> {
                       ],
                     ),
                   ),
+
+                  const SizedBox(height: 15,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Thu nhập"),
+                          SizedBox(
+                            height: 150,
+                            width: 150,
+                            child: DonutAutoLabelChart(seriesList: dataRecharge, animate: false,),
+                          )
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Chi tiêu"),
+                          SizedBox(
+                            height: 150,
+                            width: 150,
+                            child: DonutAutoLabelChart(seriesList: dataWithdraw, animate: false,),
+                          )
+                        ],
+                      )
+                    ],
+                  )
+
                 ],
               ),
             ),
@@ -377,7 +425,7 @@ class _ReportPageState extends State<ReportPage> {
     if (check == "Tháng") {
       listChi.clear();
       listThu.clear();
-      listData.forEach((element) {
+      for (var element in listData) {
         if (DateTime.parse(element.expenseDate).month == 10) {
           if (DateTime.parse(element.expenseDate).day >= 1 &&
               DateTime.parse(element.expenseDate).day <= 7) {
@@ -444,7 +492,7 @@ class _ReportPageState extends State<ReportPage> {
             }
           }
         }
-      });
+      }
     } else {
       listChi.clear();
       listThu.clear();
@@ -519,6 +567,29 @@ class _ReportPageState extends State<ReportPage> {
     ];
   }
 }
+
+Future<List<charts_new.Series<dynamic, String>>> _createData(String datesType, String apiPaths) async {
+
+  DateTime now = DateTime.now();
+  String dateFormat = "${now.year}-${now.month}-${now.day}";
+  List<PieItem> data = [];
+
+  await PieItemController().getPieItems(dateFormat, datesType, apiPaths).then((value) {
+    data = value!;
+  });
+
+  return [
+    charts.Series<PieItem, String>(
+      id: 'Sales',
+      domainFn: (PieItem item, _) => item.expenseName,
+      measureFn: (PieItem item, _) => item.totalCost,
+      data: data,
+      labelAccessorFn: (PieItem row, _) => '${row.expenseName}',
+    )
+  ];
+
+}
+
 
 class MenuItem {
   final String text;

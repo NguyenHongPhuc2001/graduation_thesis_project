@@ -8,6 +8,7 @@ import 'dart:convert';
 import '../../utils/api_paths/api_paths.dart';
 
 class AccountAPI extends BaseAPI {
+
   Future<bool?> changePassword(String? username, String? password,
       String? newPassword, String? rePassword) async {
     final queryParameters = {
@@ -93,4 +94,5 @@ class AccountAPI extends BaseAPI {
       return false;
     }
   }
+
 }

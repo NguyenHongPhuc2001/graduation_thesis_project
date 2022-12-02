@@ -46,7 +46,6 @@ class WalletAPI extends BaseAPI{
   Future<bool?> update(int? walletId, String? walletName, double? walletBalance) async{
 
     String? username = await manager.getUsername();
-    Account account = Account(accountUsername: username!);
 
     final queryParameters = {
       "walletId" : walletId,
