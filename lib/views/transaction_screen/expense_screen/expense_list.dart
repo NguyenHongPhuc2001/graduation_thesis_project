@@ -104,9 +104,14 @@ class _ExpenseListState extends State<ExpenseList> {
       child: Align(
         alignment: FractionalOffset.bottomCenter,
         child: InkWell(
-          onTap: (){
-            Get.to(ExpenseCreate(isLoadByBudget: widget.isLoadByBudget,))!.then((value) {
+          onTap: () async{
+            await Get.to(ExpenseCreate(isLoadByBudget: widget.isLoadByBudget,))!.then((value) {
               if(value=="Create"){
+                ExpenseController().getExpenses().then((value) {
+                  setState(() {
+                    listExpense = List.from(value!);
+                  });
+                });
                 Fluttertoast.showToast(msg: "Thêm chi tiêu thành công !");
               }
             });

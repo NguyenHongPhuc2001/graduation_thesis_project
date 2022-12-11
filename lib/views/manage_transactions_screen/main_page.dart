@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:graduation_thesis_project/models/history.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/history_controller.dart';
+import 'package:graduation_thesis_project/remote/controllers/entites/wallet_controller.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
 import 'package:intl/intl.dart';
-import 'overview_manage_transaction.dart';
+import '../../controllers/chart/pie_controller.dart';
+import 'history_page.dart';
 
 class ManageTransaction extends StatefulWidget {
   bool check;
@@ -19,7 +21,6 @@ class ManageTransaction extends StatefulWidget {
 }
 
 class _ManageTransactionState extends State<ManageTransaction> {
-
   final List<Tab> listTabs = [];
   int _selectedIndex = DateTime.now().month - 1;
   final listItems = <String>["Tuần", "Tháng"];
@@ -70,39 +71,43 @@ class _ManageTransactionState extends State<ManageTransaction> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             // toolbarHeight: size.height * 0.12,
-            title: InkWell(
-              onTap: () {
-                showSearch(
-                  context: context,
-                  delegate: CustomSearchDelegate(),
-                );
-              },
-              splashColor: Colors.white,
-              highlightColor: Colors.white,
-              child: Container(
-                alignment: Alignment.centerLeft,
-                width: size.width * 0.8,
-                padding: EdgeInsets.symmetric(
-                    horizontal: size.width * 0.02, vertical: size.width * 0.01),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(size.width * 0.01),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.search,
-                      color: Colors.black,
-                    ),
-                    SizedBox(width: size.width * 0.07),
-                    TextContainer(
-                      text: "Tìm kiếm ",
-                      textColor: Colors.black,
-                      textSize: size.width * 0.04,
-                      textFontWeight: FontWeight.w400,
-                      decoration: TextDecoration.none,
-                    ),
-                  ],
+            title: Visibility(
+              visible: false,
+              child: InkWell(
+                onTap: () {
+                  showSearch(
+                    context: context,
+                    delegate: CustomSearchDelegate(),
+                  );
+                },
+                splashColor: Colors.white,
+                highlightColor: Colors.white,
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  width: size.width * 0.8,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: size.width * 0.02,
+                      vertical: size.width * 0.01),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(size.width * 0.01),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.search,
+                        color: Colors.black,
+                      ),
+                      SizedBox(width: size.width * 0.07),
+                      TextContainer(
+                        text: "Tìm kiếm ",
+                        textColor: Colors.black,
+                        textSize: size.width * 0.04,
+                        textFontWeight: FontWeight.w400,
+                        decoration: TextDecoration.none,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -115,21 +120,15 @@ class _ManageTransactionState extends State<ManageTransaction> {
                     color: Colors.black,
                   ),
                   onSelected: (value) async {
-                    // List<ListDaysHaveTransactionInMonth> list = [];
-                    List<History> list = [];
+                    DateFormat df = DateFormat("yyyy-MM-dd");
+                    var result;
 
                     await HistoryController()
-                        .getListTransactionByMonth("2022-12")
+                        .createTransaction(
+                            "2022-12-11", 120000.0, "giao dich 7", 1, 1, 1)
                         .then((value) {
-                      setState(() {
-                        list = List.from(value!);
-                      });
+                      print(value);
                     });
-
-                    list.forEach((element) {
-                      print(element.historyNotedDate!);
-                    });
-
 
                     setState(() {
                       currentItem = value;
@@ -164,7 +163,11 @@ class _ManageTransactionState extends State<ManageTransaction> {
               tabs: listTabs,
             ),
           ),
-          body: OverviewManageTransaction(month: _selectedIndex, day: 1,check: widget.check!,),
+          body: OverviewManageTransaction(
+            month: _selectedIndex,
+            day: 1,
+            check: widget.check!,
+          ),
         ),
       ),
     );

@@ -56,12 +56,15 @@ class EventAPI extends BaseAPI{
     Map<String, dynamic> dataFromAPI = jsonDecode(respone.body);
 
     var completer = Completer<List<Event>>();
-    final List<Event> listEvent = [];
-    dataFromAPI.entries.elementAt(2).value.forEach((item) {
-      listEvent.add(Event.fromJson(item));
-    });
 
-    completer.complete(listEvent);
+    var map = Map.fromIterable(dataFromAPI['objectList'] as List);
+    List<Event> wallets = eventsFromJson(map.keys.toList());
+
+    if(dataFromAPI.entries.elementAt(1).value == 200){
+      completer.complete(wallets);
+    }else{
+      completer.completeError("Could not get the data !");
+    }
 
     return completer.future;
   }
@@ -177,7 +180,7 @@ class EventAPI extends BaseAPI{
     };
 
     final request =
-    http.Request(ApiPaths.METHOD_GET, UriContainer().uriGetListByStatus("event"));
+    http.Request(ApiPaths.METHOD_GET, UriContainer().uriGetListByExpired("event"));
 
     request.headers['content-type'] = 'application/json';
     request.headers['Authorization'] = 'Bearer ${token!}';

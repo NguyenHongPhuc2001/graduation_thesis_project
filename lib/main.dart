@@ -30,16 +30,6 @@ class _MyAppState extends State<MyApp> {
       ),
       debugShowCheckedModeBanner: false,
       home: const RootPage()
-      // Column(
-      //   mainAxisAlignment: MainAxisAlignment.center,
-      //   children: [
-      //     SizedBox(
-      //       height: 180,
-      //       width: 180,
-      //       child: DonutAutoLabelChart.withSampleData(),
-      //     ),
-      //   ],
-      // )
     );
   }
 }

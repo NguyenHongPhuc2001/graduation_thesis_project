@@ -12,11 +12,11 @@ import '../../../../models/expense.dart';
 class EventScreen extends StatefulWidget {
 
   final PageController pageController;
-  final List<Event> listEvent;
-  final Event? event;
-  final List<Expense> listTransaction;
+  // final List<Event> listEvent;
+  // final Event? event;
+  // final List<Expense> listTransaction;
 
-  const EventScreen({ Key? key, required this.pageController, required this.listEvent, this.event, required this.listTransaction, }) : super(key: key);
+  const EventScreen({ Key? key, required this.pageController,}) : super(key: key);
 
   @override
   State<EventScreen> createState() => _EventScreenState();
@@ -24,10 +24,10 @@ class EventScreen extends StatefulWidget {
 }
 
 class _EventScreenState extends State<EventScreen> {
-  final _eventPageController = PageController();
-  bool statusOfInsert = false, check =false;
-  int nbBeforInsert = 0, nbAfterInsert = 0;
-  List<Event> listEvent = [];
+  final PageController _eventPageController = PageController();
+  bool check =false;
+  List<Event> listEventHappenning = [];
+  List<Event> listEventEnd = [];
 
   @override
   void initState() {
@@ -35,7 +35,7 @@ class _EventScreenState extends State<EventScreen> {
     super.initState();
     EventController().getByStatus(false).then((value) {
       setState((){
-        listEvent = List.from(value);
+        listEventHappenning = List.from(value);
       });
     });
   }
@@ -64,7 +64,7 @@ class _EventScreenState extends State<EventScreen> {
                     if (value == "Create") {
                        EventController().getByStatus(false).then((value) {
                         setState(() {
-                          listEvent = List.from(value);
+                          listEventHappenning = List.from(value);
                           check =true;
                         });
                       });
@@ -78,7 +78,7 @@ class _EventScreenState extends State<EventScreen> {
             physics: const NeverScrollableScrollPhysics(),
             controller: _eventPageController,
             children: [
-              EventHappening(check: check),
+              EventHappening(check: check, listEvent: listEventHappenning,),
               EventEnd(),
             ],
           ),

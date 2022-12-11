@@ -203,7 +203,7 @@ class GoalAPI extends BaseAPI {
     };
 
     final request =
-    http.Request(ApiPaths.METHOD_GET, UriContainer().uriGetListByStatus("goal"));
+    http.Request(ApiPaths.METHOD_GET, UriContainer().uriGetListByExpired("goal"));
 
     request.headers['content-type'] = 'application/json';
     request.headers['Authorization'] = 'Bearer ${token!}';
@@ -227,5 +227,44 @@ class GoalAPI extends BaseAPI {
     }
 
     return completer.future;
+  }
+
+
+  Future<bool> goalDepositCost(int goalId, int walletId, double goalDepositCost)async{
+
+    String? userName = await manager.getUsername();
+    String? token = await manager.getAuthToken();
+
+    final queryParameters = {
+      "goalId" : goalId,
+      "walletId" : walletId,
+      "goalDepositCost" : goalDepositCost,
+      "account" : {
+        "accountUsername" : userName
+      }
+    };
+
+    final request =
+    http.Request(ApiPaths.METHOD_POST, UriContainer().uriGoalDeposit("goal"));
+
+    request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
+    request.body = jsonEncode(queryParameters);
+
+    final responeStream = await request.send();
+    final respone = await http.Response.fromStream(responeStream);
+
+    Map<String, dynamic> dataFromAPI = jsonDecode(respone.body);
+
+    var completer = Completer<bool>();
+
+    if (dataFromAPI.entries.elementAt(1).value == 200) {
+      completer.complete(true);
+    }else{
+      completer.completeError("Could not deposit the goal !");
+    }
+
+    return completer.future;
+
   }
 }

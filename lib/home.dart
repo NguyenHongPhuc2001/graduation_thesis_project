@@ -10,7 +10,7 @@ import 'package:graduation_thesis_project/views/transaction_screen/expense_scree
 import 'package:graduation_thesis_project/views/transaction_screen/transaction_screen/transaction_create.dart';
 import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen/wallet_create.dart';
 
-import 'views/manage_transactions_screen/manage_transaction_main_screen.dart';
+import 'views/manage_transactions_screen/main_page.dart';
 
 class Home extends StatefulWidget {
   const Home({
@@ -34,8 +34,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-
-    print(currentTab);
 
     return Scaffold(
       body: PageStorage(
@@ -75,7 +73,7 @@ class _HomeState extends State<Home> {
         child: SizedBox(
           height: 60,
           child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: <
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <
                   Widget>[
             Expanded(
               flex: 1,
@@ -93,12 +91,13 @@ class _HomeState extends State<Home> {
                     Icon(
                       Icons.home,
                       color: currentTab == 0 ? Colors.blue : Colors.grey,
+                      size: 30,
                     ),
                     Text(
                       "Tổng quan",
                       style: TextStyle(
                           color: currentTab == 0 ? Colors.blue : Colors.grey,
-                          fontSize: 6),
+                          fontSize: 9.5),
                     )
                   ],
                 ),
@@ -121,12 +120,13 @@ class _HomeState extends State<Home> {
                     Icon(
                       Icons.wallet,
                       color: currentTab == 1 ? Colors.blue : Colors.grey,
+                      size:30,
                     ),
                     Text(
                       "Giao dịch",
                       style: TextStyle(
                           color: currentTab == 1 ? Colors.blue : Colors.grey,
-                          fontSize: 6),
+                          fontSize: 9.5),
                     )
                   ],
                 ),
@@ -142,7 +142,7 @@ class _HomeState extends State<Home> {
                 minWidth: 40,
                 onPressed: () {
                   setState(() {
-                    currentScreen = const PlanMainScreen(listTransaction: []);
+                    currentScreen = const PlanMainScreen();
                     currentTab = 2;
                   });
                 },
@@ -152,12 +152,13 @@ class _HomeState extends State<Home> {
                     Icon(
                       Icons.edit_note_rounded,
                       color: currentTab == 2 ? Colors.blue : Colors.grey,
+                      size: 30,
                     ),
                     Text(
                       "Kế hoạch",
                       style: TextStyle(
                           color: currentTab == 2 ? Colors.blue : Colors.grey,
-                          fontSize: 6),
+                          fontSize: 9.5),
                     )
                   ],
                 ),
@@ -179,12 +180,13 @@ class _HomeState extends State<Home> {
                     Icon(
                       Icons.settings,
                       color: currentTab == 3 ? Colors.blue : Colors.grey,
+                      size:30,
                     ),
                     Text(
                       "Cài đặt",
                       style: TextStyle(
                           color: currentTab == 3 ? Colors.blue : Colors.grey,
-                          fontSize: 6),
+                          fontSize: 9.5),
                     )
                   ],
                 ),

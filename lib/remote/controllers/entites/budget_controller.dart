@@ -8,11 +8,8 @@ import '../../../models/expense.dart';
 
 class BudgetController extends GetxController{
 
-  List<Budget> budgetList = <Budget>[].obs;
-
-  void getBudgets() async {
-    List<Budget>? eList = await BudgetAPI().getList();
-    budgetList.assignAll(eList!);
+  Future<List<Budget>?> getBudgets() async {
+    return await BudgetAPI().getList();
   }
 
   Future<bool?> createBudget(String budgetName, double budgetValue, String budgetIcon, String budgetMothYear, int expenseId) async {
@@ -27,8 +24,8 @@ class BudgetController extends GetxController{
     return await BudgetAPI().delete(budgetId);
   }
 
-  Future<List<Budget>> getListByStatus(bool budgetStatus) async {
-    return await BudgetAPI().getListByStatus(budgetStatus);
+  Future<List<Budget>> getListByExpired(bool budgetExpired) async {
+    return await BudgetAPI().getListByExpired(budgetExpired);
   }
 
 

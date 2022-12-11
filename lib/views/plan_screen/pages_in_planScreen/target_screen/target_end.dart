@@ -19,7 +19,6 @@ import '../../../commons/widgets/single_row_container_2.dart';
 
 class TargetEnd extends StatefulWidget {
 
-
    TargetEnd({
     Key? key,
   }) : super(key: key);

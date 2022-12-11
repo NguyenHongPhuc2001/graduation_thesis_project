@@ -5,6 +5,7 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/goal_controller.dart';
+import 'package:graduation_thesis_project/remote/controllers/entites/wallet_controller.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/appbar_container_2.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/custom_round_rectangle_button.dart';
@@ -17,6 +18,8 @@ import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../../../models/goal.dart';
+import '../../../../models/wallet.dart';
+import '../../../commons/pages/select_wallet.dart';
 
 class TargetDetail extends StatefulWidget {
   final Goal target;
@@ -40,17 +43,18 @@ class _TargetDetailState extends State<TargetDetail> {
       initialValue: 0,
       precision: 0);
   var target;
+  List<Wallet> listWallet = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // goalName = widget.target.goalName;
-    // goalEndDate = widget.target.goalEndDate;
-    // goalPresentCost = widget.target.goalPresentCost;
-    // goalFinalCost = widget.target.goalFinalCost;
-    // goalColor = int.parse(widget.target.goalColor);
     target = widget.target;
+    WalletController().getList().then((value) {
+      setState(() {
+        listWallet = List.from(value!);
+      });
+    });
   }
 
   @override
@@ -111,8 +115,7 @@ class _TargetDetailState extends State<TargetDetail> {
                     CircleIconContainer(
                       urlImage: target.goalIcon,
                       iconSize: size.width * 0.1,
-                      backgroundColor:
-                          Color(int.parse(target.goalColor)),
+                      backgroundColor: Color(int.parse(target.goalColor)),
                       padding: size.width * 0.045,
                     ),
                     Container(
@@ -257,7 +260,8 @@ class _TargetDetailState extends State<TargetDetail> {
                                 padding:
                                     EdgeInsets.only(top: size.width * 0.03),
                                 child: MoneyTextContainer(
-                                  value: target.goalFinalCost - target.goalPresentCost,
+                                  value: target.goalFinalCost -
+                                      target.goalPresentCost,
                                   textSize: size.width * 0.04,
                                   textFontWeight: FontWeight.w400,
                                   color: Colors.black,
@@ -356,6 +360,8 @@ class _TargetDetailState extends State<TargetDetail> {
     showDialog(
       context: context,
       builder: (context) {
+        var wallet;
+
         return AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(size.width * 0.03),
@@ -371,14 +377,140 @@ class _TargetDetailState extends State<TargetDetail> {
               decoration: TextDecoration.none,
             ),
           ),
-          content: TextField(
-            keyboardType: TextInputType.number,
-            controller: _moneyTextController,
-            decoration: InputDecoration(
-              hintText: "Số tiền",
-              isDense: true,
-            ),
-          ),
+          content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: size.width * 0.61,
+                  height: size.width * 0.09,
+                  child: TextField(
+                    controller: _moneyTextController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(
+                          left: size.width * 0.04,
+                          top: size.width * 0.02,
+                          bottom: size.width * 0.02),
+                      hintText: 'Nhập số tiền',
+                      hintStyle: TextStyle(
+                        fontSize: size.width * 0.034,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: size.width * 0.005)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(
+                              color: Colors.grey.shade600,
+                              width: size.width * 0.005)),
+                      isDense: true,
+                      suffixIcon: Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: size.width * 0.006,
+                            horizontal: size.width * 0.01),
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: size.width * 0.02,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(size.width * 0.1),
+                            color: Colors.red,
+                          ),
+                          child: Text(
+                            "VNĐ",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ),
+                    ),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                SizedBox(height: size.width * 0.05),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(3),
+                      width: size.width * 0.6,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(100),
+                          boxShadow: const [
+                            BoxShadow(color: Colors.grey, blurRadius: 2)
+                          ]),
+                      child: InkWell(
+                        onTap: () async {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SelectWallet(
+                                listWallet: listWallet,
+                                walletId:
+                                    (wallet != null) ? wallet.walletId : null,
+                              ),
+                            ),
+                          ).then((value) {
+                            setState(() {
+                              wallet = value;
+                            });
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: size.width * 0.03),
+                          alignment: Alignment.center,
+                          child: Row(
+                            mainAxisAlignment: wallet == null
+                                ? MainAxisAlignment.spaceBetween
+                                : MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: wallet != null
+                                        ? size.width * 0.009
+                                        : 0),
+                                child: Text(
+                                  wallet == null
+                                      ? "Chọn ví"
+                                      : wallet.walletName,
+                                  style: TextStyle(
+                                    color: (wallet == null)
+                                        ? Colors.grey
+                                        : Colors.black,
+                                    fontSize: size.width * 0.035,
+                                    fontWeight: FontWeight.w500,
+                                    decoration: TextDecoration.none,
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: wallet != null ? false : true,
+                                child: Icon(
+                                  Icons.keyboard_arrow_down,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          }),
           actionsAlignment: MainAxisAlignment.spaceAround,
           actions: [
             CustomRoundRectangleButton(
@@ -404,33 +536,22 @@ class _TargetDetailState extends State<TargetDetail> {
             CustomRoundRectangleButton(
               onTap: () {
                 setState(() {
-
+                  GoalController()
+                      .goalDepositCost(
+                          target.goalId,
+                          wallet.walletId,
+                          _moneyTextController.numberValue)
+                      .then((value) {
                     GoalController()
-                        .updateGoal(
-                            target.goalId,
-                           target.goalName,
-                            target.goalIcon,
-                            target.goalEndDate,
-                            target.goalFinalCost,
-                            target.goalColor,
-                            target.goalPresentCost + _moneyTextController.numberValue,
-                    target.goalStatus)
+                        .getOneGoal(widget.target.goalId)
                         .then((value) {
-                      GoalController()
-                          .getOneGoal(widget.target.goalId)
-                          .then((value) {
-                        setState(() {
-                          // goalName = value.goalName;
-                          // goalIcon = value.goalIcon;
-                          // goalEndDate = value.goalEndDate;
-                          // goalFinalCost = value.goalFinalCost;
-                          // goalPresentCost = value.goalPresentCost;
-                          target = value;
-                          Navigator.pop(context);
-                          Fluttertoast.showToast(msg: "Thêm số tiền thành công !");
-                        });
+                      setState(() {
+                        target = value;
+                        Navigator.pop(context);
+                        Fluttertoast.showToast(msg: "Thêm số tiền thành công !");
                       });
                     });
+                  });
                 });
               },
               buttonWith: size.width * 0.3,
@@ -523,7 +644,7 @@ class _TargetDetailState extends State<TargetDetail> {
               ),
               CustomRoundRectangleButton(
                 onTap: () {
-                  setState(() async{
+                  setState(() async {
                     await GoalController()
                         .deleteGoal(target.goalId)
                         .then((value) {

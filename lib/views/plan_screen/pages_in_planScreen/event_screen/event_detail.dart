@@ -9,6 +9,7 @@ import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_cont
 import 'package:graduation_thesis_project/views/commons/widgets/custom_round_rectangle_button.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/single_row_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
+import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_trasaction_list.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_updateEvent.dart';
 import 'package:graduation_thesis_project/views/transaction_screen/expense_screen/expense_list.dart';
 import 'package:intl/intl.dart';
@@ -29,29 +30,24 @@ class EventDetail extends StatefulWidget {
 
 class _EventDetailState extends State<EventDetail> {
   final DateFormat df = DateFormat("yyy-MM-dd");
-  var event, check;
-
+  var event, check, dayLeft;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    check = widget.event.eventStatus;
 
-    EventController().getOneEvent(widget.event.eventId!).then((value) {
-      setState(() {
-        event = value;
-        check = event.eventStatus;
-      });
-    });
+    dayLeft =
+        DateTime.parse(widget.event.eventEndDate).difference(DateTime.now());
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    List<Expense> lsTransaction = [];
-    final Duration dayLeft =
-        DateTime.parse(widget.event.eventEndDate).difference(DateTime.now());
 
-    DateTime dateTime = DateTime.parse(event.eventEndDate);
+
+    DateTime dateTime = DateTime.parse(widget.event.eventEndDate);
+
     String correctDate =
         "${dateTime.year}-${dateTime.month}-${dateTime.day + 1}";
 
@@ -304,7 +300,7 @@ class _EventDetailState extends State<EventDetail> {
                   CustomRoundRectangleButton(
                     backgroundColor: const Color(0xff3A86FF),
                     onTap: () {
-                      Get.to(ExpenseList(isLoadByBudget: false));
+                      Get.to(EventTransactionList(event: widget.event));
                     },
                     buttonWith: size.width * 0.85,
                     padding: size.width * 0.04,

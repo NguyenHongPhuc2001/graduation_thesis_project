@@ -1,7 +1,7 @@
 // import 'package:flutter/material.dart';
 // import 'package:graduation_thesis_project/models/expense.dart';
 //
-// import '../manage_transactions_screen/manage_transaction_main_screen.dart';
+// import '../manage_transactions_screen/main_page.dart';
 //
 //
 // class Transaction extends StatefulWidget {

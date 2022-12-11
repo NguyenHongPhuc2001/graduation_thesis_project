@@ -1,10 +1,10 @@
 class Report{
-  int? expenseId;
-  String reportType;
-  double reportValue;
-  String reportTime;
+  double totalCost;
+  String dateType;
 
-  Report({this.expenseId, required this.reportType, required this.reportTime, required this.reportValue});
+  Report({required this.dateType, required this.totalCost});
+
+
 
 
 }

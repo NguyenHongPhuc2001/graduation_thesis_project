@@ -23,19 +23,22 @@ class TargetHappening extends StatefulWidget {
   final List<Goal> listGoal;
   bool check;
 
-  TargetHappening({Key? key, required this.listGoal, required this.check})
-      : super(key: key);
+  TargetHappening({
+    Key? key,
+    required this.listGoal,
+    required this.check,
+  }) : super(key: key);
 
   @override
   State<TargetHappening> createState() => _TargetHappeningState();
 }
 
 class _TargetHappeningState extends State<TargetHappening> {
-  bool isEmpty = false;
+  bool isEmpty = false,check = true;
   final nf = NumberFormat("###,###");
   double targetPercent = 0;
   List<Goal> listTargetHappening = [];
-  bool check = true;
+
 
   @override
   void initState() {
@@ -46,6 +49,8 @@ class _TargetHappeningState extends State<TargetHappening> {
       });
     });
     super.initState();
+
+    print("Initial from target happening !");
   }
 
   @override
@@ -56,7 +61,7 @@ class _TargetHappeningState extends State<TargetHappening> {
       listTargetHappening.clear();
       if (mounted) {
         GoalController().getByStatus(false).then((value) {
-          setState((){
+          setState(() {
             listTargetHappening = List.from(value);
           });
         });
@@ -148,7 +153,7 @@ class _TargetHappeningState extends State<TargetHappening> {
                                       .then((value) {
                                     setState(() {
                                       listTargetHappening = List.from(value);
-                                      check = false;
+                                      // check = false;
                                     });
                                   });
                                   Fluttertoast.showToast(
@@ -159,7 +164,7 @@ class _TargetHappeningState extends State<TargetHappening> {
                                       .then((value) {
                                     setState(() {
                                       listTargetHappening = List.from(value);
-                                      check = false;
+                                      // check = false;
                                     });
                                   });
                                 } else if (value == "Finish") {
@@ -168,7 +173,7 @@ class _TargetHappeningState extends State<TargetHappening> {
                                       .then((value) {
                                     setState(() {
                                       listTargetHappening = List.from(value);
-                                      check = false;
+                                      // check = false;
                                     });
                                   });
                                 } else {
@@ -177,7 +182,7 @@ class _TargetHappeningState extends State<TargetHappening> {
                                       .then((value) {
                                     setState(() {
                                       listTargetHappening = List.from(value);
-                                      check = true;
+                                      // check = true;
                                     });
                                   });
                                 }

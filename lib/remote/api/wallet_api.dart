@@ -130,5 +130,43 @@ class WalletAPI extends BaseAPI{
     return false;
   }
 
+  Future<Wallet> getOne(int walletId) async {
+
+    String? username = await manager.getUsername();
+
+
+    final queryParameters = {
+      "walletId":walletId
+    };
+
+    final request = http.Request(
+        ApiPaths.METHOD_GET,
+        UriContainer().uriGetOne("wallet"));
+
+    String? token = await manager.getAuthToken();
+    request.headers['content-type'] = 'application/json';
+    request.headers['Authorization'] = 'Bearer ${token!}';
+    request.body = jsonEncode(queryParameters);
+
+    final streamedRequest = await request.send();
+    final response = await http.Response.fromStream(streamedRequest);
+
+    var completer = Completer<Wallet>();
+
+
+    Map<String, dynamic> data = jsonDecode(response.body);
+
+    Wallet wallet = Wallet.fromJson(data.entries.elementAt(2).value);
+
+
+    if(response.statusCode == 200){
+      completer.complete(wallet);
+    }else{
+      completer.completeError("Could not get the data !");
+    }
+
+    return completer.future;
+  }
+
 
 }

@@ -22,4 +22,8 @@ class WalletController extends GetxController {
     return await WalletAPI().create(walletName, walletBalance);
   }
 
+  Future<Wallet> getOne(int walletId) async {
+    return await WalletAPI().getOne(walletId);
+  }
+
 }

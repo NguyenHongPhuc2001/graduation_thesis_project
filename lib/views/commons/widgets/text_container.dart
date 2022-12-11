@@ -25,6 +25,7 @@ class TextContainer extends StatelessWidget {
         color: textColor,
         fontWeight: textFontWeight,
         decoration: decoration,
+        overflow: TextOverflow.ellipsis
       ),
     );
   }

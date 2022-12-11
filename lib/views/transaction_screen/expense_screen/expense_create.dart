@@ -188,61 +188,12 @@ class _ExpenseCreateState extends State<ExpenseCreate> {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: size.width * 0.06,
-                          vertical: size.width * 0.05),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Sự kiện : ',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          InkWell(
-                            onTap: (){
-                              Get.to(SelectEvent())!.then((value) {
-                                  setState(() {
-                                    event = value;
-                                  });
-                              });
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.all(3),
-                              width: size.width * 0.5,
-                              height: size.width * 0.1,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(100),
-                                  boxShadow: const [
-                                    BoxShadow(color: Colors.grey, blurRadius: 2)
-                                  ]),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  TextContainer(
-                                      text: (event!=null)?event.eventName:"Chọn sự kiện",
-                                      textColor: (event!=null)?Colors.black:Colors.grey,
-                                      textSize: size.width * 0.04,
-                                      textFontWeight: FontWeight.w400,
-                                      decoration: TextDecoration.none),
-                                  Icon(
-                                    Icons.keyboard_arrow_down,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
               ),
               ElevatedButton(
-                onPressed: () async {
-                  await widget.expenseController.createExpense(
+                onPressed: ()  {
+                  widget.expenseController.createExpense(
                       controllerExpenseName.text,
                       valueChoose == 'Chi tiêu'
                           ? ExpenseType.DISBURSE.name

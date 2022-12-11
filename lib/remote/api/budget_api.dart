@@ -135,21 +135,21 @@ class BudgetAPI extends BaseAPI {
     return null;
   }
 
-  Future<List<Budget>> getListByStatus(bool budgetStatus) async {
+  Future<List<Budget>> getListByExpired(bool budgetExpired) async {
     String? token = await manager.getAuthToken();
     String? userName = await manager.getUsername();
 
 
     print(token);
     final queryParameters = {
-      "budgetExpired": budgetStatus,
+      "budgetExpired": budgetExpired,
       "account": {
-        "accountUsername": userName!
+        "accountUsername": userName
       }
     };
 
     final request = http.Request(
-        ApiPaths.METHOD_GET, UriContainer().uriGetListByStatus("budget"));
+        ApiPaths.METHOD_GET, UriContainer().uriGetListByExpired("budget"));
 
     request.headers['content-type'] = 'application/json';
     request.headers['Authorization'] = 'Bearer ${token!}';
@@ -163,6 +163,10 @@ class BudgetAPI extends BaseAPI {
     var map = Map.fromIterable(dataFromAPI['objectList'] as List);
 
     List<Budget> budgets = budgetsFromJson(map.keys.toList());
+
+    budgets.forEach((element) {
+      print(element.budgetName);
+    });
 
     if (dataFromAPI.entries.elementAt(1).value == 200) {
       completer.complete(budgets);

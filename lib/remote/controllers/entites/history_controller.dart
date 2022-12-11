@@ -1,8 +1,10 @@
 import 'package:get/get.dart';
+import 'package:graduation_thesis_project/models/chart/bar_item.dart';
 import 'package:graduation_thesis_project/models/history.dart';
+import 'package:graduation_thesis_project/models/response/total_cost.dart';
 import 'package:graduation_thesis_project/remote/api/History_API.dart';
 
-import '../../../models/response/list_days_have_transaction_in_month.dart';
+import '../../../models/response/list_days_have_transaction.dart';
 
 class HistoryController extends GetxController {
 
@@ -12,15 +14,14 @@ class HistoryController extends GetxController {
     return await HistoryAPI().getHistoriesByWithdraw();
   }
 
-  Future<bool> createTransaction(String historyType,String historyNotedDate,String historyAction,
+  Future<bool> createTransaction(String historyNotedDate,
       double historyCost, String historyNote, int expenseId, int walletId, int? eventId)async{
-    return await HistoryAPI().createTransaction(historyType, historyNotedDate, historyAction, historyCost, historyNote, expenseId, walletId, eventId);
+    return await HistoryAPI().createTransaction( historyNotedDate, historyCost, historyNote, expenseId, walletId, eventId);
   }
 
-  Future<bool> updateTransaction(String? historyType,String? historyNotedDate,String? historyAction,
+  Future<bool> updateTransaction(int? historyId,String? historyNotedDate,
       double? historyCost, String? historyNote, int? expenseId, int? walletId, int? eventId) async {
-    return await HistoryAPI().updateTransaction(historyType,historyNotedDate,historyAction,
-        historyCost,  historyNote,  expenseId,  walletId, eventId);
+    return await HistoryAPI().updateTransaction(historyId,historyNotedDate, historyCost,  historyNote,  expenseId,  walletId, eventId);
   }
 
   Future<bool> deleteTransaction(int historyId) async{
@@ -28,16 +29,37 @@ class HistoryController extends GetxController {
   }
 
 
-  Future<List<History>?> getListTransactionByMonth(String month)async{
-    return await HistoryAPI().getListTransactionByMonth(month);
+  Future<List<History>?> getListTransactionByDate(String date, String getDateType)async{
+    return await HistoryAPI().getListTransactionByDate(date,getDateType);
   }
 
-  Future<List<History>?> getListTransactionByDay(String day)async{
-    return await HistoryAPI().getListTransactionByDay(day);
-  }
-
-  Future<List<ListDaysHaveTransactionInMonth>?> getListDaysHaveTransactionByMonth(String month)async{
+  Future<List<ListDaysHaveTransaction>?> getListDaysHaveTransactionByMonth(String month)async{
     return await HistoryAPI().getListDaysHaveTransactionByMonth(month);
   }
 
+
+  Future<TotalCost> getTotalCostOfWithdraw(String date, String getDateType)async{
+    return await HistoryAPI().getTotalCostOfWithdraw(date, getDateType);
+  }
+
+  Future<TotalCost> getTotalCostOfRecharge(String date, String getDateType)async{
+    return await HistoryAPI().getTotalCostOfRecharge(date, getDateType);
+  }
+
+
+  Future<List<ListDaysHaveTransaction>> getListDayHaveTransactionByEvent(String date, int eventId)async{
+    return await HistoryAPI().getListDayHaveTransactionByEvent(date,eventId);
+  }
+
+  Future<List<History>> getListTransactionByEvent( int eventId)async{
+    return await HistoryAPI().getListTransactionByEvent(eventId);
+  }
+
+  Future<TotalCost> getTotalCostByEvent( int eventId, String historyAction)async{
+    return await HistoryAPI().getTotalCostByEvent(eventId,historyAction);
+  }
+
+  Future<List<BarItem>> getTotalCostBetweenDate(String year,String month ,String historyAction,String lastDayOfMonth)async{
+    return await HistoryAPI().getTotalCostBetweenDate(year,month,historyAction,lastDayOfMonth);
+  }
 }

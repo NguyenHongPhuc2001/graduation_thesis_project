@@ -1,5 +1,5 @@
 // import 'package:get/get.dart';
-// import 'package:graduation_thesis_project/models/history.dart';
+// import 'package:graduation_thesis_project/models/history_page.dart';
 // import 'package:graduation_thesis_project/services/remote_services.dart';
 //
 // class HistoryController extends GetxController {

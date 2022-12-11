@@ -30,4 +30,6 @@ class EventController extends GetxController {
   Future<List<Event>> getByStatus(bool eventStatus)async{
     return await EventAPI().getByStatus(eventStatus);
   }
+
+
 }

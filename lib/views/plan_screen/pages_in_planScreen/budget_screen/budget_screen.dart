@@ -26,6 +26,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
   bool check = false;
 
+
   @override
   Widget build(BuildContext context) {
 
@@ -46,7 +47,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 await Get.to(BudgetCreate())!.then((value) {
                   if(value =="Create"){
                     setState(() {
-                      widget.budgetController.getBudgets();
+                      widget.budgetController.getBudgets().then((value) {
+                      });
                       check = true;
                     });
                   }
@@ -60,13 +62,11 @@ class _BudgetScreenState extends State<BudgetScreen> {
               itemBuilder: (context, pagePosition) {
                 if (pagePosition == 0) {
                   return BudgetHappening(
-                    listBudget: widget.budgetController.budgetList.where((b) => b.budgetExpired == false).toList(),
                     check: check,
                   );
                 } else {
                   return BudgetEnd(
-                    listBudget: widget.budgetController.budgetList.where((b) => b.budgetExpired == true).toList(),
-                  );
+                   );
                 }
               }),
         ),

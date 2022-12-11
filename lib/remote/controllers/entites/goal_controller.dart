@@ -40,4 +40,8 @@ class GoalController extends GetxController {
   Future<List<Goal>> getByStatus(bool goalStatus)async{
     return await GoalAPI().getGoalsByStatus(goalStatus);
   }
+
+  Future<bool> goalDepositCost(int goalId,int walletId,double goalDeposit)async{
+    return await GoalAPI().goalDepositCost(goalId, walletId, goalDeposit);
+  }
 }

@@ -3,12 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
+import 'package:graduation_thesis_project/remote/controllers/entites/wallet_controller.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../models/goal.dart';
+import '../../../../models/wallet.dart';
 import '../../../commons/pages/select_icon.dart';
 import '../../../../remote/controllers/entites/goal_controller.dart';
+import '../../../commons/pages/select_wallet.dart';
 import '../../../commons/widgets/text_container.dart';
 
 class AddTarget extends StatefulWidget {
@@ -26,7 +29,10 @@ class _AddTargetState extends State<AddTarget> {
       initialValue: 0,
       precision: 0);
   final DateFormat df = DateFormat("yyyy-MM-dd");
-  var goalEndDate, goalIcon, colorSelectedIndex = 0, goalColor;
+  List<Wallet> listWallet = [];
+  var goalEndDate, goalIcon, colorSelectedIndex = 0, goalColor, wallet;
+
+
 
   List<Goal> listGoal = [];
 
@@ -55,6 +61,11 @@ class _AddTargetState extends State<AddTarget> {
     goalEndDate = DateTime.now();
     goalColor = items[0].value;
     goalIcon = "images/QuestionIcon.svg";
+    WalletController().getList().then((value) {
+      setState(() {
+        listWallet = List.from(value!);
+      });
+    });
   }
 
   @override
@@ -312,7 +323,7 @@ class _AddTargetState extends State<AddTarget> {
                           ],
                         ),
                         SizedBox(
-                          height: size.height * 0.03,
+                          height: size.height * 0.03
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,

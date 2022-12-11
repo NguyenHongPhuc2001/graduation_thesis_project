@@ -13,12 +13,12 @@ import 'budget_update.dart';
 
 // ignore: must_be_immutable
 class BudgetHappening extends StatefulWidget {
-  final List<Budget> listBudget;
+  // final List<Budget> listBudget;
   bool check;
 
   BudgetHappening({
     Key? key,
-    required this.listBudget,
+    // required this.listBudget,
     required this.check
   }) : super(key: key);
 
@@ -38,10 +38,9 @@ class _BudgetHappeningState extends State<BudgetHappening> {
     // TODO: implement initState
     super.initState();
 
-    BudgetController().getListByStatus(false).then((value) {
+    BudgetController().getListByExpired(false).then((value) {
       setState(() {
         listBudgetHappening = List.from(value);
-        print("check lenght " + listBudgetHappening.length.toString());
       });
     });
   }
@@ -50,14 +49,19 @@ class _BudgetHappeningState extends State<BudgetHappening> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
+    print("budget ${listBudgetHappening.length}");
+
+
     double totalSpending = 0, percentSpending = 0, percentOver = 0;
     bool isOverSpending = false;
 
     if (widget.check == true) {
       listBudgetHappening.clear();
       if (mounted) {
-        setState(() {
-          listBudgetHappening = List.from(widget.listBudget);
+        BudgetController().getBudgets().then((value) {
+          setState(() {
+            listBudgetHappening = List.from(value!);
+          });
         });
         setState(() {
           widget.check = false;
@@ -66,7 +70,7 @@ class _BudgetHappeningState extends State<BudgetHappening> {
     }
 
     return Scaffold(
-      body: listBudgetHappening.isEmpty
+      body: (listBudgetHappening.isEmpty==true)
           ? Container(
               margin: EdgeInsets.only(top: size.width * 0.2),
               child: SizedBox(
@@ -169,7 +173,7 @@ class _BudgetHappeningState extends State<BudgetHappening> {
                                   urlImage: listBudgetHappening
                                       .elementAt(index)
                                       .budgetIcon,
-                                  iconSize: size.width * 0.05,
+                                  iconSize: size.width * 0.07,
                                   backgroundColor: Colors.orange,
                                   padding: size.width * 0.040,
                                 ),

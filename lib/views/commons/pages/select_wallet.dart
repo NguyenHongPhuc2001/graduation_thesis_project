@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/wallet.dart';
+import 'package:graduation_thesis_project/remote/controllers/entites/wallet_controller.dart';
 
 import 'package:graduation_thesis_project/views/commons/widgets/custom_round_rectangle_button.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/money_text_container.dart';
@@ -32,13 +34,19 @@ class SelectWallet extends StatefulWidget {
 class _SelectWalletState extends State<SelectWallet> {
 
   final NumberFormat nf = NumberFormat("###,###");
-  final List<Wallet> listWallet = [];
+  List<Wallet> listWallet = [];
   var walletSelected, indexSelected;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    WalletController().getList().then((value) {
+      setState(() {
+        listWallet = List.from(value!);
+      });
+    });
 
     if (widget.walletId != null) {
       for (int i = 0; i < widget.listWallet.length; i++) {
@@ -85,7 +93,12 @@ class _SelectWalletState extends State<SelectWallet> {
         actions: [
           IconButton(
             onPressed: () {
-              Get.to(WalletCreate());
+              Get.to(WalletCreate())!.then((value) {
+                setState(() {
+                  listWallet = List.from(value);
+                  Fluttertoast.showToast(msg: "Thêm ví thành công !");
+                });
+              });
             },
             icon: const Icon(
               Icons.add,
