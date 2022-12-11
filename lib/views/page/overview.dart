@@ -479,7 +479,7 @@ class _OverviewState extends State<Overview> {
                                               fontWeight: FontWeight.bold)
                                           : TextStyle(
                                               fontSize: size.width * 0.035,
-                                              color: Colors.black,
+                                              color: Colors.grey,
                                               fontWeight: FontWeight.bold),
                                     ),
                                   ),
@@ -518,7 +518,7 @@ class _OverviewState extends State<Overview> {
                                               fontWeight: FontWeight.bold)
                                           : TextStyle(
                                               fontSize: size.width * 0.035,
-                                              color: Colors.black,
+                                              color: Colors.grey,
                                               fontWeight: FontWeight.bold),
                                     ),
                                   ),

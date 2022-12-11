@@ -487,14 +487,40 @@ Future<List<charts.Series<BarItem, String>>> _barChartData(
         .getTotalCostBetweenDate(time.year.toString(), time.month.toString(),
             HistoryAction.WITHDRAW.name, lastDayOfMonth.day.toString())
         .then((value) {
-      listChi = List.from(value);
+          value.forEach((element) {
+            String date= "Tuần 1";
+            if(element.dateType=="Week 1"){
+              date = "Tuần 1";
+            }else if(element.dateType=="Week 2"){
+              date = "Tuần 2";
+            }else if(element.dateType=="Week 3"){
+              date = "Tuần 3";
+            }else{
+              date = "Tuần 4";
+            }
+            listChi.add(BarItem(dateType: date, totalCost: element.totalCost));
+          });
+      // listChi = List.from(value);
     });
 
     await HistoryController()
         .getTotalCostBetweenDate(time.year.toString(), time.month.toString(),
             HistoryAction.RECHARGE.name, lastDayOfMonth.day.toString())
         .then((value) {
-      listThu = List.from(value);
+      value.forEach((element) {
+        String date= "Tuần 1";
+        if(element.dateType=="Week 1"){
+          date = "Tuần 1";
+        }else if(element.dateType=="Week 2"){
+          date = "Tuần 2";
+        }else if(element.dateType=="Week 3"){
+          date = "Tuần 3";
+        }else{
+          date = "Tuần 4";
+        }
+        listThu.add(BarItem(dateType: date, totalCost: element.totalCost));
+      });
+      // listThu = List.from(value);
     });
 
 
