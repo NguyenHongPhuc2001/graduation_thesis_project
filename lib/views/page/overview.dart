@@ -469,7 +469,7 @@ class _OverviewState extends State<Overview> {
                                               blurRadius: 1,
                                               spreadRadius: 1)
                                         ]),
-                                    duration: Duration(seconds: 0),
+                                    duration: const Duration(seconds: 0),
                                     child: Text(
                                       "Tuần",
                                       style: (chooseWeek == true)

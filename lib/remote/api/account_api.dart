@@ -9,8 +9,11 @@ import '../../utils/api_paths/api_paths.dart';
 
 class AccountAPI extends BaseAPI {
 
-  Future<bool?> changePassword(String? username, String? password,
+  Future<bool?> changePassword(String? password,
       String? newPassword, String? rePassword) async {
+
+    String? username = await manager.getUsername();
+
     final queryParameters = {
       "accountUsername": username,
       "accountPassword": password,
@@ -86,7 +89,7 @@ class AccountAPI extends BaseAPI {
     final Token token = Token.fromJson(data.entries.elementAt(2).value);
 
     manager.setAuthToken(token.token);
-    manager.setUsername(username!);
+    manager.setUsername(username);
 
     if (data.entries.elementAt(1).value == 201) {
       return true;

@@ -10,11 +10,9 @@ import 'package:percent_indicator/percent_indicator.dart';
 import '../../../../remote/controllers/entites/budget_controller.dart';
 
 class BudgetEnd extends StatefulWidget {
-  // final List<Budget>? listBudget;
 
   const BudgetEnd({
     Key? key,
-    // this.listBudget,
   }) : super(key: key);
 
   @override

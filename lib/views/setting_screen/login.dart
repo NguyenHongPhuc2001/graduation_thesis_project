@@ -64,7 +64,7 @@ class _LoginState extends State<Login> {
                             spreadRadius: 2,
                             blurRadius: 3,
                             offset: const Offset(
-                                0, 0), // changes position of shadow
+                                0, 0),
                           ),
                         ],
                       ),
@@ -103,7 +103,7 @@ class _LoginState extends State<Login> {
                             controller: usernameController,
                             onChanged: (value) => widget.username = value,
                             decoration: InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
+                                enabledBorder: const UnderlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black),
                                 ),
                                 hintText: "Nhập tài khoản",
@@ -122,7 +122,7 @@ class _LoginState extends State<Login> {
                                 onChanged: (value) => widget.password = value,
                                 obscureText: !isClick,
                                 decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
+                                  enabledBorder: const UnderlineInputBorder(
                                     borderSide: BorderSide(color: Colors.black),
                                   ),
                                   hintText: "Nhập mật khẩu",
@@ -188,13 +188,11 @@ class _LoginState extends State<Login> {
                       ElevatedButton(
                         onPressed: () async {
                           try {
-                            final check = await AccountController()
-                                .signIn(widget.username, widget.password);
-                            print("Value check ${check}");
+                            final check = await AccountController().signIn(widget.username, widget.password);
                             if (check == true) {
                               Navigator.pushReplacement(context,
                                   MaterialPageRoute(
-                                      builder: (context) => Home()));
+                                      builder: (context) => const Home()));
                               Fluttertoast.showToast(msg: "Đăng nhập thành công !");
                             }else{
                               Fluttertoast.showToast(msg: "Đăng nhập thất bại !");
@@ -213,7 +211,7 @@ class _LoginState extends State<Login> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => SignUp(),
+                              builder: (context) => const SignUp(),
                             ),
                           );
                         },

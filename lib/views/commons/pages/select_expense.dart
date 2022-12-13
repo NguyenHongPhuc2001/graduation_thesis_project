@@ -105,9 +105,9 @@ class _SelectExpenseState extends State<SelectExpense> {
           onTap: (){
             Get.to(ExpenseCreate(isLoadByBudget: true));
           },
-          child: Text(
+          child: const Text(
                  "Thêm mới chi tiêu",
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white
                 ),

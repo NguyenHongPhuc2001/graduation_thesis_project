@@ -17,37 +17,38 @@ class Goal {
   String goalColor;
   Account? account;
   int? walletId;
+  // ignore: unnecessary_question_mark
   dynamic? histories;
 
 
   Goal.fromJson(Map<String, dynamic> data)
-      : this.goalId = data['goalId'],
-        this.goalName = data['goalName'],
-        this.goalStatus = data['goalStatus'],
-        this.goalPresentCost = data['goalPresentCost'].toDouble(),
-        this.goalFinalCost = data['goalFinalCost'],
-        this.goalDepositCost = data['goalDepositCost'],
-        this.goalStartDate = data['goalStartDate'],
-        this.goalEndDate = data['goalEndDate'],
-        this.goalIcon = data['goalIcon'],
-        this.goalColor = data['goalColor'],
-        this.walletId = data['walletId'],
-        this.histories = data['histories'];
+      : goalId = data['goalId'],
+        goalName = data['goalName'],
+        goalStatus = data['goalStatus'],
+        goalPresentCost = data['goalPresentCost'].toDouble(),
+        goalFinalCost = data['goalFinalCost'],
+        goalDepositCost = data['goalDepositCost'],
+        goalStartDate = data['goalStartDate'],
+        goalEndDate = data['goalEndDate'],
+        goalIcon = data['goalIcon'],
+        goalColor = data['goalColor'],
+        walletId = data['walletId'],
+        histories = data['histories'];
 
   Map<String, dynamic> toJson() {
     return {
-      'goalId': this.goalId,
-      'goalName': this.goalName,
-      'goalStatus': this.goalStatus,
-      'goalPresentCost': this.goalPresentCost,
-      'goalFinalCost': this.goalFinalCost,
-      'goalDepositCost': this.goalDepositCost,
-      'goalStartDate': this.goalStartDate,
-      'goalEndDate': this.goalEndDate,
-      'goalIcon': this.goalIcon,
-      'goalColor': this.goalColor,
-      'walletId': this.walletId,
-      'histories': this.histories,
+      'goalId': goalId,
+      'goalName': goalName,
+      'goalStatus': goalStatus,
+      'goalPresentCost': goalPresentCost,
+      'goalFinalCost': goalFinalCost,
+      'goalDepositCost': goalDepositCost,
+      'goalStartDate': goalStartDate,
+      'goalEndDate': goalEndDate,
+      'goalIcon': goalIcon,
+      'goalColor': goalColor,
+      'walletId': walletId,
+      'histories': histories,
     };
   }
 }

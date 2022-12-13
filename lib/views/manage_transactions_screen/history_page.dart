@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:graduation_thesis_project/controllers/entites/history_controller.dart';
-import 'package:graduation_thesis_project/models/expense.dart';
 import 'package:graduation_thesis_project/models/response/list_days_have_transaction.dart';
-import 'package:graduation_thesis_project/remote/controllers/entites/expense_controller.dart';
 import 'package:graduation_thesis_project/views/manage_transactions_screen/report_page.dart';
 import 'package:graduation_thesis_project/views/transaction_screen/transaction_screen/transaction_detail.dart';
 
@@ -19,6 +16,7 @@ import '../commons/widgets/money_text_container.dart';
 import '../commons/widgets/single_row_container.dart';
 import '../commons/widgets/text_container.dart';
 
+// ignore: must_be_immutable
 class OverviewManageTransaction extends StatefulWidget {
   final historyController = Get.put(HistoryController());
 
@@ -52,7 +50,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
   void initState() {
     super.initState();
 
-    month = "${DateTime.now().year}-${widget.month + 1}" as String;
+    month = "${DateTime.now().year}-${widget.month + 1}";
 
     widget.historyController
         .getListDaysHaveTransactionByMonth(month)
@@ -88,7 +86,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
 
 
     if (widget.check == true) {
-      month = "${DateTime.now().year}-${widget.month + 1}" as String;
+      month = "${DateTime.now().year}-${widget.month + 1}";
 
       widget.historyController
           .getListDaysHaveTransactionByMonth(month)
@@ -133,7 +131,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                     color: Colors.white,
                     boxShadow: [
                       BoxShadow(
-                        offset: Offset(0, 0),
+                        offset: const Offset(0, 0),
                         color: Colors.grey,
                         blurRadius: size.width * 0.01,
                       ),
@@ -233,7 +231,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                     DateTime d1 = df_week.parse(element.historyNotedDate!);
                     DateTime d2 = df_week
                         .parse(listDays.reversed.toList()[index].date)
-                        .subtract(Duration(days: 1));
+                        .subtract(const Duration(days: 1));
                     if (d1.compareTo(d2) == 0) {
                       listTransactionByDay.add(element);
                     }
@@ -257,7 +255,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                         color: Colors.white,
                         boxShadow: [
                           BoxShadow(
-                            offset: Offset(0, 0),
+                            offset: const Offset(0, 0),
                             color: Colors.grey,
                             blurRadius: size.width * 0.01,
                             spreadRadius: size.width * 0.001,
@@ -284,7 +282,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                                   decoration: TextDecoration.none,
                                 ),
                               ),
-                              Container(
+                              SizedBox(
                                 width: size.width * 0.52,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,12 +322,12 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                           Divider(
                               thickness: size.width * 0.003,
                               color: Colors.black),
-                          Container(
+                          SizedBox(
                             width: size.width,
                             height:
                                 size.width * 0.15 * listTransactionByDay.length,
                             child: ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
+                                physics: const NeverScrollableScrollPhysics(),
                                 itemCount: listTransactionByDay.length,
                                 itemBuilder:
                                     (BuildContext context, int index1) {
@@ -350,7 +348,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                                         }
                                       });
                                     },
-                                    child: Container(
+                                    child: SizedBox(
                                       width: size.width,
                                       height: size.width*0.15,
                                       child: Row(
@@ -360,7 +358,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                                           Padding(
                                             padding: EdgeInsets.only(
                                                 left: size.width * 0.01),
-                                            child: Container(
+                                            child: SizedBox(
                                               width: size.width * 0.1,
                                               child: CircleIconContainer(
                                                 urlImage:
@@ -373,7 +371,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                                               ),
                                             ),
                                           ),
-                                          Container(
+                                          SizedBox(
                                             width: size.width * 0.5,
                                             child: Column(
                                               crossAxisAlignment:
@@ -393,7 +391,7 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
                                                       TextDecoration.none,
                                                 ),
                                                 SizedBox(height:size.width*0.01),
-                                                Container(
+                                                SizedBox(
                                                   width: size.width*0.4,
                                                   child: TextContainer(
                                                     text: listTransactionByDay[
@@ -443,51 +441,49 @@ class _OverviewManageTransactionState extends State<OverviewManageTransaction> {
           )
         : Scaffold(
             body: Center(
-                child: Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SvgPicture.asset(
-                    "images/FolderIcon.svg",
-                    width: size.width * 0.5,
-                  ),
-                  SizedBox(height: size.width * 0.1),
-                  Text(
-                    "Không có giao dịch",
-                    style: TextStyle(
-                      fontSize: size.width * 0.07,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w300,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SvgPicture.asset(
+                      "images/FolderIcon.svg",
+                      width: size.width * 0.5,
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Chọn nút "),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
-                          child: Container(
-                            padding: EdgeInsets.all(size.width * 0.02),
-                            decoration: BoxDecoration(
-                                color: Colors.blue, shape: BoxShape.circle),
-                            child: TextContainer(
-                              text: "+",
-                              textColor: Colors.white,
-                              textSize: size.width * 0.05,
-                              textFontWeight: FontWeight.w400,
-                              decoration: TextDecoration.none,
+                    SizedBox(height: size.width * 0.1),
+                    Text(
+                      "Không có giao dịch",
+                      style: TextStyle(
+                        fontSize: size.width * 0.07,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Chọn nút "),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            child: Container(
+                              padding: EdgeInsets.all(size.width * 0.02),
+                              decoration: const BoxDecoration(
+                                  color: Colors.blue, shape: BoxShape.circle),
+                              child: TextContainer(
+                                text: "+",
+                                textColor: Colors.white,
+                                textSize: size.width * 0.05,
+                                textFontWeight: FontWeight.w400,
+                                decoration: TextDecoration.none,
+                              ),
                             ),
                           ),
-                        ),
-                        const Text("để thêm giao dịch"),
-                      ],
+                          const Text("để thêm giao dịch"),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            )),
+                  ],
+                )),
           );
   }
 

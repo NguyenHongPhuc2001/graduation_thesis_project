@@ -8,7 +8,6 @@ import '../../../../models/history.dart';
 import '../../../../models/response/list_days_have_transaction.dart';
 import '../../../../remote/controllers/entites/history_controller.dart';
 import '../../../commons/widgets/circle_icon_container.dart';
-import '../../../commons/widgets/custom_round_rectangle_button.dart';
 import '../../../commons/widgets/money_text_container.dart';
 import '../../../commons/widgets/single_row_container.dart';
 import '../../../commons/widgets/text_container.dart';
@@ -46,7 +45,7 @@ class _EventTransactionListState extends State<EventTransactionList> {
         .getListDayHaveTransactionByEvent("2022",widget.event.eventId!)
         .then((value) {
       setState(() {
-        listDays = List.from(value!);
+        listDays = List.from(value);
       });
     });
 
@@ -55,7 +54,7 @@ class _EventTransactionListState extends State<EventTransactionList> {
         .getListTransactionByEvent(widget.event.eventId!)
         .then((value) {
       setState(() {
-        listTranByEvent = List.from(value!);
+        listTranByEvent = List.from(value);
       });
     });
 
@@ -109,7 +108,7 @@ class _EventTransactionListState extends State<EventTransactionList> {
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    offset: Offset(0, 0),
+                    offset: const Offset(0, 0),
                     color: Colors.grey,
                     blurRadius: size.width * 0.01,
                   ),
@@ -178,25 +177,25 @@ class _EventTransactionListState extends State<EventTransactionList> {
                     (BuildContext context, int index) {
                   List<History> listTransactionByDay = [];
 
-                  listTranByEvent.forEach((element) {
+                  for (var element in listTranByEvent) {
                     DateTime d1 = df_week.parse(element.historyNotedDate!);
                     DateTime d2 = df_week
                         .parse(listDays[index].date)
-                        .subtract(Duration(days: 1));
+                        .subtract(const Duration(days: 1));
                     if (d1.compareTo(d2) == 0) {
                       listTransactionByDay.add(element);
                     }
-                  });
+                  }
 
                   double sum = 0.0;
 
-                  listTransactionByDay.forEach((element) {
+                  for (var element in listTransactionByDay) {
                     if (element.historyAction == "WITHDRAW") {
                       sum -= element.historyCost!;
                     } else {
                       sum += element.historyCost!;
                     }
-                  });
+                  }
 
                   return Padding(
                     padding: EdgeInsets.only(top: size.width * 0.1),
@@ -206,7 +205,7 @@ class _EventTransactionListState extends State<EventTransactionList> {
                         color: Colors.white,
                         boxShadow: [
                           BoxShadow(
-                            offset: Offset(0, 0),
+                            offset: const Offset(0, 0),
                             color: Colors.grey,
                             blurRadius: size.width * 0.01,
                             spreadRadius: size.width * 0.001,
@@ -233,7 +232,7 @@ class _EventTransactionListState extends State<EventTransactionList> {
                                   decoration: TextDecoration.none,
                                 ),
                               ),
-                              Container(
+                              SizedBox(
                                 width: size.width * 0.52,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -273,12 +272,12 @@ class _EventTransactionListState extends State<EventTransactionList> {
                           Divider(
                               thickness: size.width * 0.003,
                               color: Colors.black),
-                          Container(
+                          SizedBox(
                             width: size.width,
                             height:
                             size.width * 0.15 * listTransactionByDay.length,
                             child: ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
+                                physics: const NeverScrollableScrollPhysics(),
                                 itemCount: listTransactionByDay.length,
                                 itemBuilder:
                                     (BuildContext context, int index1) {
@@ -290,10 +289,7 @@ class _EventTransactionListState extends State<EventTransactionList> {
                                             listTransactionByDay[index]),
                                       );
                                     },
-                                    child: Container(
-                                      // padding: EdgeInsets.only(
-                                      //     top: size.width * 0.02,
-                                      //     bottom: size.width * 0.01),
+                                    child: SizedBox(
                                       width: size.width,
                                       height: size.width*0.15,
                                       child: Row(
@@ -303,7 +299,7 @@ class _EventTransactionListState extends State<EventTransactionList> {
                                           Padding(
                                             padding: EdgeInsets.only(
                                                 left: size.width * 0.01),
-                                            child: Container(
+                                            child: SizedBox(
                                               width: size.width * 0.1,
                                               child: CircleIconContainer(
                                                 urlImage:
@@ -316,7 +312,7 @@ class _EventTransactionListState extends State<EventTransactionList> {
                                               ),
                                             ),
                                           ),
-                                          Container(
+                                          SizedBox(
                                             width: size.width * 0.6,
                                             child: Column(
                                               crossAxisAlignment:
@@ -382,50 +378,48 @@ class _EventTransactionListState extends State<EventTransactionList> {
         ],
       )
           :  Center(
-            child: Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SvgPicture.asset(
-                    "images/FolderIcon.svg",
-                    width: size.width * 0.5,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SvgPicture.asset(
+                  "images/FolderIcon.svg",
+                  width: size.width * 0.5,
+                ),
+                SizedBox(height: size.width * 0.1),
+                Text(
+                  "Không có giao dịch",
+                  style: TextStyle(
+                    fontSize: size.width * 0.07,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w300,
                   ),
-                  SizedBox(height: size.width * 0.1),
-                  Text(
-                    "Không có giao dịch",
-                    style: TextStyle(
-                      fontSize: size.width * 0.07,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Chọn nút "),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
-                          child: Container(
-                            padding: EdgeInsets.all(size.width * 0.02),
-                            decoration: BoxDecoration(
-                                color: Colors.blue, shape: BoxShape.circle),
-                            child: TextContainer(
-                              text: "+",
-                              textColor: Colors.white,
-                              textSize: size.width * 0.05,
-                              textFontWeight: FontWeight.w400,
-                              decoration: TextDecoration.none,
-                            ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Chọn nút "),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        child: Container(
+                          padding: EdgeInsets.all(size.width * 0.02),
+                          decoration: const BoxDecoration(
+                              color: Colors.blue, shape: BoxShape.circle),
+                          child: TextContainer(
+                            text: "+",
+                            textColor: Colors.white,
+                            textSize: size.width * 0.05,
+                            textFontWeight: FontWeight.w400,
+                            decoration: TextDecoration.none,
                           ),
                         ),
-                        const Text("để thêm giao dịch"),
-                      ],
-                    ),
+                      ),
+                      const Text("để thêm giao dịch"),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             )),
     );
 

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:graduation_thesis_project/models/history.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/history_controller.dart';
-import 'package:graduation_thesis_project/remote/controllers/entites/wallet_controller.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
 import 'package:intl/intl.dart';
-import '../../controllers/chart/pie_controller.dart';
 import 'history_page.dart';
 
+// ignore: must_be_immutable
 class ManageTransaction extends StatefulWidget {
   bool check;
 
@@ -44,20 +41,20 @@ class _ManageTransactionState extends State<ManageTransaction> {
         String now = "THÁNG NÀY";
         listTabs.add(
           Tab(
-            text: "${now}",
+            text: now,
           ),
         );
       } else if (i == (DateTime.now().month - 1)) {
         String previous = "THÁNG TRƯỚC";
         listTabs.add(
           Tab(
-            text: "${previous}",
+            text: previous,
           ),
         );
       } else {
         listTabs.add(
           Tab(
-            text: "${i}/${DateTime.now().year}",
+            text: "$i/${DateTime.now().year}",
           ),
         );
       }
@@ -94,7 +91,7 @@ class _ManageTransactionState extends State<ManageTransaction> {
                   ),
                   child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.search,
                         color: Colors.black,
                       ),
@@ -115,19 +112,15 @@ class _ManageTransactionState extends State<ManageTransaction> {
               Padding(
                 padding: EdgeInsets.only(right: size.width * 0.02),
                 child: PopupMenuButton<String>(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.more_vert,
                     color: Colors.black,
                   ),
                   onSelected: (value) async {
-                    DateFormat df = DateFormat("yyyy-MM-dd");
-                    var result;
-
                     await HistoryController()
                         .createTransaction(
                             "2022-12-11", 120000.0, "giao dich 7", 1, 1, 1)
                         .then((value) {
-                      print(value);
                     });
 
                     setState(() {
@@ -166,7 +159,7 @@ class _ManageTransactionState extends State<ManageTransaction> {
           body: OverviewManageTransaction(
             month: _selectedIndex,
             day: 1,
-            check: widget.check!,
+            check: widget.check,
           ),
         ),
       ),
@@ -228,7 +221,7 @@ class CustomSearchDelegate extends SearchDelegate {
         onPressed: () {
           query = '';
         },
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
       ),
     ];
   }
@@ -239,7 +232,7 @@ class CustomSearchDelegate extends SearchDelegate {
       onPressed: () {
         close(context, null);
       },
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
     );
   }
 
@@ -258,7 +251,7 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   // TODO: implement searchFieldStyle
   TextStyle? get searchFieldStyle {
-    return TextStyle(fontSize: 13);
+    return const TextStyle(fontSize: 13);
   }
 
   @override

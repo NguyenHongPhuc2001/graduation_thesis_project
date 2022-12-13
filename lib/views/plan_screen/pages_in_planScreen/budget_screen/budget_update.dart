@@ -115,7 +115,6 @@ class _BudgetUpdateState extends State<BudgetUpdate> {
                               borderSide: BorderSide(
                                   color: Colors.grey.shade600,
                                   width: size.width * 0.005)),
-                          // filled: true,
                           fillColor: Colors.white,
                           hintText: "Nhập tên ngân sách",
                           hintStyle: TextStyle(
@@ -579,7 +578,7 @@ class _BudgetUpdateState extends State<BudgetUpdate> {
                   textFontWeight: FontWeight.bold,
                   decoration: TextDecoration.none,
                 ),
-                backgroundColor: Color(0xff2B4BF2),
+                backgroundColor: const Color(0xff2B4BF2),
               ),
             ],
           );

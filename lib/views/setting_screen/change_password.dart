@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:graduation_thesis_project/services/remote_services.dart';
+import 'package:graduation_thesis_project/remote/controllers/entites/account_controller.dart';
 
 class ChangePassword extends StatefulWidget {
   const ChangePassword({Key? key}) : super(key: key);
@@ -237,8 +237,7 @@ class _ChangePasswordState extends State<ChangePassword> {
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: ElevatedButton(
               onPressed: () {
-                RemoteService()
-                    .changePassword("ChuTT", password, newPassword, rePassword);
+                AccountController().changePassword(password, newPassword, rePassword);
               },
               style: ElevatedButton.styleFrom(
                 shape: const StadiumBorder(),

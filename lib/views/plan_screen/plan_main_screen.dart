@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
-import 'package:graduation_thesis_project/models/event.dart';
-import 'package:graduation_thesis_project/models/expense.dart';
-import 'package:graduation_thesis_project/models/goal.dart';
-import 'package:graduation_thesis_project/remote/controllers/entites/event_controller.dart';
-import 'package:graduation_thesis_project/remote/controllers/entites/goal_controller.dart';
 
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/budget_screen/budget_screen.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_screen.dart';

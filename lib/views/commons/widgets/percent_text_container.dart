@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
-import 'package:intl/intl.dart';
 
 class PercentTextContainer extends StatelessWidget {
   final double textSize;
@@ -18,7 +17,6 @@ class PercentTextContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final nf = NumberFormat("###,###");
     Size size = MediaQuery.of(context).size;
 
     return Row(

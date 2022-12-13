@@ -71,11 +71,6 @@ class _AboutUsState extends State<AboutUs> {
                   ),
                 textAlign: TextAlign.center,
               )
-
-              // const Text(
-              //   "ỨNG DỤNG ĐƯỢC XÂY DỰNG BỞI CP TEAM \n MỌI THÔNG TIN LIÊN HỆ \n 1800-0909",
-              //   textAlign: TextAlign.center,
-              // ),
             ],
           ),
         )

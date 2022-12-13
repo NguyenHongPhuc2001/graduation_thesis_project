@@ -10,9 +10,6 @@ import '../../commons/widgets/text_container.dart';
 
 // ignore: must_be_immutable
 class WalletSetting extends StatefulWidget {
-  // int? walletId;
-  // String? walletName;
-  // String? walletBalance;
   Wallet wallet;
 
   WalletController walletController = Get.put(WalletController());
@@ -116,7 +113,6 @@ class _WalletSettingState extends State<WalletSetting> {
                                   const EdgeInsets.symmetric(horizontal: 60),
                               child: TextField(
                                 controller: controllerWalletName,
-                                // onChanged: (value) => widget.walletName = value,
                                 decoration: const InputDecoration(
                                   enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(color: Colors.black),
@@ -156,7 +152,6 @@ class _WalletSettingState extends State<WalletSetting> {
                                     child: TextField(
                                       controller: controllerWalletBalance,
                                       keyboardType: TextInputType.number,
-                                      // onChanged: (value) => widget.walletBalance = value,
                                       autofocus: false,
                                       decoration: InputDecoration(
                                         contentPadding: const EdgeInsets.only(
@@ -322,7 +317,7 @@ class _WalletSettingState extends State<WalletSetting> {
                   textFontWeight: FontWeight.bold,
                   decoration: TextDecoration.none,
                 ),
-                backgroundColor: Color(0xff2B4BF2),
+                backgroundColor: const Color(0xff2B4BF2),
               ),
             ],
           );

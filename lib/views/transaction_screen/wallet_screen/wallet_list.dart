@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/wallet_controller.dart';
@@ -8,8 +7,6 @@ import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen
 import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen/wallet_setting.dart';
 import 'package:intl/intl.dart';
 import '../../../models/wallet.dart';
-import '../../commons/widgets/custom_round_rectangle_button.dart';
-import '../../commons/widgets/text_container.dart';
 
 // ignore: must_be_immutable
 class WalletList extends StatefulWidget {
@@ -93,10 +90,10 @@ class _WalletListState extends State<WalletList> {
                   width: size.width * 0.1,
                   height: size.width * 0.1,
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.blue,
-                    boxShadow: const [
+                    boxShadow: [
                       BoxShadow(
                           spreadRadius: 2, blurRadius: 2, color: Colors.black12)
                     ],
@@ -175,7 +172,7 @@ class _WalletListState extends State<WalletList> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
+                SizedBox(
                   width: size.width * 0.45,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -216,7 +213,6 @@ class _WalletListState extends State<WalletList> {
                               margin: const EdgeInsets.symmetric(horizontal: 5),
                               child: Text(
                                 "${nf.format(item.walletBalance!)} VNĐ",
-                                // "500.000.000 VNĐ",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,

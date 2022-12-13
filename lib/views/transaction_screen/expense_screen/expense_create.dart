@@ -1,12 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/utils/enums/expense_type.dart';
-import 'package:graduation_thesis_project/views/commons/pages/select_event.dart';
 import 'package:graduation_thesis_project/views/commons/pages/select_icon.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
-import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
 
 import '../../../remote/controllers/entites/expense_controller.dart';
 
@@ -24,7 +20,6 @@ class ExpenseCreate extends StatefulWidget {
 class _ExpenseCreateState extends State<ExpenseCreate> {
   final controllerExpenseName = TextEditingController();
   String? valueChoose;
-  String? _expenseName = "";
   String? _expenseIcon = "images/palm_tree.svg";
   var event;
 
@@ -71,7 +66,7 @@ class _ExpenseCreateState extends State<ExpenseCreate> {
             children: [
               Container(
                 width: size.width,
-                height: size.height * 0.5,
+                height: size.height * 0.35,
                 margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -105,7 +100,6 @@ class _ExpenseCreateState extends State<ExpenseCreate> {
                               borderSide: BorderSide(
                                   color: Colors.grey.shade600,
                                   width: size.width * 0.005)),
-                          // filled: true,
                           fillColor: Colors.white,
                           hintText: "Nhập tên chi tiêu",
                           hintStyle: TextStyle(
@@ -162,7 +156,7 @@ class _ExpenseCreateState extends State<ExpenseCreate> {
                                   BoxShadow(color: Colors.grey, blurRadius: 2)
                                 ]),
                             child: DropdownButton(
-                              hint: Text("Chọn loại thu chi"),
+                              hint: const Text("Chọn loại thu chi"),
                               underline: const SizedBox(),
                               icon: const Icon(
                                   Icons.keyboard_arrow_down_outlined),

@@ -1,9 +1,9 @@
 import 'package:charts_flutter_new/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:graduation_thesis_project/utils/api.dart';
 
 import '../../models/chart/pie_item.dart';
 import '../../remote/controllers/chart/pie_controller.dart';
+import '../api_paths/api_paths.dart';
 import '../date/date_utils.dart';
 
 // ignore: must_be_immutable
@@ -28,22 +28,33 @@ class DonutAutoLabelChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    if(seriesList[0].data.isNotEmpty){
+    try{
+
+      if(seriesList[0].data.isNotEmpty){
+
+        return charts.PieChart<String>(
+            seriesList,
+            animate: animate,
+            defaultRenderer: charts.ArcRendererConfig(
+                arcWidth: 60,
+                arcRendererDecorators: [charts.ArcLabelDecorator()])
+        );
+
+      }
 
       return charts.PieChart<String>(
           seriesList,
-          animate: animate,
-          defaultRenderer: charts.ArcRendererConfig(
-              arcWidth: 60,
-              arcRendererDecorators: [charts.ArcLabelDecorator()])
+          animate: animate
+      );
+
+    }catch(e){
+
+      return charts.PieChart<String>(
+          seriesList,
+          animate: animate
       );
 
     }
-
-    return charts.PieChart<String>(
-        seriesList,
-        animate: animate
-    );
 
   }
 

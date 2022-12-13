@@ -25,7 +25,6 @@ class _RootPageState extends State<RootPage> {
     super.initState();
 
     SessionManager().getAuthToken().then((value){
-      print(value);
       setState(() {
         value == null ? _authStatus = AuthStatus.notSignIn : _authStatus = AuthStatus.signIn;
       });

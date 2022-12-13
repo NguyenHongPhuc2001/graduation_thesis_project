@@ -1,12 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/goal_controller.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/money_text_container.dart';
-import 'package:graduation_thesis_project/views/commons/widgets/single_row_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_detail.dart';
 import 'package:intl/intl.dart';
@@ -19,7 +16,7 @@ import '../../../commons/widgets/single_row_container_2.dart';
 
 class TargetEnd extends StatefulWidget {
 
-   TargetEnd({
+   const TargetEnd({
     Key? key,
   }) : super(key: key);
 
@@ -68,44 +65,36 @@ class _TargetEndState extends State<TargetEnd> {
               decoration: TextDecoration.none,
             ),
             Padding(
-              padding: EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.only(top: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Chọn nút "),
+                  const Text("Chọn nút "),
                   Padding(
-                    padding: EdgeInsets.only(left: 10, right: 10),
+                    padding: const EdgeInsets.only(left: 10, right: 10),
                     child: CustomRoundRectangleButton(
-                      boxShadow: [
-                        BoxShadow(
-                          offset: Offset(0, 0),
-                          color: Colors.grey,
-                          blurRadius: size.width * 0.02,
-                          spreadRadius: size.width*0.001,
-                        ),
-                      ],
                       onTap: () {},
                       buttonWith: size.width * 0.13,
                       padding: size.width * 0.01,
                       borderRadius: size.width * 0.02,
                       text: TextContainer(
                         text: "Thêm",
-                        textColor: Color(0xff90E0EF),
+                        textColor: const Color(0xffffffff),
                         textSize: size.width * 0.02,
                         textFontWeight: FontWeight.bold,
                         decoration: TextDecoration.none,
                       ),
-                      backgroundColor: Colors.white,
+                      backgroundColor: Colors.blue,
                     ),
                   ),
-                  Text("để thêm mục tiêu"),
+                  const Text("để thêm mục tiêu"),
                 ],
               ),
             ),
           ],
         ),
       )
-          : Container(
+          : SizedBox(
         width: size.width,
         child: ListView.builder(
             itemCount: listTargetEnd.length,
@@ -162,7 +151,7 @@ class _TargetEndState extends State<TargetEnd> {
                         mainAxisAlignment:
                         MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
+                          SizedBox(
                             width: size.width * 0.23,
                             child: CircleIconContainer(
                               urlImage: listTargetEnd
@@ -173,7 +162,7 @@ class _TargetEndState extends State<TargetEnd> {
                               padding: size.width * 0.045,
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: size.width * 0.7,
                             child: Column(
                               crossAxisAlignment:
@@ -222,7 +211,7 @@ class _TargetEndState extends State<TargetEnd> {
                                     barRadius: Radius.circular(
                                         size.width * 0.008),
                                     lineHeight: size.width * 0.02,
-                                    percent: targetPercent,
+                                    percent: targetPercent > 1.0 ? 1.0 : targetPercent,
                                     progressColor: Colors.green,
                                   ),
                                 ),

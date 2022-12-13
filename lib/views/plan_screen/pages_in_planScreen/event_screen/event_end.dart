@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:graduation_thesis_project/models/expense.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/event_controller.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/history_controller.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
@@ -19,7 +17,7 @@ import '../../../commons/widgets/single_row_container_2.dart';
 // ignore: must_be_immutable
 class EventEnd extends StatefulWidget {
 
-  EventEnd({
+  const EventEnd({
     Key? key,
   }) : super(key: key);
 
@@ -55,7 +53,7 @@ class _EventEndState extends State<EventEnd> {
     Size size = MediaQuery.of(context).size;
 
     if (checkTotal == true) {
-      lsEnd.forEach((element) {
+      for (var element in lsEnd) {
         HistoryController()
             .getTotalCostByEvent(element.eventId!, "WITHDRAW")
             .then((value) {
@@ -63,22 +61,8 @@ class _EventEndState extends State<EventEnd> {
             listValue.add(value);
           });
         });
-      });
+      }
     }
-
-    // if (checkTotal == true) {
-    //   listValue.clear();
-    //   lsEnd.forEach((element) {
-    //     HistoryController()
-    //         .getTotalCostByEvent(element.eventId!, "WITHDRAW")
-    //         .then((value) {
-    //       setState(() {
-    //         listValue.add(value);
-    //       });
-    //     });
-    //   });
-    //   checkTotal = false;
-    // }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -265,7 +249,7 @@ class _EventEndState extends State<EventEnd> {
                                                   blurRadius: 0.2)
                                             ]),
                                         child: MoneyTextContainer(
-                                          value: (listValue[index].totalCost==null)?0:listValue[index].totalCost,
+                                          value: listValue[index].totalCost,
                                           textSize: size.width * 0.035,
                                           textFontWeight: FontWeight.w500,
                                           color: Colors.black,

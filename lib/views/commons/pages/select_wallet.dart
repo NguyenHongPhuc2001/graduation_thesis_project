@@ -1,7 +1,5 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/wallet.dart';
@@ -12,7 +10,6 @@ import 'package:graduation_thesis_project/views/commons/widgets/money_text_conta
 import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen/wallet_create.dart';
 import 'package:intl/intl.dart';
 
-import '../../../un_used/WalletNew.dart';
 import '../widgets/circle_icon_container.dart';
 import '../widgets/single_row_container_2.dart';
 import '../widgets/text_container.dart';

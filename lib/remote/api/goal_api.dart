@@ -15,7 +15,6 @@ class GoalAPI extends BaseAPI {
   Future<Goal> getOne(int goalId) async {
 
     String? token = await manager.getAuthToken();
-    String? userName = await manager.getUsername();
 
     final queryParameters = {"goalId": goalId};
 
@@ -111,10 +110,11 @@ class GoalAPI extends BaseAPI {
 
     final dataFromAPI = jsonDecode(respone.body);
 
-    if (dataFromAPI.entries.elementAt(1).value == 201)
-      return true;
-    else
+    if (dataFromAPI.entries.elementAt(1).value != 201) {
       return false;
+    } else {
+      return true;
+    }
   }
 
   Future<bool> update(
@@ -157,8 +157,9 @@ class GoalAPI extends BaseAPI {
 
     if (dataFromAPI.entries.elementAt(1).value == 200) {
       return true;
-    } else
+    } else {
       return false;
+    }
   }
 
   Future<bool> delete(int goalId) async {
@@ -185,8 +186,9 @@ class GoalAPI extends BaseAPI {
 
     if (dataFromAPI.entries.elementAt(1).value == 200) {
       return true;
-    } else
+    } else {
       return false;
+    }
   }
 
 

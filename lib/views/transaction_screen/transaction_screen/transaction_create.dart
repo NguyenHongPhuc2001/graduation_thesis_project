@@ -1,13 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/history_controller.dart';
-import 'package:graduation_thesis_project/utils/enums/expense_type.dart';
-import 'package:graduation_thesis_project/views/commons/pages/select_event.dart';
-import 'package:graduation_thesis_project/views/commons/pages/select_icon.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_list.dart';
@@ -15,9 +10,6 @@ import 'package:graduation_thesis_project/views/transaction_screen/expense_scree
 import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen/wallet_list.dart';
 import 'package:intl/intl.dart';
 
-import '../../../models/expense.dart';
-import '../../../models/wallet.dart';
-import '../../../remote/controllers/entites/expense_controller.dart';
 import '../../../remote/controllers/entites/wallet_controller.dart';
 
 // ignore: must_be_immutable
@@ -58,9 +50,9 @@ class _TransactionCreateState extends State<TransactionCreate> {
         // resizeToAvoidBottomInset: false,
         backgroundColor: const Color(0xE9ECEFED),
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             "Thêm giao dịch",
-            style: const TextStyle(
+            style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
                 fontSize: 15.0),
@@ -87,7 +79,7 @@ class _TransactionCreateState extends State<TransactionCreate> {
               children: [
                 Container(
                   width: size.width,
-                  height: size.height * 0.7,
+                  height: size.height * 0.58,
                   margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -99,38 +91,6 @@ class _TransactionCreateState extends State<TransactionCreate> {
                   ),
                   child: Column(
                     children: [
-                      // Container(
-                      //   padding: const EdgeInsets.all(3),
-                      //   margin: const EdgeInsets.only(top: 20),
-                      //   width: size.width * 0.8,
-                      //   height: size.width * 0.13,
-                      //   child: TextField(
-                      //     controller: controllerTransactionName,
-                      //     textAlign: TextAlign.center,
-                      //     autofocus: false,
-                      //     decoration: InputDecoration(
-                      //       contentPadding: const EdgeInsets.only(
-                      //           left: 15, top: 5, bottom: 15),
-                      //       enabledBorder: OutlineInputBorder(
-                      //           borderRadius: BorderRadius.circular(30),
-                      //           borderSide: BorderSide(
-                      //               color: Colors.grey.shade300,
-                      //               width: size.width * 0.005)),
-                      //       focusedBorder: OutlineInputBorder(
-                      //           borderRadius: BorderRadius.circular(30),
-                      //           borderSide: BorderSide(
-                      //               color: Colors.grey.shade600,
-                      //               width: size.width * 0.005)),
-                      //       // filled: true,
-                      //       fillColor: Colors.white,
-                      //       hintText: "Nhập tên giao dịch",
-                      //       hintStyle: TextStyle(
-                      //           fontSize: size.width * 0.04,
-                      //           color: Colors.grey.shade600,
-                      //           fontWeight: FontWeight.w400),
-                      //     ),
-                      //   ),
-                      // ),
                       const SizedBox(
                         height: 20,
                       ),
@@ -162,12 +122,6 @@ class _TransactionCreateState extends State<TransactionCreate> {
                               alignment: Alignment.center,
                               width: size.width * 0.53,
                               height: size.width * 0.1,
-                              // decoration: BoxDecoration(
-                              //     color: Colors.white,
-                              //     borderRadius: BorderRadius.circular(100),
-                              //     boxShadow: const [
-                              //       BoxShadow(color: Colors.grey, blurRadius: 2)
-                              //     ]),
                               child: TextField(
                                 controller: controllerTransactionValue,
                                 keyboardType: TextInputType.number,
@@ -184,7 +138,7 @@ class _TransactionCreateState extends State<TransactionCreate> {
                                       borderSide: BorderSide(
                                           color: Colors.grey.shade600,
                                           width: size.width * 0.005)),
-                                  // filled: true,
+
                                   fillColor: Colors.white,
                                   hintText: "Nhập tên giao dịch",
                                   hintStyle: TextStyle(
@@ -203,7 +157,7 @@ class _TransactionCreateState extends State<TransactionCreate> {
                                               size.width * 0.1),
                                           color: Colors.red,
                                         ),
-                                        child: Text(
+                                        child: const Text(
                                           "VNĐ",
                                           style: TextStyle(
                                               color: Colors.white,
@@ -265,9 +219,9 @@ class _TransactionCreateState extends State<TransactionCreate> {
                                         decoration: TextDecoration.none,
                                       ),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       width: size.width * 0.15,
-                                      child: Icon(
+                                      child: const Icon(
                                               Icons.keyboard_arrow_down,
                                             ),
                                     ),
@@ -338,9 +292,9 @@ class _TransactionCreateState extends State<TransactionCreate> {
                                         decoration: TextDecoration.none,
                                       ),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       width: size.width * 0.15,
-                                      child: Icon(
+                                      child: const Icon(
                                         Icons.keyboard_arrow_down,
                                       ),
                                     ),
@@ -376,7 +330,7 @@ class _TransactionCreateState extends State<TransactionCreate> {
                             ),
                             InkWell(
                               onTap: () {
-                                Get.to(EventList())!.then((value) {
+                                Get.to(const EventList())!.then((value) {
                                   setState(() {
                                     event = value;
                                   });
@@ -407,9 +361,9 @@ class _TransactionCreateState extends State<TransactionCreate> {
                                           textFontWeight: FontWeight.w400,
                                           decoration: TextDecoration.none),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       width: size.width * 0.15,
-                                      child: Icon(
+                                      child: const Icon(
                                               Icons.keyboard_arrow_down,
                                             ),
                                     ),
@@ -446,7 +400,7 @@ class _TransactionCreateState extends State<TransactionCreate> {
                                     fontWeight: FontWeight.bold),
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               width: size.width * 0.51,
                               height: size.width * 0.2,
                               child: TextField(
@@ -469,7 +423,6 @@ class _TransactionCreateState extends State<TransactionCreate> {
                                       borderSide: BorderSide(
                                           color: Colors.grey.shade600,
                                           width: size.width * 0.005)),
-                                  // filled: true,
                                   fillColor: Colors.white,
                                   hintText: "Nhập ghi chú",
                                   hintStyle: TextStyle(
@@ -500,7 +453,7 @@ class _TransactionCreateState extends State<TransactionCreate> {
                   style: ElevatedButton.styleFrom(
                       shape: const StadiumBorder(),
                       minimumSize: const Size(250, 30)),
-                  child: Text("Tạo mới giao dịch"),
+                  child: const Text("Tạo mới giao dịch"),
                 ),
               ],
             ),

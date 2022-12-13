@@ -131,10 +131,7 @@ class WalletAPI extends BaseAPI{
   }
 
   Future<Wallet> getOne(int walletId) async {
-
-    String? username = await manager.getUsername();
-
-
+    
     final queryParameters = {
       "walletId":walletId
     };

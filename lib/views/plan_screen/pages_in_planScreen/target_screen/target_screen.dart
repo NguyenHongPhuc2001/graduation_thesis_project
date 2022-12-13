@@ -56,7 +56,7 @@ class _TargetScreenState extends State<TargetScreen> {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddTarget(),
+                    builder: (context) => const AddTarget(),
                   ),
                 ).then((value) => setState(() {
                       if (value == "Create") {

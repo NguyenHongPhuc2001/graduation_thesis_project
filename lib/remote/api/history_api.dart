@@ -155,6 +155,7 @@ class HistoryAPI extends BaseAPI {
 
     Map<String, dynamic> data = jsonDecode(response.body);
 
+    // ignore: unrelated_type_equality_checks
     if (data.entries.elementAt(1) == 200) {
       return true;
     }
@@ -163,7 +164,6 @@ class HistoryAPI extends BaseAPI {
   }
 
   Future<bool> deleteTransaction(int historyId) async {
-    String? userName = await manager.getUsername();
     String? token = await manager.getAuthToken();
 
     final queryParameters = {"historyId": historyId};
@@ -180,6 +180,7 @@ class HistoryAPI extends BaseAPI {
 
     Map<String, dynamic> data = jsonDecode(response.body);
 
+    // ignore: unrelated_type_equality_checks
     if (data.entries.elementAt(1) == 200) {
       return true;
     }
@@ -241,8 +242,6 @@ class HistoryAPI extends BaseAPI {
     final response = await http.Response.fromStream(streamedRequest);
 
     Map<String, dynamic> dataFromAPI = jsonDecode(response.body);
-
-    print(token);
 
     if (dataFromAPI.entries.elementAt(1).value == 200) {
       List<ListDaysHaveTransaction> map =
@@ -352,8 +351,6 @@ class HistoryAPI extends BaseAPI {
 
     Map<String, dynamic> dataFromAPI = jsonDecode(response.body);
 
-    print(dataFromAPI.entries.elementAt(2).value);
-
     List<ListDaysHaveTransaction> listDaysHaveTransaction =
         listDaysHaveTransactionInMonthFromJson(
             dataFromAPI.entries.elementAt(2).value);
@@ -425,8 +422,6 @@ class HistoryAPI extends BaseAPI {
     final response = await http.Response.fromStream(streamedRequest);
 
     Map<String, dynamic> dataFromAPI = jsonDecode(response.body);
-
-    print(dataFromAPI.entries.elementAt(2).value);
 
     TotalCost totalCost =
         TotalCost.fromJson(dataFromAPI.entries.elementAt(2).value);

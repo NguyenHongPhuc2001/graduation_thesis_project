@@ -2,8 +2,6 @@ import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/wallet.dart';
 import 'package:graduation_thesis_project/remote/api/Wallet_API.dart';
 
-import '../../../models/account.dart';
-
 class WalletController extends GetxController {
 
   Future<List<Wallet>?> getList()  async {

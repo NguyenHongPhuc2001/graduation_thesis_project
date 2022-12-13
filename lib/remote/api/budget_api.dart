@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:get_storage/get_storage.dart';
 import 'package:graduation_thesis_project/remote/api/base_api.dart';
 import 'package:graduation_thesis_project/utils/api_paths/uri_container.dart';
 
@@ -127,8 +126,6 @@ class BudgetAPI extends BaseAPI {
       var map = Map.fromIterable(data['objectList'] as List);
       List<Budget> budgets = budgetsFromJson(map.keys.toList());
 
-      print(budgets.length);
-
       return budgets;
     }
 
@@ -139,8 +136,6 @@ class BudgetAPI extends BaseAPI {
     String? token = await manager.getAuthToken();
     String? userName = await manager.getUsername();
 
-
-    print(token);
     final queryParameters = {
       "budgetExpired": budgetExpired,
       "account": {
@@ -163,10 +158,6 @@ class BudgetAPI extends BaseAPI {
     var map = Map.fromIterable(dataFromAPI['objectList'] as List);
 
     List<Budget> budgets = budgetsFromJson(map.keys.toList());
-
-    budgets.forEach((element) {
-      print(element.budgetName);
-    });
 
     if (dataFromAPI.entries.elementAt(1).value == 200) {
       completer.complete(budgets);

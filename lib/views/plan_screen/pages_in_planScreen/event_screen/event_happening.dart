@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
-import 'package:graduation_thesis_project/models/expense.dart';
 import 'package:graduation_thesis_project/models/response/total_cost.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/event_controller.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
@@ -55,7 +53,7 @@ class _EventHappeningState extends State<EventHappening> {
 
 
       if (checkTotal == true) {
-        lsEventHappening.forEach((element) {
+        for (var element in lsEventHappening) {
           HistoryController()
               .getTotalCostByEvent(element.eventId!, "WITHDRAW")
               .then((value) {
@@ -63,7 +61,7 @@ class _EventHappeningState extends State<EventHappening> {
               listValue.add(value);
             });
           });
-        });
+        }
       }
 
 
@@ -144,18 +142,6 @@ class _EventHappeningState extends State<EventHappening> {
               child: ListView.builder(
                   itemCount: lsEventHappening.length,
                   itemBuilder: (context, index) {
-                    // double spending=0.0;
-
-                    // if(mounted){
-                    //   HistoryController()
-                    //       .getTotalCostByEvent(
-                    //           lsEventHappening[index].eventId!, "WITHDRAW")
-                    //       .then((value) {
-                    //     setState(() {
-                    //       spending = value.totalCost;
-                    //     });
-                    //   });
-                    // }
 
                     return Padding(
                       padding: EdgeInsets.only(top: size.width * 0.07),
@@ -199,7 +185,7 @@ class _EventHappeningState extends State<EventHappening> {
                               }));
                         },
                         child: SingleRowContainer2(
-                          paddingLeft: size.width * 0.01,
+                          paddingLeft: size.width * 0.02,
                           paddingRight: size.width * 0.01,
                           paddingTop: size.width * 0.02,
                           paddingBottom: size.width * 0.02,
@@ -272,7 +258,7 @@ class _EventHappeningState extends State<EventHappening> {
                                                         blurRadius: 0.2)
                                                   ]),
                                               child: MoneyTextContainer(
-                                                value: (listValue[index].totalCost==null)?0:listValue[index].totalCost,
+                                                value: listValue[index].totalCost,
                                                 textSize: size.width * 0.025,
                                                 textFontWeight: FontWeight.w500,
                                                 color: Colors.black,

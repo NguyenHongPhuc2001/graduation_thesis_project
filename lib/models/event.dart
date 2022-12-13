@@ -21,23 +21,23 @@ class Event {
   });
 
   Event.fromJson(Map<String, dynamic> data)
-      : this.eventId = data['eventId'],
-        this.eventName = data['eventName'],
-        this.eventEndDate = data['eventEndDate'],
-        this.eventStatus = data['eventStatus'],
-        this.eventIcon = data['eventIcon'],
-        this.wallet = Wallet.fromJson(data['wallet']),
-        this.histories = data['histories'];
+      : eventId = data['eventId'],
+        eventName = data['eventName'],
+        eventEndDate = data['eventEndDate'],
+        eventStatus = data['eventStatus'],
+        eventIcon = data['eventIcon'],
+        wallet = Wallet.fromJson(data['wallet']),
+        histories = data['histories'];
 
   Map<String, dynamic> toJson() {
     return {
-      'eventId': this.eventId,
-      'eventName': this.eventName,
-      'eventEndDate': this.eventEndDate,
-      'eventStatus': this.eventStatus,
-      'eventIcon': this.eventIcon,
-      'wallet': this.wallet,
-      'histories': this.histories,
+      'eventId': eventId,
+      'eventName': eventName,
+      'eventEndDate': eventEndDate,
+      'eventStatus': eventStatus,
+      'eventIcon': eventIcon,
+      'wallet': wallet,
+      'histories': histories,
     };
   }
 }

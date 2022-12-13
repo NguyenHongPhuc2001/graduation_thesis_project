@@ -13,12 +13,10 @@ import 'budget_update.dart';
 
 // ignore: must_be_immutable
 class BudgetHappening extends StatefulWidget {
-  // final List<Budget> listBudget;
   bool check;
 
   BudgetHappening({
     Key? key,
-    // required this.listBudget,
     required this.check
   }) : super(key: key);
 
@@ -48,9 +46,6 @@ class _BudgetHappeningState extends State<BudgetHappening> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
-    print("budget ${listBudgetHappening.length}");
-
 
     double totalSpending = 0, percentSpending = 0, percentOver = 0;
     bool isOverSpending = false;
@@ -167,15 +162,18 @@ class _BudgetHappeningState extends State<BudgetHappening> {
                             paddingTop: size.width * 0.02,
                             paddingBottom: size.width * 0.02,
                             children: [
-                              SizedBox(
-                                width: size.width * 0.20,
-                                child: CircleIconContainer(
-                                  urlImage: listBudgetHappening
-                                      .elementAt(index)
-                                      .budgetIcon,
-                                  iconSize: size.width * 0.07,
-                                  backgroundColor: Colors.orange,
-                                  padding: size.width * 0.040,
+                              Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: SizedBox(
+                                  width: size.width * 0.18,
+                                  child: CircleIconContainer(
+                                    urlImage: listBudgetHappening
+                                        .elementAt(index)
+                                        .budgetIcon,
+                                    iconSize: size.width * 0.05,
+                                    backgroundColor: Colors.orange,
+                                    padding: size.width * 0.040,
+                                  ),
                                 ),
                               ),
                               Container(

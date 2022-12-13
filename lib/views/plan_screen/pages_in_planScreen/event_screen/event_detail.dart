@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:graduation_thesis_project/models/expense.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/event_controller.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/appbar_container_2.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
@@ -11,7 +10,6 @@ import 'package:graduation_thesis_project/views/commons/widgets/single_row_conta
 import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_trasaction_list.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_updateEvent.dart';
-import 'package:graduation_thesis_project/views/transaction_screen/expense_screen/expense_list.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../models/event.dart';

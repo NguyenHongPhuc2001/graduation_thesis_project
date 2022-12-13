@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -71,12 +70,11 @@ class _TransactionDetailState extends State<TransactionDetail> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-        // resizeToAvoidBottomInset: false,
         backgroundColor: const Color(0xE9ECEFED),
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             "Chi tiết giao dịch",
-            style: const TextStyle(
+            style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
                 fontSize: 15.0),
@@ -96,7 +94,7 @@ class _TransactionDetailState extends State<TransactionDetail> {
           elevation: 2,
           actions: [
             IconButton(
-              icon: Icon(Icons.delete, color: Colors.black),
+              icon: const Icon(Icons.delete, color: Colors.black),
               onPressed: () {
                 _showDeleteDialog(widget.transaction);
               },
@@ -111,7 +109,7 @@ class _TransactionDetailState extends State<TransactionDetail> {
               children: [
                 Container(
                   width: size.width,
-                  height: size.height * 0.7,
+                  height: size.height * 0.58,
                   margin:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
                   decoration: BoxDecoration(
@@ -156,12 +154,6 @@ class _TransactionDetailState extends State<TransactionDetail> {
                               alignment: Alignment.center,
                               width: size.width * 0.53,
                               height: size.width * 0.1,
-                              // decoration: BoxDecoration(
-                              //     color: Colors.white,
-                              //     borderRadius: BorderRadius.circular(100),
-                              //     boxShadow: const [
-                              //       BoxShadow(color: Colors.grey, blurRadius: 2)
-                              //     ]),
                               child: TextField(
                                 controller: controllerTransactionValue,
                                 keyboardType: TextInputType.number,
@@ -178,7 +170,6 @@ class _TransactionDetailState extends State<TransactionDetail> {
                                       borderSide: BorderSide(
                                           color: Colors.grey.shade600,
                                           width: size.width * 0.005)),
-                                  // filled: true,
                                   fillColor: Colors.white,
                                   hintText: "Nhập số tiền",
                                   hintStyle: TextStyle(
@@ -197,7 +188,7 @@ class _TransactionDetailState extends State<TransactionDetail> {
                                             size.width * 0.1),
                                         color: Colors.red,
                                       ),
-                                      child: Text(
+                                      child: const Text(
                                         "VNĐ",
                                         style: TextStyle(
                                             color: Colors.white,
@@ -261,9 +252,9 @@ class _TransactionDetailState extends State<TransactionDetail> {
                                               decoration: TextDecoration.none,
                                             ),
                                           ),
-                                          Container(
+                                          SizedBox(
                                             width: size.width * 0.15,
-                                            child: Icon(
+                                            child: const Icon(
                                               Icons.keyboard_arrow_down,
                                             ),
                                           ),
@@ -337,9 +328,9 @@ class _TransactionDetailState extends State<TransactionDetail> {
                                               decoration: TextDecoration.none,
                                             ),
                                           ),
-                                          Container(
+                                          SizedBox(
                                             width: size.width * 0.15,
-                                            child: Icon(
+                                            child: const Icon(
                                               Icons.keyboard_arrow_down,
                                             ),
                                           ),
@@ -376,7 +367,7 @@ class _TransactionDetailState extends State<TransactionDetail> {
                             ),
                             InkWell(
                               onTap: () {
-                                Get.to(EventList())!.then((value) {
+                                Get.to(const EventList())!.then((value) {
                                   setState(() {
                                     event = value;
                                   });
@@ -410,9 +401,9 @@ class _TransactionDetailState extends State<TransactionDetail> {
                                                 decoration:
                                                     TextDecoration.none),
                                           ),
-                                          Container(
+                                          SizedBox(
                                             width: size.width * 0.15,
-                                            child: Icon(
+                                            child: const Icon(
                                               Icons.keyboard_arrow_down,
                                             ),
                                           ),
@@ -451,7 +442,7 @@ class _TransactionDetailState extends State<TransactionDetail> {
                                     fontWeight: FontWeight.bold),
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               width: size.width * 0.51,
                               height: size.width * 0.2,
                               child: TextField(
@@ -474,7 +465,6 @@ class _TransactionDetailState extends State<TransactionDetail> {
                                       borderSide: BorderSide(
                                           color: Colors.grey.shade600,
                                           width: size.width * 0.005)),
-                                  // filled: true,
                                   fillColor: Colors.white,
                                   hintText: "Nhập ghi chú",
                                   hintStyle: TextStyle(
@@ -515,7 +505,7 @@ class _TransactionDetailState extends State<TransactionDetail> {
                   style: ElevatedButton.styleFrom(
                       shape: const StadiumBorder(),
                       minimumSize: const Size(250, 30)),
-                  child: Text("Cập nhật giao dịch"),
+                  child: const Text("Cập nhật giao dịch"),
                 ),
               ],
             ),
@@ -559,8 +549,8 @@ class _TransactionDetailState extends State<TransactionDetail> {
                   color: Colors.black,
                   fontWeight: FontWeight.w400,
                 ),
-                children: [
-                  const TextSpan(
+                children: const [
+                   TextSpan(
                       text: "Bạn có chắc muốn xóa giao dịch này chứ ?"),
                 ],
               ),
@@ -608,7 +598,7 @@ class _TransactionDetailState extends State<TransactionDetail> {
                   textFontWeight: FontWeight.bold,
                   decoration: TextDecoration.none,
                 ),
-                backgroundColor: Color(0xff2B4BF2),
+                backgroundColor: const Color(0xff2B4BF2),
               ),
             ],
           );

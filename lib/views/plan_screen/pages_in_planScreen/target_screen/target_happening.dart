@@ -1,15 +1,11 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/goal_controller.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/circle_icon_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/money_text_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/percent_text_container.dart';
-import 'package:graduation_thesis_project/views/commons/widgets/single_row_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_detail.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +15,7 @@ import '../../../../models/goal.dart';
 import '../../../commons/widgets/custom_round_rectangle_button.dart';
 import '../../../commons/widgets/single_row_container_2.dart';
 
+// ignore: must_be_immutable
 class TargetHappening extends StatefulWidget {
   final List<Goal> listGoal;
   bool check;
@@ -50,7 +47,6 @@ class _TargetHappeningState extends State<TargetHappening> {
     });
     super.initState();
 
-    print("Initial from target happening !");
   }
 
   @override
@@ -90,44 +86,36 @@ class _TargetHappeningState extends State<TargetHappening> {
                     decoration: TextDecoration.none,
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 20),
+                    padding: const EdgeInsets.only(top: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Chọn nút "),
+                        const Text("Chọn nút "),
                         Padding(
-                          padding: EdgeInsets.only(left: 10, right: 10),
+                          padding: const EdgeInsets.only(left: 10, right: 10),
                           child: CustomRoundRectangleButton(
-                            boxShadow: [
-                              BoxShadow(
-                                offset: Offset(0, 0),
-                                color: Colors.grey,
-                                blurRadius: size.width * 0.02,
-                                spreadRadius: size.width * 0.001,
-                              ),
-                            ],
                             onTap: () {},
                             buttonWith: size.width * 0.13,
                             padding: size.width * 0.01,
                             borderRadius: size.width * 0.02,
                             text: TextContainer(
                               text: "Thêm",
-                              textColor: Color(0xffFB8500),
+                              textColor: const Color(0xffffffff),
                               textSize: size.width * 0.02,
                               textFontWeight: FontWeight.bold,
                               decoration: TextDecoration.none,
                             ),
-                            backgroundColor: Colors.white,
+                            backgroundColor: Colors.blue,
                           ),
                         ),
-                        Text("để thêm mục tiêu"),
+                        const Text("để thêm mục tiêu"),
                       ],
                     ),
                   ),
                 ],
               ),
             )
-          : Container(
+          : SizedBox(
               width: size.width,
               child: ListView.builder(
                   itemCount: listTargetHappening.length,
@@ -198,7 +186,7 @@ class _TargetHappeningState extends State<TargetHappening> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
+                                SizedBox(
                                   width: size.width * 0.23,
                                   child: CircleIconContainer(
                                     urlImage: listTargetHappening
@@ -212,7 +200,7 @@ class _TargetHappeningState extends State<TargetHappening> {
                                     padding: size.width * 0.045,
                                   ),
                                 ),
-                                Container(
+                                SizedBox(
                                   width: size.width * 0.7,
                                   child: Column(
                                     crossAxisAlignment:

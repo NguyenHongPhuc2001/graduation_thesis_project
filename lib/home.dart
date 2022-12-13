@@ -6,9 +6,7 @@ import 'package:graduation_thesis_project/views/page/overview.dart';
 
 import 'package:graduation_thesis_project/views/page/setting.dart';
 import 'package:graduation_thesis_project/views/plan_screen/plan_main_screen.dart';
-import 'package:graduation_thesis_project/views/transaction_screen/expense_screen/expense_create.dart';
 import 'package:graduation_thesis_project/views/transaction_screen/transaction_screen/transaction_create.dart';
-import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen/wallet_create.dart';
 
 import 'views/manage_transactions_screen/main_page.dart';
 

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/event_controller.dart';
-import 'package:graduation_thesis_project/views/commons/widgets/appbar_container.dart';
 
 import '../../../../models/event.dart';
 import '../../../commons/widgets/circle_icon_container.dart';

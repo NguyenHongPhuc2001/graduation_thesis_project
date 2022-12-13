@@ -7,15 +7,10 @@ import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/event_screen/event_happening.dart';
 
 import '../../../../models/event.dart';
-import '../../../../models/expense.dart';
 
 class EventScreen extends StatefulWidget {
 
   final PageController pageController;
-  // final List<Event> listEvent;
-  // final Event? event;
-  // final List<Expense> listTransaction;
-
   const EventScreen({ Key? key, required this.pageController,}) : super(key: key);
 
   @override
@@ -25,8 +20,8 @@ class EventScreen extends StatefulWidget {
 
 class _EventScreenState extends State<EventScreen> {
   final PageController _eventPageController = PageController();
-  bool check =false;
-  List<Event> listEventHappenning = [];
+  bool check = false;
+  List<Event> listEventHappening = [];
   List<Event> listEventEnd = [];
 
   @override
@@ -35,7 +30,7 @@ class _EventScreenState extends State<EventScreen> {
     super.initState();
     EventController().getByStatus(false).then((value) {
       setState((){
-        listEventHappenning = List.from(value);
+        listEventHappening = List.from(value);
       });
     });
   }
@@ -64,7 +59,7 @@ class _EventScreenState extends State<EventScreen> {
                     if (value == "Create") {
                        EventController().getByStatus(false).then((value) {
                         setState(() {
-                          listEventHappenning = List.from(value);
+                          listEventHappening = List.from(value);
                           check =true;
                         });
                       });
@@ -78,8 +73,8 @@ class _EventScreenState extends State<EventScreen> {
             physics: const NeverScrollableScrollPhysics(),
             controller: _eventPageController,
             children: [
-              EventHappening(check: check, listEvent: listEventHappenning,),
-              EventEnd(),
+              EventHappening(check: check, listEvent: listEventHappening,),
+              const EventEnd(),
             ],
           ),
         ),

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:graduation_thesis_project/views/commons/pages/select_wallet.dart';
 import 'package:graduation_thesis_project/views/setting_screen/about_us.dart';
 import 'package:graduation_thesis_project/views/setting_screen/change_password.dart';
 import 'package:graduation_thesis_project/views/setting_screen/login.dart';
-import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen/wallet_create.dart';
 import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen/wallet_list.dart';
-import 'package:graduation_thesis_project/views/transaction_screen/wallet_screen/wallet_setting.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountManagement extends StatefulWidget {
@@ -141,7 +138,7 @@ class _AccountManagementState extends State<AccountManagement> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => AboutUs(),
+                                    builder: (context) => const AboutUs(),
                                   ),
                                 );
                               },
@@ -167,7 +164,7 @@ class _AccountManagementState extends State<AccountManagement> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    Get.to(ChangePassword());
+                    Get.to(const ChangePassword());
                   },
                   style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
@@ -182,6 +179,7 @@ class _AccountManagementState extends State<AccountManagement> {
                   onPressed: ()async {
                     SharedPreferences pref = await SharedPreferences.getInstance();
                     pref.clear();
+                    // ignore: use_build_context_synchronously
                     Navigator.pushAndRemoveUntil(context,
                         MaterialPageRoute(builder: (context) => Login()), (
                             route) => false);

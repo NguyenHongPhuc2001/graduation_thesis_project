@@ -1,5 +1,4 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:get/get.dart';
@@ -11,7 +10,6 @@ import '../../../../models/goal.dart';
 import '../../../../models/wallet.dart';
 import '../../../commons/pages/select_icon.dart';
 import '../../../../remote/controllers/entites/goal_controller.dart';
-import '../../../commons/pages/select_wallet.dart';
 import '../../../commons/widgets/text_container.dart';
 
 class AddTarget extends StatefulWidget {
@@ -123,7 +121,6 @@ class _AddTargetState extends State<AddTarget> {
                               .then((value) {
                             setState(() {
                               goalIcon = value;
-                              print(value);
                             });
                           });
                         },
@@ -288,6 +285,7 @@ class _AddTargetState extends State<AddTarget> {
                               child: TextField(
                                 controller: _targetMoneyController,
                                 keyboardType: TextInputType.number,
+                                textAlign: TextAlign.center,
                                 decoration: InputDecoration(
                                     hintText: 'Nhập số tiền',
                                     hintStyle: TextStyle(
@@ -310,7 +308,7 @@ class _AddTargetState extends State<AddTarget> {
                                               size.width * 0.1),
                                           color: Colors.red,
                                         ),
-                                        child: Text(
+                                        child: const Text(
                                           "VNĐ",
                                           style: TextStyle(
                                               color: Colors.white,
@@ -351,9 +349,8 @@ class _AddTargetState extends State<AddTarget> {
                                   hint: Padding(
                                     padding: EdgeInsets.only(
                                         left: size.width * 0.04),
-                                    child: Text("Chọn màu"),
+                                    child: const Text("Chọn màu"),
                                   ),
-                                  buttonPadding: EdgeInsets.only(right: size.width*0.014),
                                   value: goalColor,
                                   dropdownMaxHeight: size.width * 0.5,
                                   items: items
@@ -364,16 +361,14 @@ class _AddTargetState extends State<AddTarget> {
                                             padding: EdgeInsets.only(
                                                 left: size.width * 0.01),
                                             child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      size.width * 0.15),
+                                              padding: EdgeInsets.symmetric( horizontal: size.width * 0.1),
                                               decoration: BoxDecoration(
                                                   shape: BoxShape.rectangle,
                                                   color: Color(item.value),
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           size.width * 0.1)),
-                                              child: Text(""),
+                                              child: const Text(""),
                                             ),
                                           ),
                                         ),
@@ -399,6 +394,7 @@ class _AddTargetState extends State<AddTarget> {
                   await GoalController().createGoal(_targetNameController.text,
                       _targetMoneyController.numberValue, df.format(goalEndDate), goalColor.toString(), goalIcon);
 
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context, "Create");
                 },
                 style: ElevatedButton.styleFrom(

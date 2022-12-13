@@ -39,55 +39,53 @@ class _SignUpState extends State<SignUp> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 90,
-                            height: 90,
-                            margin: const EdgeInsets.only(top: 20),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100.0),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 2,
-                                  blurRadius: 3,
-                                  offset: const Offset(
-                                      0, 0), // changes position of shadow
-                                ),
-                              ],
-                            ),
-                            child: SizedBox(
-                              width: 45,
-                              height: 45,
-                              child: SvgPicture.asset("images/logo_money.svg"),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 15),
-                            child: const Text(
-                              "Money Spending",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 90,
+                          height: 90,
+                          margin: const EdgeInsets.only(top: 20),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100.0),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 2,
+                                blurRadius: 3,
+                                offset: const Offset(
+                                    0, 0),
                               ),
+                            ],
+                          ),
+                          child: SizedBox(
+                            width: 45,
+                            height: 45,
+                            child: SvgPicture.asset("images/logo_money.svg"),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 15),
+                          child: const Text(
+                            "Money Spending",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
                             ),
                           ),
-                          Container(
-                              margin: const EdgeInsets.only(top: 10),
-                              child: const Text(
-                                "Đăng ký",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 15,
-                                    color: Color(0xE5AAAAAA)),
-                              )),
-                        ],
-                      ),
+                        ),
+                        Container(
+                            margin: const EdgeInsets.only(top: 10),
+                            child: const Text(
+                              "Đăng ký",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 15,
+                                  color: Color(0xE5AAAAAA)),
+                            )),
+                      ],
                     ),
                     Container(
                       margin:
@@ -98,7 +96,7 @@ class _SignUpState extends State<SignUp> {
                           TextField(
                             controller: userNameController,
                             decoration: InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
+                                enabledBorder: const UnderlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black),
                                 ),
                                 hintText: "Nhập tài khoản",
@@ -116,7 +114,7 @@ class _SignUpState extends State<SignUp> {
                                 controller: passwordController,
                                 obscureText: !passIsClick,
                                 decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
+                                  enabledBorder: const UnderlineInputBorder(
                                     borderSide: BorderSide(color: Colors.black),
                                   ),
                                   hintText: "Nhập mật khẩu",
@@ -160,7 +158,7 @@ class _SignUpState extends State<SignUp> {
                                 controller: rePasswordController,
                                 obscureText: !rePassIsClick,
                                 decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
+                                  enabledBorder: const UnderlineInputBorder(
                                     borderSide: BorderSide(color: Colors.black),
                                   ),
                                   hintText: "Nhập lại mật khẩu",

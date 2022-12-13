@@ -13,7 +13,7 @@ class TotalCost extends BaseModel {
   });
 
   factory TotalCost.fromJson(Map<String, dynamic> json) =>
-      TotalCost(totalCost: json['totalCost']);
+      TotalCost(totalCost: json['totalCost'] == null ? 0.0 : json['price'].toDouble());
 
   Map<String, dynamic> toJson() => {"totalCost": totalCost};
 }

@@ -1,4 +1,3 @@
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/event_controller.dart';
@@ -41,7 +40,6 @@ class _UpdateEventState extends State<UpdateEvent> {
     super.initState();
     wallet = widget.event.wallet;
     eventIcon = widget.event.eventIcon;
-    // eventEndDate = widget.event.eventEndDate;
     widget.walletController.getList().then((value) {
       setState(() {
         listWallet = List.from(value!);
@@ -58,7 +56,6 @@ class _UpdateEventState extends State<UpdateEvent> {
     DateTime date = DateTime.parse(widget.event.eventEndDate);
     String correctDate = "${date.year}-${date.month}-${date.day + 1}";
     _eventNameController.text = widget.event.eventName;
-
 
     return Scaffold(
         resizeToAvoidBottomInset: false,

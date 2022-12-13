@@ -36,6 +36,7 @@ class _BudgetCreateState extends State<BudgetCreate> {
   // ignore: prefer_typing_uninitialized_variables
   final pageController = PageController();
 
+  // ignore: prefer_typing_uninitialized_variables
   var expense,budgetIcon,budgetValue,budgetEndDate;
 
   final budgetNameController = TextEditingController();
@@ -112,7 +113,6 @@ class _BudgetCreateState extends State<BudgetCreate> {
                               borderSide: BorderSide(
                                   color: Colors.grey.shade600,
                                   width: size.width * 0.005)),
-                          // filled: true,
                           fillColor: Colors.white,
                           hintText: "Nhập tên ngân sách",
                           hintStyle: TextStyle(

@@ -1,12 +1,6 @@
 import 'package:get/get.dart';
 import 'package:graduation_thesis_project/models/expense.dart';
 import 'package:graduation_thesis_project/remote/api/Expense_API.dart';
-import 'package:graduation_thesis_project/services/remote_services.dart';
-
-
-import '../../../models/account.dart';
-
-
 
 class ExpenseController extends GetxController{
 

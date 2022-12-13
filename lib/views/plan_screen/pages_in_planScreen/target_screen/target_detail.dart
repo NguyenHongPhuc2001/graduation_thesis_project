@@ -1,8 +1,6 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/goal_controller.dart';
 import 'package:graduation_thesis_project/remote/controllers/entites/wallet_controller.dart';
@@ -12,7 +10,6 @@ import 'package:graduation_thesis_project/views/commons/widgets/custom_round_rec
 import 'package:graduation_thesis_project/views/commons/widgets/money_text_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/percent_text_container.dart';
 import 'package:graduation_thesis_project/views/commons/widgets/text_container.dart';
-import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_screen.dart';
 import 'package:graduation_thesis_project/views/plan_screen/pages_in_planScreen/target_screen/target_update.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -165,7 +162,7 @@ class _TargetDetailState extends State<TargetDetail> {
                     child: CircularPercentIndicator(
                       radius: size.width * 0.3,
                       progressColor: Color(int.parse(target.goalColor)),
-                      percent: percentTarget,
+                      percent: percentTarget > 1.0 ? 1.0 : percentTarget,
                       lineWidth: size.width * 0.06,
                       center: Container(
                         padding: EdgeInsets.only(top: size.width * 0.15),
@@ -320,32 +317,6 @@ class _TargetDetailState extends State<TargetDetail> {
                 SizedBox(
                   height: size.width * 0.01,
                 ),
-                // CustomRoundRectangleButton(
-                //   backgroundColor: Colors.transparent,
-                //   onTap: () async {
-                //     await GoalController().updateGoal(
-                //         target.goalId,
-                //         target.goalName,
-                //         target.goalIcon,
-                //         target.goalEndDate,
-                //         target.goalFinalCost,
-                //         target.goalColor,
-                //         target.goalPresentCost,
-                //         true).then((value) {
-                //           Navigator.pop(context,"Finish");
-                //     });
-                //   },
-                //   buttonWith: size.width * 0.8,
-                //   padding: size.width * 0.03,
-                //   borderRadius: size.width * 0.02,
-                //   text: TextContainer(
-                //     text: "HOÀN THÀNH MỤC TIÊU",
-                //     textColor: Color(int.parse(widget.target.goalColor)),
-                //     textSize: size.width * 0.05,
-                //     textFontWeight: FontWeight.bold,
-                //     decoration: TextDecoration.none,
-                //   ),
-                // ),
               ],
             ),
           ),
@@ -382,7 +353,7 @@ class _TargetDetailState extends State<TargetDetail> {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
+                SizedBox(
                   width: size.width * 0.61,
                   height: size.width * 0.09,
                   child: TextField(
@@ -422,7 +393,7 @@ class _TargetDetailState extends State<TargetDetail> {
                                 BorderRadius.circular(size.width * 0.1),
                             color: Colors.red,
                           ),
-                          child: Text(
+                          child: const Text(
                             "VNĐ",
                             style: TextStyle(
                                 color: Colors.white,
@@ -431,7 +402,7 @@ class _TargetDetailState extends State<TargetDetail> {
                         ),
                       ),
                     ),
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
                     ),
@@ -497,7 +468,7 @@ class _TargetDetailState extends State<TargetDetail> {
                               ),
                               Visibility(
                                 visible: wallet != null ? false : true,
-                                child: Icon(
+                                child: const Icon(
                                   Icons.keyboard_arrow_down,
                                 ),
                               ),
@@ -564,7 +535,7 @@ class _TargetDetailState extends State<TargetDetail> {
                 textFontWeight: FontWeight.bold,
                 decoration: TextDecoration.none,
               ),
-              backgroundColor: Color(0xff2B4BF2),
+              backgroundColor: const Color(0xff2B4BF2),
             ),
           ],
         );
@@ -610,13 +581,13 @@ class _TargetDetailState extends State<TargetDetail> {
                   fontWeight: FontWeight.w400,
                 ),
                 children: [
-                  TextSpan(text: "Bạn có chắc muốn xóa mục tiêu "),
+                  const TextSpan(text: "Bạn có chắc muốn xóa mục tiêu "),
                   TextSpan(
-                      text: "${tg.goalName}",
-                      style: TextStyle(
+                      text: tg.goalName,
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       )),
-                  TextSpan(text: " chứ ?"),
+                  const TextSpan(text: " chứ ?"),
                 ],
               ),
             ),
@@ -663,7 +634,7 @@ class _TargetDetailState extends State<TargetDetail> {
                   textFontWeight: FontWeight.bold,
                   decoration: TextDecoration.none,
                 ),
-                backgroundColor: Color(0xff2B4BF2),
+                backgroundColor: const Color(0xff2B4BF2),
               ),
             ],
           );
